@@ -8,7 +8,7 @@
 
 void test_vector() {
     std::cout << std::format("test_vector\n");
- 
+
     toy::vector<int> foo;
 
     foo.push_back(1);
