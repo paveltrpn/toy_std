@@ -7,7 +7,8 @@
 #include "common.h"
 
 namespace toy {
-template <typename T> class vector {
+template <typename T>
+class vector {
     public:
         vector() {
             capacity_ = 1;

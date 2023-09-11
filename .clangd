@@ -1,5 +1,14 @@
 CompileFlags:
-  Add:
-    - -std=c++20
-    - -stdlib=libc++
-  Compiler: /usr/local/clang++
+  CompilationDatabase: ./build/
+ 
+Hover:
+  ShowAKA: Yes
+
+InlayHints:
+  Designators: Yes
+  Enabled: Yes
+  ParameterNames: No
+  DeducedTypes: Yes
+
+Diagnostics:
+  Suppress:
