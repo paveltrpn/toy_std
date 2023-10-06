@@ -61,6 +61,14 @@ class vector {
             return data_[id];
         }
 
+        T& at(size_t id) {
+            if (id < size_) {
+                return data_[id];
+            } else {
+                throw std::invalid_argument{ "vector bounds violition" };
+            }
+        }
+
     private:
         size_t size_;
         size_t capacity_;
