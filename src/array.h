@@ -28,10 +28,11 @@ struct array {
         }
 
         array& operator=(const array& rhs) {
-            if (this != rhs) {
+            if (this != &rhs) {
                 std::copy(std::begin(rhs.data_), std::end(rhs.data_), data_);
                 return *this;
             }
+            return *this;
         }
     
         array& operator=(T rhs[len]) {
