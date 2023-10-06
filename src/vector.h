@@ -2,11 +2,14 @@
 #ifndef __toy_vector_h__
 #define __toy_vector_h__
 
+#include <iostream>
+#include <format>
 #include <memory>
 
-#include "common.h"
+#define DEBUG
 
 namespace toy {
+
 template <typename T>
 class vector {
     public:
@@ -21,12 +24,19 @@ class vector {
             data_ = std::make_unique<T[]>(capacity_);
         }
 
-        ~vector() {
-        }
+        vector(const vector& rhs) = default;
+        vector(vector&& rhs) = default;
+
+        vector& operator=(const vector& rhs) = default;
+        vector& operator=(vector&& rhs) = default;
+
+        ~vector() = default;
 
         void push_back(T elem) {
             if (size_ == capacity_) {
-                PRINTMSG("vector call realloc\n");
+#ifdef DEBUG
+                std::cout << std::format("vector call realloc\n");
+#endif
 
                 capacity_ *= 2;
                 auto nd = std::make_unique<T[]>(capacity_);
@@ -57,6 +67,7 @@ class vector {
 
         std::unique_ptr<T[]> data_;
 };
+
 }  // namespace toy
 
 #endif

@@ -3,21 +3,23 @@
 #define __toy_raw_vector_h__
 
 #include <iostream>
+#include <format>
 #include <type_traits>
 #include <algorithm>
 #include <string>
 
-#include "common.h"
+#define DEBUG
 
 namespace toy {
+
 template <typename T, typename = void>
 class raw_vector {
-        raw_vector() = delete;
-        raw_vector(raw_vector& other) = delete;
-        raw_vector(raw_vector&& other) = delete;
+        raw_vector() = default;
+        raw_vector(raw_vector& other) = default;
+        raw_vector(raw_vector&& other) = default;
 
-        raw_vector& operator=(raw_vector& other) = delete;
-        raw_vector& operator=(raw_vector&& other) = delete;
+        raw_vector& operator=(raw_vector& other) = default;
+        raw_vector& operator=(raw_vector&& other) = default;
 };
 
 template <typename T>
@@ -50,6 +52,9 @@ class raw_vector<
 
         void push_back(T&& elem) {
             if (size_ == capacity_) {
+#ifdef DEBUG
+                std::cout << std::format("vector call realloc\n");
+#endif
                 capacity_ *= 2;
 
                 T* nd = new T[capacity_];
@@ -77,6 +82,7 @@ class raw_vector<
 
         T* data_;
 };
+
 }  // namespace toy
 
 #endif
