@@ -34,11 +34,11 @@ struct array {
             }
             return *this;
         }
-    
+
         array& operator=(T rhs[len]) {
             std::copy(rhs[0], rhs[len], data_);
         }
-        
+
         array& operator=(array&& rhs) = delete;
 
         ~array() = default;

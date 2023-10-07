@@ -2,6 +2,7 @@
 #ifndef __toy_vector_h__
 #define __toy_vector_h__
 
+#include <algorithm>
 #include <iostream>
 #include <format>
 #include <memory>
@@ -13,21 +14,60 @@ namespace toy {
 template <typename T>
 class vector {
     public:
-        vector() {
-            capacity_ = 1;
-            size_ = 0;
-            data_ = std::make_unique<T[]>(capacity_);
-        };
-
-        vector(size_t c) : capacity_{ c } {
+        /*
+         * constructor with user-defined capacity
+         */
+        vector(size_t c = 1) : capacity_{ c } {
             size_ = 0;
             data_ = std::make_unique<T[]>(capacity_);
         }
 
-        vector(const vector& rhs) = default;
+        /*
+         * constructor with user-defined size
+         * and filled with default value
+         */
+        vector(size_t s, T value) : size_{ s } {
+            capacity_ = size_;
+            data_ = std::make_unique<T[]>(capacity_);
+            
+            for (size_t i = 0; i < size_; ++i) {
+                data_[i] = value;
+            }
+        }
+
+        vector(const vector& rhs) {
+            capacity_ = rhs.capacity_;
+            size_ = rhs.size_;
+
+            data_ = std::make_unique<T[]>(capacity_);
+
+            for (size_t i = 0; i < size_; ++i) {
+                data_[i] = rhs.data_[i];
+            }
+        }
+
         vector(vector&& rhs) = default;
 
-        vector& operator=(const vector& rhs) = default;
+        vector& operator=(const vector& rhs) {
+            if (this == &rhs) {
+                return *this;
+            }
+
+            size_ = rhs.size_;
+            capacity_ = rhs.capacity_;
+
+            auto old = data_.release();
+            delete[] old;
+
+            data_ = std::make_unique<T[]>(capacity_);
+
+            for (size_t i = 0; i < size_; ++i) {
+                data_[i] = rhs.data_[i];
+            }
+
+            return *this;
+        }
+
         vector& operator=(vector&& rhs) = default;
 
         ~vector() = default;
