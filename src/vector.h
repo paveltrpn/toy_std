@@ -26,7 +26,7 @@ class vector {
          * constructor with user-defined size
          * and filled with default value
          */
-        vector(size_t s, T value) : size_{ s } {
+        vector(size_t s, T value) : size_{ s - 1 } {
             capacity_ = size_;
             data_ = std::make_unique<T[]>(capacity_);
 
@@ -101,11 +101,17 @@ class vector {
                 // delete[] old;
 
                 data_[size_] = elem;
-                size_ += 1;
+                size_++;
             } else {
                 data_[size_] = elem;
-                size_ += 1;
+                size_++;
             }
+        }
+
+        T pop_back() {
+            auto elem = data_[size_];
+            size_--;
+            return elem;
         }
 
         T& operator[](size_t id) {
@@ -124,11 +130,11 @@ class vector {
          * Test purpose members
          */
 
-        [[nodiscard]] size_t getSize() const {
+        [[nodiscard]] constexpr size_t getSize() const {
             return size_;
         };
 
-        [[nodiscard]] size_t getCap() const {
+        [[nodiscard]] constexpr size_t getCap() const {
             return capacity_;
         };
 

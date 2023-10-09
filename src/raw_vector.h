@@ -40,7 +40,7 @@ struct raw_vector<
          * constructor with user-defined size
          * and filled with default value
          */
-        raw_vector(size_t s, T value) : size_{ s } {
+        raw_vector(size_t s, T value) : size_{ s - 1 } {
             capacity_ = size_;
             data_ = new T[capacity_];
 
@@ -126,6 +126,12 @@ struct raw_vector<
             }
         }
 
+        T pop_back() {
+            auto elem = data_[size_];
+            size_ -= 1;
+            return elem;
+        }
+
         T& operator[](size_t id) {
             return data_[id];
         }
@@ -142,11 +148,11 @@ struct raw_vector<
          * Test purpose members
          */
 
-        [[nodiscard]] size_t getSize() const {
+        [[nodiscard]] constexpr size_t getSize() const {
             return size_;
         };
 
-        [[nodiscard]] size_t getCap() const {
+        [[nodiscard]] constexpr size_t getCap() const {
             return capacity_;
         };
 

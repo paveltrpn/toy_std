@@ -5,7 +5,7 @@
 
 BOOST_AUTO_TEST_SUITE(raw_vector)
 
-BOOST_AUTO_TEST_CASE(case_creation) {
+BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
     toy::raw_vector<int> first{ 3, 11 };
 
     BOOST_CHECK_EQUAL(first[1], 11);
@@ -15,6 +15,14 @@ BOOST_AUTO_TEST_CASE(case_creation) {
 
     first[2] = 30;
     BOOST_CHECK_EQUAL(first[2], 30);
+
+    auto foo = first.pop_back();
+    BOOST_CHECK_EQUAL(foo, 30);
+    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(1));
+
+    first.push_back(30);
+    BOOST_CHECK_EQUAL(first[2], 30);
+    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(2));
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_create) {
