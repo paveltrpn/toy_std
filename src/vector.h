@@ -29,7 +29,7 @@ class vector {
         vector(size_t s, T value) : size_{ s } {
             capacity_ = size_;
             data_ = std::make_unique<T[]>(capacity_);
-            
+
             for (size_t i = 0; i < size_; ++i) {
                 data_[i] = value;
             }
@@ -46,7 +46,14 @@ class vector {
             }
         }
 
-        vector(vector&& rhs) = default;
+        vector(vector&& rhs) noexcept {
+            capacity_ = rhs.capacity_;
+            size_ = rhs.size_;
+
+            data_ = std::move(rhs.data_);
+
+            rhs.capacity_ = rhs.size_ = 0;
+        };
 
         vector& operator=(const vector& rhs) {
             if (this == &rhs) {
@@ -56,8 +63,10 @@ class vector {
             size_ = rhs.size_;
             capacity_ = rhs.capacity_;
 
-            auto old = data_.release();
-            delete[] old;
+            data_.reset();
+            // Same as
+            // auto old = data_.release();
+            // delete[] old;
 
             data_ = std::make_unique<T[]>(capacity_);
 
@@ -77,8 +86,8 @@ class vector {
 #ifdef DEBUG
                 std::cout << std::format("vector call realloc\n");
 #endif
-
                 capacity_ *= 2;
+
                 auto nd = std::make_unique<T[]>(capacity_);
 
                 for (size_t i = 0; i < size_; ++i) {
@@ -86,8 +95,10 @@ class vector {
                 }
                 data_.swap(nd);
 
-                auto old = nd.release();
-                delete[] old;
+                nd.reset();
+                // Same as
+                // auto old = nd.release();
+                // delete[] old;
 
                 data_[size_] = elem;
                 size_ += 1;
@@ -107,6 +118,22 @@ class vector {
             } else {
                 throw std::invalid_argument{ "vector bounds violition" };
             }
+        }
+
+        /*
+         * Test purpose members
+         */
+
+        [[nodiscard]] size_t getSize() const {
+            return size_;
+        };
+
+        [[nodiscard]] size_t getCap() const {
+            return capacity_;
+        };
+
+        T* getPtr() const {
+            return data_.get();
         }
 
     private:
