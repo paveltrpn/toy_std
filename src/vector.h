@@ -26,7 +26,7 @@ class vector {
          * constructor with user-defined size
          * and filled with default value
          */
-        vector(size_t s, T value) : size_{ s - 1 } {
+        vector(size_t s, T value) : size_{ s } {
             capacity_ = size_;
             data_ = std::make_unique<T[]>(capacity_);
 
@@ -109,7 +109,7 @@ class vector {
         }
 
         T pop_back() {
-            auto elem = data_[size_];
+            auto elem = data_[size_ - 1];
             size_--;
             return elem;
         }

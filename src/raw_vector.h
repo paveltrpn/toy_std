@@ -40,7 +40,7 @@ struct raw_vector<
          * constructor with user-defined size
          * and filled with default value
          */
-        raw_vector(size_t s, T value) : size_{ s - 1 } {
+        raw_vector(size_t s, T value) : size_{ s } {
             capacity_ = size_;
             data_ = new T[capacity_];
 
@@ -119,16 +119,16 @@ struct raw_vector<
                 delete[] nd;
 
                 data_[size_] = elem;
-                size_ += 1;
+                size_++;
             } else {
                 data_[size_] = elem;
-                size_ += 1;
+                size_++;
             }
         }
 
         T pop_back() {
-            auto elem = data_[size_];
-            size_ -= 1;
+            auto elem = data_[size_ - 1];
+            size_--;
             return elem;
         }
 

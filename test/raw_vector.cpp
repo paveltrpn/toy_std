@@ -1,28 +1,28 @@
 
 #include "../src/raw_vector.h"
-
+#include <string>
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(raw_vector)
 
 BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
-    toy::raw_vector<int> first{ 3, 11 };
+    toy::raw_vector<std::string> first{ 3, "nil" };
 
-    BOOST_CHECK_EQUAL(first[1], 11);
+    BOOST_CHECK_EQUAL(first[1], "nil");
 
-    first[0] = 10;
-    BOOST_CHECK_EQUAL(first[0], 10);
+    first[0] = "ten";
+    BOOST_CHECK_EQUAL(first[0], "ten");
 
-    first[2] = 30;
-    BOOST_CHECK_EQUAL(first[2], 30);
+    first[2] = std::string{"thirty"};
+    BOOST_CHECK_EQUAL(first[2], "thirty");
 
     auto foo = first.pop_back();
-    BOOST_CHECK_EQUAL(foo, 30);
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(1));
-
-    first.push_back(30);
-    BOOST_CHECK_EQUAL(first[2], 30);
+    BOOST_CHECK_EQUAL(foo, "thirty");
     BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(2));
+
+    first.push_back("thirty");
+    BOOST_CHECK_EQUAL(first[2], "thirty");
+    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_create) {
