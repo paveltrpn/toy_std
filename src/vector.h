@@ -18,6 +18,9 @@ class vector {
          * constructor with user-defined capacity
          */
         vector(size_t c = 1) : capacity_{ c } {
+            if (c < 1) {
+                capacity_ = 1;
+            }
             size_ = 0;
             data_ = std::make_unique<T[]>(capacity_);
         }
@@ -101,11 +104,10 @@ class vector {
                 // delete[] old;
 
                 data_[size_] = elem;
-                size_++;
             } else {
                 data_[size_] = elem;
-                size_++;
             }
+            size_++;
         }
 
         T pop_back() {

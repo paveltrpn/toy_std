@@ -5,8 +5,40 @@ set(CMAKE_CXX_COMPILER clang++)
 
 project (toy_containers)
 
-add_compile_options(-g -Wall -Wextra -Wpedantic -std=c++20 -stdlib=libc++ -Wno-unused-parameter)
+add_compile_options(-g 
+                    -Wall 
+                    -Wextra 
+                    -Wpedantic 
+                    -std=c++20 
+                    -stdlib=libc++ 
+                    -Wno-unused-parameter)
+
 add_link_options(-stdlib=libc++)
+
+option(WITH_UBSAN "build with undefined behavior sanitizer" OFF)
+option(WITH_ASAN  "build with address sanitizer" OFF)
+option(WITH_TSAN  "build with thread sanitizer" OFF)
+option(WITH_MSAN  "build with memory sanitizer" OFF)
+
+if(WITH_UBSAN)
+  add_compile_options(-fsanitize=undefined)
+  add_link_options(-fsanitize=undefined)
+endif()
+
+if(WITH_ASAN)
+  add_compile_options(-fsanitize=address)
+  add_link_options(-fsanitize=address)
+endif()
+
+if(WITH_TSAN)
+  add_compile_options(-fsanitize=thread)
+  add_link_options(-fsanitize=thread)
+endif()
+
+if(WITH_MSAN)
+  add_compile_options(-fsanitize=memory)
+  add_link_options(-fsanitize=memory)
+endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 

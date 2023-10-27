@@ -55,8 +55,8 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
-    toy::vector<int> first{ 0 };
-    toy::vector<int> second{ 0 };
+    toy::vector<int> first{ 1 };
+    toy::vector<int> second{ 1 };
 
     first.push_back(10);
     first.push_back(30);
