@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
-    toy::raw_vector<int> first{ 0 };
+    toy::raw_vector<int> first{ 1 };
     toy::raw_vector<int> second{ 0 };
 
     first.push_back(10);
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(case_copy_assign) {
 }
 
 BOOST_AUTO_TEST_CASE(case_move_assign) {
-    toy::raw_vector<int> first{ 0 };
+    toy::raw_vector<int> first{ 1 };
     toy::raw_vector<int> second{ 0 };
 
     first.push_back(10);

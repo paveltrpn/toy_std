@@ -30,6 +30,7 @@ struct raw_vector<
                           || std::is_base_of<T, std::string>::value>::type> {
         /*
          * constructor with user-defined capacity
+         * always create vector with size = 1
          */
         raw_vector(size_t c = 1) : capacity_{ c } {
             if (c < 1) {
@@ -44,10 +45,19 @@ struct raw_vector<
          * and filled with default value
          */
         raw_vector(size_t s, T value) : size_{ s } {
-            capacity_ = size_;
-            data_ = new T[capacity_];
+            if (s >= 1) {
+                capacity_ = size_;
+                data_ = new T[capacity_];
 
-            std::fill(data_, data_ + size_, value);
+                std::fill(data_, data_ + size_, value);
+                return;
+            }
+            capacity_ = 1;
+            data_ = new T[capacity_];
+            data_[size_] = value;
+#ifdef DEBUG
+            std::cout << std::format("WARNING! raw_vector(size_t, T): with zero size!\n");
+#endif
         }
 
         raw_vector(const raw_vector& rhs) {

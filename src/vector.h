@@ -16,6 +16,7 @@ class vector {
     public:
         /*
          * constructor with user-defined capacity
+         * always create vector with size = 1
          */
         vector(size_t c = 1) : capacity_{ c } {
             if (c < 1) {
@@ -30,12 +31,21 @@ class vector {
          * and filled with default value
          */
         vector(size_t s, T value) : size_{ s } {
-            capacity_ = size_;
-            data_ = std::make_unique<T[]>(capacity_);
+            if (s >= 1) {
+                capacity_ = size_;
+                data_ = std::make_unique<T[]>(capacity_);
 
-            for (size_t i = 0; i < size_; ++i) {
-                data_[i] = value;
+                for (size_t i = 0; i < size_; ++i) {
+                    data_[i] = value;
+                }
+                return;
             }
+            capacity_ = 1;
+            data_ = std::make_unique<T[]>(capacity_);
+            data_[size_] = value; 
+#ifdef DEBUG
+            std::cout << std::format("WARNING! vector(size_t, T): with zero size!\n");
+#endif
         }
 
         vector(const vector& rhs) {
