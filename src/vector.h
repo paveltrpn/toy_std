@@ -6,12 +6,20 @@
 #include <iostream>
 #include <format>
 #include <memory>
+#include <type_traits>
 
 #define DEBUG
 
 namespace toy {
 
 template <typename T>
+concept Character = std::is_same_v<char, std::remove_cv_t<T>>;
+
+template <typename T>
+concept NumberOrString = std::is_integral_v<T> || std::is_floating_point_v<T>
+                         || std::is_same_v<std::string, T> || std::is_same_v<std::wstring, T>;
+
+template <NumberOrString T>
 class vector {
     public:
         /*
@@ -42,7 +50,7 @@ class vector {
             }
             capacity_ = 1;
             data_ = std::make_unique<T[]>(capacity_);
-            data_[size_] = value; 
+            data_[size_] = value;
 #ifdef DEBUG
             std::cout << std::format("WARNING! vector(size_t, T): with zero size!\n");
 #endif

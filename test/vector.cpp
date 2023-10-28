@@ -1,7 +1,19 @@
 
 #include "../src/vector.h"
+#include <string>
 
 #include <boost/test/unit_test.hpp>
+
+// #define VECTOR_BROKEN_EXCLUDE
+
+#ifdef VECTOR_BROKEN_EXCLUDE
+void testDeclarations() {
+    toy::vector<std::basic_string<wchar_t>> wcharSrt{ 3, L"nil" };
+    toy::vector<std::basic_string<std::byte>> byteStr{ 1, "nil" };
+    toy::vector<std::wstring> wstr{ 1, L"nil" };
+    toy::vector<std::basic_string<char>> charStr{ 1, "nil" };
+}
+#endif
 
 BOOST_AUTO_TEST_SUITE(vector)
 
@@ -25,16 +37,16 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
     BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
 }
 
-BOOST_AUTO_TEST_CASE(case_copy_create) {
-    toy::vector<int> first;
+BOOST_AUTO_TEST_CASE(case_copy_create, *boost::unit_test::tolerance(0.00001)) {
+    toy::vector<float> first;
 
-    first.push_back(10);
-    first.push_back(30);
+    first.push_back(10.0f);
+    first.push_back(30.0f);
 
-    toy::vector<int> second{ first };
+    toy::vector<float> second{ first };
 
-    BOOST_CHECK_EQUAL(second[0], 10);
-    BOOST_CHECK_EQUAL(second[1], 30);
+    BOOST_TEST(second[0] == 10.0f);
+    BOOST_TEST(second[1] == 30.0f);
 }
 
 BOOST_AUTO_TEST_CASE(case_move_create) {
