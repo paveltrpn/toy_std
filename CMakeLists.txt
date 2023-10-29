@@ -58,7 +58,8 @@ add_executable(test_unit
     ${TST_DIR}/array.cpp
     ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
-    ${TST_DIR}/stack.cpp)
+    ${TST_DIR}/stack.cpp
+    ${TST_DIR}/matrix.cpp)
 target_link_libraries(test_unit ${Boost_LIBRARIES})
 # target_compile_definitions(test_unit PUBLIC BOOST_TEST_DYN_LINK)
 

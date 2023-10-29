@@ -6,18 +6,12 @@
 #include <iostream>
 #include <format>
 #include <memory>
-#include <type_traits>
+
+#include "concepts.h"
 
 #define DEBUG
 
 namespace toy {
-
-template <typename T>
-concept Character = std::is_same_v<char, std::remove_cv_t<T>>;
-
-template <typename T>
-concept NumberOrString = std::is_integral_v<T> || std::is_floating_point_v<T>
-                         || std::is_same_v<std::string, T> || std::is_same_v<std::wstring, T>;
 
 template <NumberOrString T>
 class vector {
