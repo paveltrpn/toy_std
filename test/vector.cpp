@@ -4,9 +4,9 @@
 
 #include <boost/test/unit_test.hpp>
 
-// #define VECTOR_BROKEN_EXCLUDE
+// #define BROKEN_EXCLUDE
 
-#ifdef VECTOR_BROKEN_EXCLUDE
+#ifdef BROKEN_EXCLUDE
 void testDeclarations() {
     toy::vector<std::basic_string<wchar_t>> wcharSrt{ 3, L"nil" };
     toy::vector<std::basic_string<std::byte>> byteStr{ 1, "nil" };

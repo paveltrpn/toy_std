@@ -8,6 +8,7 @@
 namespace toy {
 
 template <typename T, size_t len>
+    requires(len > 0)
 struct array {
         array() = default;
 

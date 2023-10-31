@@ -6,6 +6,14 @@
 
 #include <boost/test/unit_test.hpp>
 
+// #define BROKEN_EXCLUDE
+
+#ifdef BROKEN_EXCLUDE
+void testDeclarations() {
+    toy::array<float, 0> array0 {};
+}
+#endif
+
 BOOST_AUTO_TEST_SUITE(array)
 
 BOOST_AUTO_TEST_CASE(case_creation) {
