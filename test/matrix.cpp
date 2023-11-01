@@ -1,5 +1,5 @@
 
-#include "../src/math_matrix.h"
+#include "../src/matrix.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -13,7 +13,7 @@ void testDeclarations() {
 }
 #endif
 
-BOOST_AUTO_TEST_SUITE(math_matrix)
+BOOST_AUTO_TEST_SUITE(matrix)
 
 BOOST_AUTO_TEST_CASE(case_construct) {
 }

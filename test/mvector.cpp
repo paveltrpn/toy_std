@@ -1,9 +1,9 @@
 
-#include "../src/math_vector.h"
+#include "../src/mvector.h"
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(math_vector)
+BOOST_AUTO_TEST_SUITE(mvector)
 
 BOOST_AUTO_TEST_CASE(case_construct) {
 }

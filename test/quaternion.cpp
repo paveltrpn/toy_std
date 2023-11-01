@@ -1,9 +1,9 @@
 
-#include "../src/math_quaternion.h"
+#include "../src/quaternion.h"
 
 #include <boost/test/unit_test.hpp>
 
-BOOST_AUTO_TEST_SUITE(math_quaternion)
+BOOST_AUTO_TEST_SUITE(quaternion)
 
 BOOST_AUTO_TEST_CASE(case_construct) {
 }
