@@ -31,10 +31,9 @@ struct matrix<T, 2, 2> {
         ~matrix() = default;
 
     private:
-        size_t rows_{ 2 };
-        size_t columnes_{ 2 };
+        static constexpr inline size_t size_ = 4;
 
-        toy::array<T, 4> data_;
+        toy::array<T, size_> data_;
 };
 
 template <toy::Arithmetical T>
@@ -44,10 +43,9 @@ struct matrix<T, 3, 3> {
         ~matrix() = default;
 
     private:
-        size_t rows_{ 3 };
-        size_t columnes_{ 3 };
-
-        toy::array<T, 9> data_;
+        static constexpr inline size_t size_ = 9;
+ 
+        toy::array<T, size_> data_;
 };
 
 template <toy::Arithmetical T>
@@ -57,10 +55,9 @@ struct matrix<T, 4, 4> {
         ~matrix() = default;
 
     private:
-        size_t rows_{ 4 };
-        size_t columnes_{ 4 };
+        static constexpr inline size_t size_ = 16;
 
-        toy::array<T, 16> data_;
+        toy::array<T, size_> data_;
 };
 
 template <typename T>

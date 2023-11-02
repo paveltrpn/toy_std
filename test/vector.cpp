@@ -37,6 +37,15 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
     BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
 }
 
+BOOST_AUTO_TEST_CASE(case_construct_init_list) {
+    toy::vector<std::string> initLst{ "first", "second", "third" };
+    BOOST_CHECK_EQUAL(initLst[0], "first");
+    BOOST_CHECK_EQUAL(initLst[1], "second");
+    BOOST_CHECK_EQUAL(initLst[2], "third");
+    BOOST_CHECK_EQUAL(initLst.getSize(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.getCap(), static_cast<size_t>(3));
+}
+
 BOOST_AUTO_TEST_CASE(case_copy_create, *boost::unit_test::tolerance(0.00001)) {
     toy::vector<float> first;
 
@@ -67,8 +76,8 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
-    toy::vector<int> first{ 1 };
-    toy::vector<int> second{ 0 };
+    toy::vector<int> first(1);
+    toy::vector<int> second(0);
 
     first.push_back(10);
     first.push_back(30);
@@ -79,10 +88,30 @@ BOOST_AUTO_TEST_CASE(case_copy_assign) {
     BOOST_CHECK_EQUAL(second[0], 10);
     BOOST_CHECK_EQUAL(second[1], 30);
     BOOST_CHECK_EQUAL(second[2], 0);
+
+    toy::vector<int> greter(5);
+}
+
+BOOST_AUTO_TEST_CASE(case_move_assign) {
+    toy::vector<int> first(1);
+    toy::vector<int> second(0);
+
+    first.push_back(10);
+    first.push_back(30);
+
+    second = std::move(first);
+
+    BOOST_CHECK_EQUAL(second[0], 10);
+    BOOST_CHECK_EQUAL(second[1], 30);
+
+    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.getCap(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.getPtr(), nullptr);
+    BOOST_CHECK_NE(second.getPtr(), nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(case_at) {
-    toy::vector<int> first{ 0 };
+    toy::vector<int> first(0);
 
     first.push_back(10);
     first.push_back(20);

@@ -3,6 +3,17 @@
 #include <string>
 #include <boost/test/unit_test.hpp>
 
+// #define BROKEN_EXCLUDE
+
+#ifdef BROKEN_EXCLUDE
+void testDeclarations() {
+    toy::raw_vector<std::basic_string<wchar_t>> wcharSrt{ 3, L"nil" };
+    toy::raw_vector<std::basic_string<std::byte>> byteStr{ 1, "nil" };
+    toy::raw_vector<std::wstring> wstr{ 1, L"nil" };
+    toy::raw_vector<std::basic_string<char>> charStr{ 1, "nil" };
+}
+#endif
+
 BOOST_AUTO_TEST_SUITE(raw_vector)
 
 BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
@@ -13,7 +24,7 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
     first[0] = "ten";
     BOOST_CHECK_EQUAL(first[0], "ten");
 
-    first[2] = std::string{"thirty"};
+    first[2] = std::string{ "thirty" };
     BOOST_CHECK_EQUAL(first[2], "thirty");
 
     auto foo = first.pop_back();
@@ -23,6 +34,15 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
     first.push_back("thirty");
     BOOST_CHECK_EQUAL(first[2], "thirty");
     BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
+}
+
+BOOST_AUTO_TEST_CASE(case_construct_init_list_pop) {
+    toy::raw_vector<std::string> initLst{ "first", "second", "third" };
+    BOOST_CHECK_EQUAL(initLst[0], "first");
+    BOOST_CHECK_EQUAL(initLst[1], "second");
+    BOOST_CHECK_EQUAL(initLst[2], "third");
+    BOOST_CHECK_EQUAL(initLst.getSize(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.getCap(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_create) {
@@ -55,8 +75,8 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
-    toy::raw_vector<int> first{ 1 };
-    toy::raw_vector<int> second{ 0 };
+    toy::raw_vector<int> first(1);
+    toy::raw_vector<int> second(0);
 
     first.push_back(10);
     first.push_back(30);
@@ -70,8 +90,8 @@ BOOST_AUTO_TEST_CASE(case_copy_assign) {
 }
 
 BOOST_AUTO_TEST_CASE(case_move_assign) {
-    toy::raw_vector<int> first{ 1 };
-    toy::raw_vector<int> second{ 0 };
+    toy::raw_vector<int> first(1);
+    toy::raw_vector<int> second(0);
 
     first.push_back(10);
     first.push_back(30);
@@ -88,7 +108,7 @@ BOOST_AUTO_TEST_CASE(case_move_assign) {
 }
 
 BOOST_AUTO_TEST_CASE(case_at) {
-    toy::raw_vector<int> first{ 0 };
+    toy::raw_vector<int> first(0);
 
     first.push_back(10);
     first.push_back(20);

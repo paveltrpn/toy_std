@@ -6,6 +6,7 @@
 #include <iostream>
 #include <format>
 #include <memory>
+#include <initializer_list>
 
 #include "concepts.h"
 
@@ -50,6 +51,16 @@ class vector {
 #endif
         }
 
+        vector(std::initializer_list<T> list) {
+            size_ = capacity_ = std::size(list);
+            data_ = std::make_unique<T[]>(capacity_);
+
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                ++i;
+            }
+        }
+
         vector(const vector& rhs) {
             capacity_ = rhs.capacity_;
             size_ = rhs.size_;
@@ -71,32 +82,40 @@ class vector {
         };
 
         vector& operator=(const vector& rhs) {
-            if (this == &rhs) {
-                return *this;
-            }
+            if (this != &rhs) {
+                size_ = rhs.size_;
+                capacity_ = rhs.capacity_;
 
-            size_ = rhs.size_;
-            capacity_ = rhs.capacity_;
+                data_.reset();
+                // Same as
+                // auto old = data_.release();
+                // delete[] old;
 
-            data_.reset();
-            // Same as
-            // auto old = data_.release();
-            // delete[] old;
+                data_ = std::make_unique<T[]>(capacity_);
 
-            data_ = std::make_unique<T[]>(capacity_);
-
-            for (size_t i = 0; i < size_; ++i) {
-                data_[i] = rhs.data_[i];
+                for (size_t i = 0; i < size_; ++i) {
+                    data_[i] = rhs.data_[i];
+                }
             }
 
             return *this;
         }
 
-        vector& operator=(vector&& rhs) = default;
+        vector& operator=(vector&& rhs) noexcept {
+            if (this != &rhs) {
+                capacity_ = rhs.capacity_;
+                size_ = rhs.size_;
+                data_ = std::move(rhs.data_);
+
+                rhs.capacity_ = rhs.size_ = 0;
+            }
+
+            return *this;
+        }
 
         ~vector() = default;
 
-        void push_back(T elem) {
+        void push_back(T&& elem) {
             if (size_ == capacity_) {
 #ifdef DEBUG
                 std::cout << std::format("vector call realloc\n");

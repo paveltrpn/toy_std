@@ -60,6 +60,16 @@ struct raw_vector<
 #endif
         }
 
+        raw_vector(std::initializer_list<T> list) {
+            size_ = capacity_ = std::size(list);
+            data_ = new T[capacity_];
+
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                ++i;
+            }
+        }
+
         raw_vector(const raw_vector& rhs) {
             capacity_ = rhs.capacity_;
             size_ = rhs.size_;
@@ -80,35 +90,31 @@ struct raw_vector<
         };
 
         raw_vector& operator=(const raw_vector& rhs) {
-            if (this == &rhs) {
-                return *this;
+            if (this != &rhs) {
+                size_ = rhs.size_;
+                capacity_ = rhs.capacity_;
+
+                delete[] data_;
+
+                data_ = new T[capacity_];
+
+                std::copy(rhs.data_, rhs.data_ + size_, data_);
             }
-
-            size_ = rhs.size_;
-            capacity_ = rhs.capacity_;
-
-            delete[] data_;
-
-            data_ = new T[capacity_];
-
-            std::copy(rhs.data_, rhs.data_ + size_, data_);
 
             return *this;
         }
 
         raw_vector& operator=(raw_vector&& rhs) noexcept {
-            if (this == &rhs) {
-                return *this;
+            if (this != &rhs) {
+                size_ = rhs.size_;
+                capacity_ = rhs.capacity_;
+
+                delete[] data_;
+                data_ = rhs.data_;
+
+                rhs.capacity_ = rhs.size_ = 0;
+                rhs.data_ = nullptr;
             }
-
-            size_ = rhs.size_;
-            capacity_ = rhs.capacity_;
-
-            delete[] data_;
-            data_ = rhs.data_;
-
-            rhs.capacity_ = rhs.size_ = 0;
-            rhs.data_ = nullptr;
 
             return *this;
         }
