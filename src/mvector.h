@@ -36,4 +36,13 @@ struct vector<T, 4> {
         toy::array<T, 4> data_;
 };
 
+template<typename T>
+using vector2 = vector<T, 2>;
+
+template<typename T>
+using vector3 = vector<T, 3>;
+
+template<typename T>
+using vector4 = vector<T, 4>;
+
 }  // namespace toy::math

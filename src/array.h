@@ -20,6 +20,9 @@ struct array {
             std::copy(rhs[0], rhs[len], data_);
         }
 
+        /*
+         * move constructor deleted because use static size array
+         */
         array(array&& rhs) = delete;
 
         array(T value) {
@@ -40,6 +43,9 @@ struct array {
             std::copy(rhs[0], rhs[len], data_);
         }
 
+        /*
+         * move assingment operator deleted because use static size array
+         */
         array& operator=(array&& rhs) = delete;
 
         ~array() = default;
@@ -48,7 +54,19 @@ struct array {
             return data_[id];
         }
 
+        const T& operator[](size_t id) const {
+            return data_[id];
+        }
+
         T& at(size_t id) {
+            if (id < len) {
+                return data_[id];
+            } else {
+                throw std::invalid_argument{ "array bounds violition" };
+            }
+        }
+
+        const T& at(size_t id) const {
             if (id < len) {
                 return data_[id];
             } else {

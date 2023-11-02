@@ -148,6 +148,10 @@ struct raw_vector<
             return data_[id];
         }
 
+        const T& operator[](size_t id) const {
+            return data_[id];
+        }
+
         T& at(size_t id) {
             if (id < size_) {
                 return data_[id];
@@ -156,6 +160,13 @@ struct raw_vector<
             }
         }
 
+        const T& at(size_t id) const {
+            if (id < size_) {
+                return data_[id];
+            } else {
+                throw std::invalid_argument{ "vector bounds violition" };
+            }
+        }
         /*
          * Test purpose members
          */

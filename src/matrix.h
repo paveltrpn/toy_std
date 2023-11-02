@@ -9,6 +9,12 @@ template <toy::Arithmetical T, size_t rows, size_t columnes>
 struct matrix {
         matrix() = default;
 
+        matrix(const matrix &rhs) : rows_(rhs.rows_), columnes_(rhs.columnes_) {
+            for (size_t i = 0; i < rows_; ++i) {
+                std::copy(rhs.data_[i], rhs.data_[i] + columnes_, data_[i]);
+            }
+        };
+
         ~matrix() = default;
 
     private:
@@ -56,5 +62,14 @@ struct matrix<T, 4, 4> {
 
         toy::array<T, 16> data_;
 };
+
+template <typename T>
+using matrix2 = matrix<T, 2, 2>;
+
+template <typename T>
+using matrix3 = matrix<T, 3, 3>;
+
+template <typename T>
+using matrix4 = matrix<T, 4, 4>;
 
 }  // namespace toy::math
