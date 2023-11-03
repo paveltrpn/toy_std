@@ -83,19 +83,19 @@ struct quaternion {
             return *this;
         };
 
-        quaternion& operator+(const quaternion& b) {
+        quaternion operator+(const quaternion& b) {
             return quaternion{ data_[0] + b[0], data_[1] + b[1], data_[2] + b[2], data_[3] + b[3] };
         }
 
-        quaternion& operator+=(const quaternion& b) {
+        quaternion operator+=(const quaternion& b) {
             return this + b;
         }
 
-        quaternion& operator-(const quaternion& b) {
-            return quaternion{ data_[0] + b[0], data_[1] + b[1], data_[2] + b[2], data_[3] + b[3] };
+        quaternion operator-(const quaternion& b) {
+            return quaternion{ data_[0] - b[0], data_[1] - b[1], data_[2] - b[2], data_[3] - b[3] };
         }
 
-        quaternion& operator-=(const quaternion& b) {
+        quaternion operator-=(const quaternion& b) {
             return this - b;
         }
 
