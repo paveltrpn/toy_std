@@ -31,6 +31,13 @@ struct array {
             }
         }
 
+        explicit array(std::initializer_list<T> list) {
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                ++i;
+            }
+        }
+
         /*
          * copy assignment
          */
@@ -76,8 +83,16 @@ struct array {
             }
         }
 
+        /*
+         * Test purpose members
+         */
+
+        [[nodiscard]] T* getData() {
+            return data_;
+        };
+
     private:
-        T data_[len];
+        T data_[len]{};
 };
 
 }  // namespace toy
