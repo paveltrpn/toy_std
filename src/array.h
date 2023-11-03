@@ -12,11 +12,11 @@ template <typename T, size_t len>
 struct array {
         array() = default;
 
-        array(const array& rhs) {
+        explicit array(const array& rhs) {
             std::copy(std::begin(rhs.data_), std::end(rhs.data_), data_);
         }
 
-        array(T rhs[len]) {
+        explicit array(T rhs[len]) {
             std::copy(rhs[0], rhs[len], data_);
         }
 
@@ -25,7 +25,7 @@ struct array {
          */
         array(array&& rhs) = delete;
 
-        array(T value) {
+        explicit array(T value) {
             for (size_t i = 0; i < len; ++i) {
                 data_[i] = value;
             }

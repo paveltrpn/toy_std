@@ -32,7 +32,7 @@ struct raw_vector<
          * constructor with user-defined capacity
          * always create vector with size = 1
          */
-        raw_vector(size_t c = 1) : capacity_{ c } {
+        explicit raw_vector(size_t c = 1) : capacity_{ c } {
             if (c < 1) {
                 capacity_ = 1;
             }
@@ -60,7 +60,7 @@ struct raw_vector<
 #endif
         }
 
-        raw_vector(std::initializer_list<T> list) {
+        explicit raw_vector(std::initializer_list<T> list) {
             size_ = capacity_ = std::size(list);
             data_ = new T[capacity_];
 
@@ -70,7 +70,7 @@ struct raw_vector<
             }
         }
 
-        raw_vector(const raw_vector& rhs) {
+        explicit raw_vector(const raw_vector& rhs) {
             capacity_ = rhs.capacity_;
             size_ = rhs.size_;
 
@@ -190,10 +190,10 @@ struct raw_vector<
         }
 
     private:
-        size_t size_;
-        size_t capacity_;
+        size_t size_{};
+        size_t capacity_{};
 
-        T* data_;
+        T* data_{};
 };
 
 }  // namespace toy

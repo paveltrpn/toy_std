@@ -21,7 +21,7 @@ class vector {
          * constructor with user-defined capacity
          * always create vector with size = 1
          */
-        vector(size_t c = 1) : capacity_{ c } {
+        explicit vector(size_t c = 1) : capacity_{ c } {
             if (c < 1) {
                 capacity_ = 1;
             }
@@ -51,7 +51,7 @@ class vector {
 #endif
         }
 
-        vector(std::initializer_list<T> list) {
+        explicit vector(std::initializer_list<T> list) {
             size_ = capacity_ = std::size(list);
             data_ = std::make_unique<T[]>(capacity_);
 
@@ -61,7 +61,7 @@ class vector {
             }
         }
 
-        vector(const vector& rhs) {
+        explicit vector(const vector& rhs) {
             capacity_ = rhs.capacity_;
             size_ = rhs.size_;
 
@@ -188,10 +188,10 @@ class vector {
         }
 
     private:
-        size_t size_;
-        size_t capacity_;
+        size_t size_{};
+        size_t capacity_{};
 
-        std::unique_ptr<T[]> data_;
+        std::unique_ptr<T[]> data_{};
 };
 
 }  // namespace toy
