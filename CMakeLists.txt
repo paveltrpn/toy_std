@@ -59,6 +59,7 @@ add_executable(test_unit
     ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
+    ${TST_DIR}/list.cpp
     ${TST_DIR}/matrix.cpp
     ${TST_DIR}/mvector.cpp
     ${TST_DIR}/quaternion.cpp)
