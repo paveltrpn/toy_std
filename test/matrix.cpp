@@ -1,5 +1,5 @@
 
-#include "../src/matrix.h"
+import toy_stl;
 
 #include <boost/test/unit_test.hpp>
 
@@ -10,7 +10,7 @@ void testDeclarations() {
     toy::math::matrix<float, 0, 0> mtrx0x0{};
     toy::math::matrix<float, 5, 0> mtrx5x0{};
     toy::math::matrix<float, 0, 5> mtrx0x5{};
-    toy::math::matrix<int*, 6, 5> mtrx6x5{};
+    toy::math::matrix<int *, 6, 5> mtrx6x5{};
 }
 #endif
 
