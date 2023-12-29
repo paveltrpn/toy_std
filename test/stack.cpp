@@ -1,5 +1,6 @@
 
-#include "../src/stack.h"
+import toy_stl;
+
 #include "../src/vector.h"
 #include "../src/raw_vector.h"
 

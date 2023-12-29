@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.28)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_SCAN_FOR_MODULES)
 
 project (toy_containers)
 
@@ -9,7 +12,6 @@ add_compile_options(-g
                     -Wall 
                     -Wextra 
                     -Wpedantic 
-                    -std=c++20 
                     -stdlib=libc++ 
                     -Wno-unused-parameter)
 
@@ -48,6 +50,14 @@ set(TST_DIR "test")
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+add_library(toy_stl)
+# Add the module file to the library
+target_sources(toy_stl
+  PUBLIC
+    FILE_SET CXX_MODULES FILES
+    ${SRC_DIR}/stack.cpp
+)
+
 enable_testing()
 set(Boost_INCLUDE_DIR "${WORK_DIR}/extern_libs/boost_1_83_0")
 set(Boost_LIBRARY_DIR "${WORK_DIR}/extern_libs/boost_1_83_0/stage/lib")
@@ -65,6 +75,8 @@ add_executable(test_unit
     ${TST_DIR}/quaternion.cpp)
 
 target_link_libraries(test_unit ${Boost_LIBRARIES})
+target_link_libraries(test_unit toy_stl)
+
 # target_compile_definitions(test_unit PUBLIC BOOST_TEST_DYN_LINK)
 
 add_test(array test_unit)
