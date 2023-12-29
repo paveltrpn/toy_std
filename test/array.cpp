@@ -1,6 +1,10 @@
 
 import toy_stl;
 
+#define BOOST_TEST_DYN_LINK
+
+#define BOOST_TEST_MODULE test_unit
+
 #include <boost/test/unit_test.hpp>
 
 // #define BROKEN_EXCLUDE
