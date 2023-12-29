@@ -74,6 +74,7 @@ find_package(Boost 1.80.0 COMPONENTS filesystem system unit_test_framework REQUI
 include_directories (${Boost_INCLUDE_DIRS})
 
 add_executable(test_unit
+    ${TST_DIR}/test.cpp
     ${TST_DIR}/array.cpp
     ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
