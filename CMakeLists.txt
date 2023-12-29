@@ -58,6 +58,7 @@ target_sources(toy_stl
     ${SRC_DIR}/list.cpp
     ${SRC_DIR}/stack.cpp
     ${SRC_DIR}/vector.cpp
+    ${SRC_DIR}/raw_vector.cpp
     ${SRC_DIR}/matrix.cpp
     ${SRC_DIR}/quaternion.cpp
     ${SRC_DIR}/mvector.cpp

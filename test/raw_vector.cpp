@@ -1,5 +1,6 @@
 
-#include "../src/raw_vector.h"
+import toy_stl;
+
 #include <string>
 #include <boost/test/unit_test.hpp>
 
