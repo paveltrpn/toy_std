@@ -7,3 +7,5 @@ export import :list;
 export import :vector;
 export import :stack;
 export import :matrix;
+export import :quaternion;
+export import :mvector;
