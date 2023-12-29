@@ -1,11 +1,11 @@
 
 module;
 
-#include "concepts.h"
 #include "array.h"
 
 export module toy_stl:quaternion;
 
+import :concepts;
 import :mvector;
 
 export {

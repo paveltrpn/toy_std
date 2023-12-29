@@ -7,11 +7,12 @@ module;
 #include <memory>
 #include <initializer_list>
 
-#include "concepts.h"
-
 #define DEBUG
 
+
 export module toy_stl:vector;
+
+import :concepts;
 
 export {
     namespace toy {
