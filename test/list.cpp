@@ -1,6 +1,6 @@
 
+import toy_stl;
 
-#include "../src/list.h"
 #include <boost/test/unit_test.hpp>
 
 // #define BROKEN_EXCLUDE

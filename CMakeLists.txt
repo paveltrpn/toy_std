@@ -55,6 +55,7 @@ add_library(toy_stl)
 target_sources(toy_stl
   PUBLIC
     FILE_SET CXX_MODULES FILES
+    ${SRC_DIR}/list.cpp
     ${SRC_DIR}/stack.cpp
     ${SRC_DIR}/vector.cpp
     ${SRC_DIR}/toy_stl.cpp
