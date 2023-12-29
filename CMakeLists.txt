@@ -64,7 +64,6 @@ target_sources(toy_stl
     ${SRC_DIR}/quaternion.cpp
     ${SRC_DIR}/mvector.cpp
     ${SRC_DIR}/toy_stl.cpp
-
 )
 
 enable_testing()
