@@ -4,6 +4,7 @@ module;
 export module toy_stl;
 
 export import :concepts;
+export import :array;
 export import :list;
 export import :vector;
 export import :raw_vector;

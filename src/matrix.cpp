@@ -1,11 +1,13 @@
 
 module;
 
-#include "array.h"
+#include <cstddef>
+#include <algorithm>
 
 export module toy_stl:matrix;
 
 import :concepts;
+import :array;
 
 export {
     namespace toy::math {

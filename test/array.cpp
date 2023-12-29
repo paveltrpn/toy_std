@@ -1,5 +1,5 @@
 
-#include "../src/array.h"
+import toy_stl;
 
 #include <boost/test/unit_test.hpp>
 

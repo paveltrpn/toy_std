@@ -1,11 +1,12 @@
 
 module;
 
-#include "array.h"
+#include <cstddef>
 
 export module toy_stl:mvector;
 
 import :concepts;
+import :array;
 
 export {
     namespace toy::math {

@@ -9,7 +9,6 @@ module;
 
 #define DEBUG
 
-
 export module toy_stl:vector;
 
 import :concepts;

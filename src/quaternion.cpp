@@ -1,12 +1,13 @@
 
 module;
 
-#include "array.h"
+#include <cstddef>
 
 export module toy_stl:quaternion;
 
 import :concepts;
 import :mvector;
+import :array;
 
 export {
     namespace toy::math {

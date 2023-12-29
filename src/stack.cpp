@@ -3,11 +3,10 @@ module;
 
 #include <type_traits>
 
-#include "array.h"
-
 export module toy_stl:stack;
 
 import :vector;
+import :array;
 
 export {
     namespace toy {
