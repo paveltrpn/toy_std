@@ -1,12 +1,14 @@
 
 module;
+
 #include <iostream>
 #include <type_traits>
 
 #include "array.h"
-#include "vector.h"
 
-export module toy_stl;
+export module toy_stl:stack;
+
+import :vector;
 
 export {
     namespace toy {
