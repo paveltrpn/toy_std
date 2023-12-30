@@ -3,10 +3,10 @@ module;
 
 #include <cstddef>
 
-export module toy_stl:mvector;
+export module toy_stl.mvector;
 
-import :concepts;
-import :array;
+import toy_stl.concepts;
+import toy_stl.array;
 
 export {
     namespace toy::math {

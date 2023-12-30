@@ -1,5 +1,5 @@
 
-import toy_stl;
+import toy_stl.mvector;
 
 #include <boost/test/unit_test.hpp>
 

@@ -9,9 +9,9 @@ module;
 
 #define DEBUG
 
-export module toy_stl:vector;
+export module toy_stl.vector;
 
-import :concepts;
+import toy_stl.concepts;
 
 export {
     namespace toy {

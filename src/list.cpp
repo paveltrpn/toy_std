@@ -1,6 +1,6 @@
 module;
 
-export module toy_stl:list;
+export module toy_stl.list;
 
 export {
     namespace toy {

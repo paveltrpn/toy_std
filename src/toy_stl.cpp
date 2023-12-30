@@ -3,12 +3,12 @@ module;
 
 export module toy_stl;
 
-export import :concepts;
-export import :array;
-export import :list;
-export import :vector;
-export import :raw_vector;
-export import :stack;
-export import :matrix;
-export import :quaternion;
-export import :mvector;
+export import toy_stl.concepts;
+export import toy_stl.array;
+export import toy_stl.list;
+export import toy_stl.vector;
+export import toy_stl.raw_vector;
+export import toy_stl.stack;
+export import toy_stl.matrix;
+export import toy_stl.quaternion;
+export import toy_stl.mvector;

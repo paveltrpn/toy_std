@@ -4,7 +4,7 @@ module;
 #include <stdexcept>
 #include <algorithm>
 
-export module toy_stl:array;
+export module toy_stl.array;
 
 export {
     namespace toy {

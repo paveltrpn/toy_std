@@ -9,7 +9,7 @@ module;
 
 #define DEBUG
 
-export module toy_stl:raw_vector;
+export module toy_stl.raw_vector;
 
 export {
     namespace toy {

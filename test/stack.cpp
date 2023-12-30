@@ -1,5 +1,6 @@
 
-import toy_stl;
+import toy_stl.stack;
+import toy_stl.vector;
 
 #include <boost/test/unit_test.hpp>
 
