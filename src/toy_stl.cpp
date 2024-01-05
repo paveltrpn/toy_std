@@ -1,14 +1,14 @@
 
 module;
 
-export module toy_stl;
+export module toy_std;
 
-export import toy_stl.concepts;
-export import toy_stl.array;
-export import toy_stl.list;
-export import toy_stl.vector;
-export import toy_stl.raw_vector;
-export import toy_stl.stack;
-export import toy_stl.matrix;
-export import toy_stl.quaternion;
-export import toy_stl.mvector;
+export import toy_std.concepts;
+export import toy_std.array;
+export import toy_std.raw_list;
+export import toy_std.vector;
+export import toy_std.raw_vector;
+export import toy_std.stack;
+export import toy_std.matrix;
+export import toy_std.quaternion;
+export import toy_std.mvector;

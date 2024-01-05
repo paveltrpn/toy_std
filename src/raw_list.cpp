@@ -3,7 +3,7 @@ module;
 
 #include <memory>
 
-export module toy_stl.list;
+export module toy_std.raw_list;
 
 namespace toy {
 
@@ -118,7 +118,7 @@ struct list_iterator {
 
         list_iterator() = default;
 
-        explicit list_iterator(list_node_base* ptr): node_ptr_{ptr} {};
+        explicit list_iterator(list_node_base* ptr) : node_ptr_{ ptr } {};
 
         reference operator*() {
             return *static_cast<node_type*>(node_ptr_)->valptr();
@@ -166,7 +166,7 @@ struct list_iterator {
 };
 
 export template <typename T>
-struct list {
+struct raw_list {
         using iterator = list_iterator<T>;
         using value_type = T;
         using reference = T&;
@@ -174,13 +174,13 @@ struct list {
 
         using node_type = list_node<T>;
 
-        list() = default;
+        raw_list() = default;
 
-        list(const list& rhs) = delete;
-        list(list&& rhs) = delete;
+        raw_list(const raw_list& rhs) = delete;
+        raw_list(raw_list&& rhs) = delete;
 
-        list& operator=(const list& rhs) = delete;
-        list& operator=(list&& rhs) = delete;
+        raw_list& operator=(const raw_list& rhs) = delete;
+        raw_list& operator=(raw_list&& rhs) = delete;
 
         iterator begin() {
             return iterator{ head_.next_ };
@@ -200,7 +200,7 @@ struct list {
             size_--;
             position.node_ptr_->unhook();
             auto* n = static_cast<node_type*>(position.node_ptr_);
-            //delete n->valptr();
+            // delete n->valptr();
             delete n;
         }
 
@@ -230,8 +230,7 @@ struct list {
             erase(begin());
         }
 
-        [[nodiscard]]
-        size_t size() const noexcept {
+        [[nodiscard]] size_t size() const noexcept {
             return size_;
         }
 

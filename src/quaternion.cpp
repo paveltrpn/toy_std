@@ -3,11 +3,11 @@ module;
 
 #include <cstddef>
 
-export module toy_stl.quaternion;
+export module toy_std.quaternion;
 
-import toy_stl.concepts;
-import toy_stl.mvector;
-import toy_stl.array;
+import toy_std.concepts;
+import toy_std.mvector;
+import toy_std.array;
 
 export {
     namespace toy::math {

@@ -3,10 +3,10 @@ module;
 
 #include <type_traits>
 
-export module toy_stl.stack;
+export module toy_std.stack;
 
-import toy_stl.vector;
-import toy_stl.array;
+import toy_std.vector;
+import toy_std.array;
 
 export {
     namespace toy {

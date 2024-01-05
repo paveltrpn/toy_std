@@ -4,10 +4,10 @@ module;
 #include <cstddef>
 #include <algorithm>
 
-export module toy_stl.matrix;
+export module toy_std.matrix;
 
-import toy_stl.concepts;
-import toy_stl.array;
+import toy_std.concepts;
+import toy_std.array;
 
 export {
     namespace toy::math {

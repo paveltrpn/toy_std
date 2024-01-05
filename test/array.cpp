@@ -1,5 +1,5 @@
 
-import toy_stl.array;
+import toy_std.array;
 
 #define BOOST_TEST_DYN_LINK
 

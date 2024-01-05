@@ -1,5 +1,5 @@
 
-import toy_stl.list;
+import toy_std.raw_list;
 
 #include <boost/test/unit_test.hpp>
 
@@ -10,10 +10,10 @@ void testDeclarations() {
 }
 #endif
 
-BOOST_AUTO_TEST_SUITE(list)
+BOOST_AUTO_TEST_SUITE(raw_list)
 
 BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
-    toy::list<std::string> first{};
+    toy::raw_list<std::string> first{};
 
     first.push_back("lisa");
     BOOST_CHECK_EQUAL(first.back(), "lisa");
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
 }
 
 BOOST_AUTO_TEST_CASE(case_range_for) {
-    toy::list<std::string> first;
+    toy::raw_list<std::string> first;
     std::vector<std::string> tst{ "lisa", "bob", "woody", "martin" };
 
     for (auto &elem : tst) {
@@ -88,4 +88,4 @@ BOOST_AUTO_TEST_CASE(case_range_for) {
     }
 }
 
-BOOST_AUTO_TEST_SUITE_END()  // list:
+BOOST_AUTO_TEST_SUITE_END()  // raw_list:

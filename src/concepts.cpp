@@ -4,7 +4,7 @@ module;
 #include <type_traits>
 #include <string>
 
-export module toy_stl.concepts;
+export module toy_std.concepts;
 
 export {
     namespace toy {

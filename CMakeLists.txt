@@ -57,7 +57,7 @@ target_sources(toy_stl
     FILE_SET CXX_MODULES FILES
     ${SRC_DIR}/concepts.cpp
     ${SRC_DIR}/array.cpp
-    ${SRC_DIR}/list.cpp
+    ${SRC_DIR}/raw_list.cpp
     ${SRC_DIR}/stack.cpp
     ${SRC_DIR}/vector.cpp
     ${SRC_DIR}/raw_vector.cpp
@@ -78,7 +78,7 @@ add_executable(test_unit
     ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
-    ${TST_DIR}/list.cpp
+    ${TST_DIR}/raw_list.cpp
     ${TST_DIR}/matrix.cpp
     ${TST_DIR}/mvector.cpp
     ${TST_DIR}/quaternion.cpp)
