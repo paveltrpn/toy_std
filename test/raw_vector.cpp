@@ -1,5 +1,5 @@
 
-import toy_std;
+import toy_std.raw_vector;
 
 #include <string>
 #include <boost/test/unit_test.hpp>
@@ -30,11 +30,11 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
 
     auto foo = first.pop_back();
     BOOST_CHECK_EQUAL(foo, "thirty");
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(2));
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(2));
 
     first.push_back("thirty");
     BOOST_CHECK_EQUAL(first[2], "thirty");
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_construct_init_list_pop) {
@@ -42,8 +42,8 @@ BOOST_AUTO_TEST_CASE(case_construct_init_list_pop) {
     BOOST_CHECK_EQUAL(initLst[0], "first");
     BOOST_CHECK_EQUAL(initLst[1], "second");
     BOOST_CHECK_EQUAL(initLst[2], "third");
-    BOOST_CHECK_EQUAL(initLst.getSize(), static_cast<size_t>(3));
-    BOOST_CHECK_EQUAL(initLst.getCap(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.size(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.capacity(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_create) {
@@ -69,10 +69,10 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
     BOOST_CHECK_EQUAL(second[0], 10);
     BOOST_CHECK_EQUAL(second[1], 30);
 
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getCap(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getPtr(), nullptr);
-    BOOST_CHECK_NE(second.getPtr(), nullptr);
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.data(), nullptr);
+    BOOST_CHECK_NE(second.data(), nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
@@ -102,10 +102,10 @@ BOOST_AUTO_TEST_CASE(case_move_assign) {
     BOOST_CHECK_EQUAL(second[0], 10);
     BOOST_CHECK_EQUAL(second[1], 30);
 
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getCap(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getPtr(), nullptr);
-    BOOST_CHECK_NE(second.getPtr(), nullptr);
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.data(), nullptr);
+    BOOST_CHECK_NE(second.data(), nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(case_at) {

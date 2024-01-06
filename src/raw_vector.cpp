@@ -11,9 +11,11 @@ module;
 
 export module toy_std.raw_vector;
 
+import toy_std.iterator_traits;
+
 namespace toy {
 
-template <typename T, typename = void>
+export template <typename T, typename = void>
 class raw_vector {
         raw_vector() = default;
         raw_vector(raw_vector& other) = default;
@@ -25,10 +27,25 @@ class raw_vector {
 
 template <typename T>
 struct vector_iterator {
+        using self = vector_iterator<T>;
+
+        using value_type = T;
+        using reference = T&;
+        using pointer = T*;
+        using difference_type = std::ptrdiff_t;
+        using iterator_tag = toy::contiguous_iterator_tag;
 };
 
 template <typename T>
-struct const_vector_iterator {
+struct vector_const_iterator {
+        using self = vector_const_iterator<T>;
+        using iterator = vector_iterator<T>;
+
+        using value_type = T;
+        using reference = const T&;
+        using pointer = const T*;
+        using difference_type = std::ptrdiff_t;
+        using iterator_tag = toy::contiguous_iterator_tag;
 };
 
 export template <typename T>
@@ -38,6 +55,8 @@ struct raw_vector<
   typename std::enable_if<std::is_same<T, float>::value || std::is_same<T, int>::value
                           || std::is_base_of<T, std::string>::value>::type> {
         using value_type = T;
+        using iterator = vector_iterator<T>;
+        using const_terator = vector_const_iterator<T>;
 
         /*
          * constructor with user-defined capacity
@@ -184,19 +203,16 @@ struct raw_vector<
                 throw std::invalid_argument{ "vector bounds violition" };
             }
         }
-        /*
-         * Test purpose members
-         */
 
-        [[nodiscard]] constexpr size_t getSize() const {
+        [[nodiscard]] constexpr size_t size() const {
             return size_;
         };
 
-        [[nodiscard]] constexpr size_t getCap() const {
+        [[nodiscard]] constexpr size_t capacity() const {
             return capacity_;
         };
 
-        T* getPtr() const {
+        [[nodiscard]] T* data() const {
             return data_;
         }
 

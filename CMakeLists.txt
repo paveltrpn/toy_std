@@ -66,6 +66,7 @@ target_sources(toy_stl
     ${SRC_DIR}/mvector.cpp
     ${SRC_DIR}/iterator_traits.cpp
     ${SRC_DIR}/toy_stl.cpp
+    ${SRC_DIR}/algorithm.cpp
 )
 
 enable_testing()

@@ -13,3 +13,4 @@ export import toy_std.matrix;
 export import toy_std.quaternion;
 export import toy_std.mvector;
 export import toy_std.iterator_traits;
+export import toy_std.algorithm;
