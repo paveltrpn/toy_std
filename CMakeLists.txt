@@ -64,6 +64,7 @@ target_sources(toy_stl
     ${SRC_DIR}/matrix.cpp
     ${SRC_DIR}/quaternion.cpp
     ${SRC_DIR}/mvector.cpp
+    ${SRC_DIR}/iterator_traits.cpp
     ${SRC_DIR}/toy_stl.cpp
 )
 

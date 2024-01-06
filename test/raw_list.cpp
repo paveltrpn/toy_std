@@ -88,4 +88,14 @@ BOOST_AUTO_TEST_CASE(case_range_for) {
     }
 }
 
+BOOST_AUTO_TEST_CASE(case_initializer_list_ctor) {
+    toy::raw_list<std::string> first{"lisa", "bob", "woody", "martin"};
+    std::vector<std::string> tst{ "lisa", "bob", "woody", "martin" };
+
+    for (size_t i = 0; auto &elem : first) {
+        BOOST_CHECK_EQUAL(elem, tst[i]);
+        ++i;
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()  // raw_list:

@@ -5,6 +5,8 @@ module;
 
 export module toy_std.raw_list;
 
+import toy_std.iterator_traits;
+
 namespace toy {
 
 struct list_node_base {
@@ -84,6 +86,16 @@ struct list_node_header : public list_node_base {
         void init() noexcept {
             this->next_ = this->prev_ = this;
         }
+
+        void size_inc(size_t value) {
+            size_ += value;
+        }
+
+        void size_dec(size_t value) {
+            size_ -= value;
+        }
+
+        size_t size_{};
 };
 
 template <typename T>
@@ -114,17 +126,17 @@ struct list_iterator {
         using reference = T&;
         using pointer = T*;
         using difference_type = std::ptrdiff_t;
-        using iterator_category = std::bidirectional_iterator_tag;
+        using iterator_category = toy::bidirectional_iterator_tag;
 
         list_iterator() = default;
 
         explicit list_iterator(list_node_base* ptr) : node_ptr_{ ptr } {};
 
-        reference operator*() {
+        reference operator*() const {
             return *static_cast<node_type*>(node_ptr_)->valptr();
         };
 
-        pointer operator->() {
+        pointer operator->() const {
             return std::addressof(static_cast<node_type*>(node_ptr_)->valptr());
         }
 
@@ -165,9 +177,74 @@ struct list_iterator {
         list_node_base* node_ptr_{};
 };
 
+template <typename T>
+struct list_const_iterator {
+        using self = list_const_iterator<T>;
+        using node_type = const list_node<T>;
+        using iterator = list_iterator<T>;
+
+        using value_type = T;
+        using reference = const T&;
+        using pointer = const T*;
+        using difference_type = std::ptrdiff_t;
+        using iterator_category = toy::bidirectional_iterator_tag;
+
+        list_const_iterator() = default;
+
+        explicit list_const_iterator(list_node_base* ptr) : node_ptr_{ ptr } {};
+
+        explicit list_const_iterator(const iterator& x) : node_ptr_{ x.node_ptr_ } {};
+
+        reference operator*() const {
+            return *static_cast<node_type*>(node_ptr_)->valptr();
+        };
+
+        pointer operator->() const {
+            return std::addressof(static_cast<node_type*>(node_ptr_)->valptr());
+        }
+
+        // pre-increment
+        self& operator++() {
+            node_ptr_ = node_ptr_->next_;
+            return *this;
+        }
+
+        // post-increment
+        self operator++(int) {
+            auto tmp{ *this };
+            ++(*this);
+            return tmp;
+        }
+
+        // pre-decrement
+        self& operator--() {
+            node_ptr_ = node_ptr_->prev_;
+            return *this;
+        }
+
+        // post-decrement
+        self operator--(int) {
+            auto tmp{ *this };
+            --(*this);
+            return tmp;
+        }
+
+        friend bool operator==(const self& a, const self& b) {
+            return a.node_ptr_ == b.node_ptr_;
+        };
+
+        friend bool operator!=(const self& a, const self& b) {
+            return !(a == b);
+        };
+
+        const list_node_base* node_ptr_{};
+};
+
 export template <typename T>
 struct raw_list {
         using iterator = list_iterator<T>;
+        using const_iterator = list_const_iterator<T>;
+
         using value_type = T;
         using reference = T&;
         using const_reference = const T&;
@@ -176,39 +253,68 @@ struct raw_list {
 
         raw_list() = default;
 
+        raw_list(std::initializer_list<value_type> rhs) {
+            for (auto&& elem : rhs) {
+                push_back(elem);
+            }
+        }
+
         raw_list(const raw_list& rhs) = delete;
         raw_list(raw_list&& rhs) = delete;
 
         raw_list& operator=(const raw_list& rhs) = delete;
         raw_list& operator=(raw_list&& rhs) = delete;
 
-        iterator begin() {
+        // OMG!!!
+        ~raw_list() {
+            clear();
+        }
+
+        [[nodiscard]] iterator begin() {
             return iterator{ head_.next_ };
         }
 
-        iterator end() {
+        [[nodiscard]] iterator end() {
             return iterator{ &head_ };
+        }
+
+        [[nodiscard]] iterator cbegin() {
+            return const_iterator{ head_.next_ };
+        }
+
+        [[nodiscard]] iterator cend() {
+            return const_iterator{ &head_ };
         }
 
         void insert(iterator position, const value_type& rhs) {
             auto* next = new node_type{ rhs };
             next->hook(position.node_ptr_);
-            size_++;
+            head_.size_inc(1);
         }
 
         void erase(iterator position) {
-            size_--;
+            head_.size_dec(1);
             position.node_ptr_->unhook();
             auto* n = static_cast<node_type*>(position.node_ptr_);
             // delete n->valptr();
             delete n;
         }
 
-        reference front() {
+        [[nodiscard]] reference front() {
             return *begin();
         }
 
-        reference back() {
+        [[nodiscard]] reference back() {
+            iterator tmp = end();
+            --tmp;
+            return *tmp;
+        }
+
+        [[nodiscard]] const_reference front() const {
+            return *begin();
+        }
+
+        [[nodiscard]] const_reference back() const {
             iterator tmp = end();
             --tmp;
             return *tmp;
@@ -230,12 +336,24 @@ struct raw_list {
             erase(begin());
         }
 
+        [[nodiscard]] bool empty() const noexcept {
+            return (head_.next_ == &head_);
+        }
+
         [[nodiscard]] size_t size() const noexcept {
-            return size_;
+            return head_.size_;
         }
 
     private:
-        size_t size_{ 0 };
+        void clear() {
+            list_node_base* cur = this->head_.next_;
+            while (cur != &this->head_) {
+                auto* tmp = static_cast<node_type*>(cur);
+                cur = tmp->next_;
+                // std::_Destroy(&__tmp->_M_data);
+                delete tmp;
+            }
+        }
 
         list_node_header head_;
 };
