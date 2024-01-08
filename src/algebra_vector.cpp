@@ -3,13 +3,13 @@ module;
 
 #include <cstddef>
 
-export module toy_std.mvector;
+export module toy_std.algebra:vector;
 
 import toy_std.concepts;
 import toy_std.array;
 
 export {
-    namespace toy::math {
+    namespace toy::algebra {
 
     template <toy::Arithmetical T, size_t size>
     struct vector;

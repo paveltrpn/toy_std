@@ -4,13 +4,13 @@ module;
 #include <cstddef>
 #include <algorithm>
 
-export module toy_std.matrix;
+export module toy_std.algebra:matrix;
 
 import toy_std.concepts;
 import toy_std.array;
 
 export {
-    namespace toy::math {
+    namespace toy::algebra {
 
     template <toy::Arithmetical T, size_t rows, size_t columnes>
         requires(rows > 0 && columnes > 0)

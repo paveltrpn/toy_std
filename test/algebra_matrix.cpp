@@ -1,5 +1,5 @@
 
-import toy_std;
+import toy_std.algebra;
 
 #include <boost/test/unit_test.hpp>
 

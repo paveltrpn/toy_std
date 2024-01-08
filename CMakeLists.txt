@@ -61,11 +61,12 @@ target_sources(toy_stl
     ${SRC_DIR}/stack.cpp
     ${SRC_DIR}/vector.cpp
     ${SRC_DIR}/raw_vector.cpp
-    ${SRC_DIR}/matrix.cpp
-    ${SRC_DIR}/quaternion.cpp
-    ${SRC_DIR}/mvector.cpp
+    ${SRC_DIR}/algebra.cpp
+    ${SRC_DIR}/algebra_matrix.cpp
+    ${SRC_DIR}/algebra_quaternion.cpp
+    ${SRC_DIR}/algebra_vector.cpp
     ${SRC_DIR}/iterator_traits.cpp
-    ${SRC_DIR}/toy_stl.cpp
+    ${SRC_DIR}/toy_std.cpp
     ${SRC_DIR}/algorithm.cpp
 )
 
@@ -81,9 +82,9 @@ add_executable(test_unit
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
     ${TST_DIR}/raw_list.cpp
-    ${TST_DIR}/matrix.cpp
-    ${TST_DIR}/mvector.cpp
-    ${TST_DIR}/quaternion.cpp)
+    ${TST_DIR}/algebra_matrix.cpp
+    ${TST_DIR}/algebra_vector.cpp
+    ${TST_DIR}/algebra_quaternion.cpp)
 
 target_link_libraries(test_unit ${Boost_LIBRARIES})
 target_link_libraries(test_unit toy_stl)

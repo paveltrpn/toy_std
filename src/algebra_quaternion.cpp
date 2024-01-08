@@ -3,14 +3,14 @@ module;
 
 #include <cstddef>
 
-export module toy_std.quaternion;
+export module toy_std.algebra:quaternion;
 
+import :vector;
 import toy_std.concepts;
-import toy_std.mvector;
 import toy_std.array;
 
 export {
-    namespace toy::math {
+    namespace toy::algebra {
 
     template <toy::Arithmetical T>
     struct quaternion {
@@ -35,20 +35,20 @@ export {
                 data_[3] = w;
             }
 
-            quaternion(const toy::math::vector2<T>& rhs) {
+            quaternion(const toy::algebra::vector2<T>& rhs) {
                 data_[0] = rhs.data_[0];
                 data_[1] = rhs.data_[1];
                 data_[2] = data_[3] = T{};
             }
 
-            quaternion(const toy::math::vector3<T>& rhs) {
+            quaternion(const toy::algebra::vector3<T>& rhs) {
                 data_[0] = rhs.data_[0];
                 data_[1] = rhs.data_[1];
                 data_[2] = rhs.data_[2];
                 data_[3] = T{};
             }
 
-            explicit quaternion(const toy::math::vector4<T>& rhs) {
+            explicit quaternion(const toy::algebra::vector4<T>& rhs) {
                 data_[0] = rhs.data_[0];
                 data_[1] = rhs.data_[1];
                 data_[2] = rhs.data_[2];
@@ -126,5 +126,5 @@ export {
             toy::array<T, 4> data_{};
     };
 
-    }  // namespace toy::math
+    }  // namespace toy::algebra
 }

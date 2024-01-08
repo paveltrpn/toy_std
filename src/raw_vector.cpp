@@ -55,6 +55,9 @@ struct raw_vector<
   typename std::enable_if<std::is_same<T, float>::value || std::is_same<T, int>::value
                           || std::is_base_of<T, std::string>::value>::type> {
         using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+
         using iterator = vector_iterator<T>;
         using const_terator = vector_const_iterator<T>;
 
@@ -180,11 +183,11 @@ struct raw_vector<
             return elem;
         }
 
-        T& operator[](size_t id) {
+        T& operator[](size_t id) noexcept {
             return data_[id];
         }
 
-        const T& operator[](size_t id) const {
+        const T& operator[](size_t id) const noexcept {
             return data_[id];
         }
 
