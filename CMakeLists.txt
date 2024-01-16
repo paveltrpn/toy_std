@@ -70,6 +70,8 @@ target_sources(toy_stl
     ${SRC_DIR}/algorithm.cpp
 )
 
+set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${WORK_DIR}/extern_libs/boost_1_83_0/stage/lib)
+
 enable_testing()
 set(Boost_INCLUDE_DIR "${WORK_DIR}/extern_libs/boost_1_83_0")
 set(Boost_LIBRARY_DIR "${WORK_DIR}/extern_libs/boost_1_83_0/stage/lib")
