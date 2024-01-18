@@ -77,5 +77,9 @@ export {
     template <typename T>
     using matrix4 = matrix<T, 4, 4>;
 
-    }  // namespace toy::math
+    using matrix2f = matrix<float, 2, 2>;
+    using matrix3f = matrix<float, 3, 3>;
+    using matrix4f = matrix<float, 4, 4>;
+
+    }  // namespace toy::algebra
 }
