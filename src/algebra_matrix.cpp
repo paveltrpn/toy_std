@@ -43,45 +43,22 @@ export {
             toy::array<T, rows * columnes> data_;
     };
 
-    template <toy::Arithmetical T>
-    struct matrix<T, 2, 2> {
-            matrix() = default;
-
-            ~matrix() = default;
-
-        private:
-            static constexpr size_t size_ = 2;
-
-            toy::array<T, size_> data_;
-    };
-
-    template <toy::Arithmetical T>
-    struct matrix<T, 3, 3> {
-            matrix() = default;
-
-            ~matrix() = default;
-
-        private:
-            static constexpr size_t size_ = 3;
-
-            toy::array<T, size_> data_;
-    };
-
-    template <toy::Arithmetical T>
-    struct matrix<T, 4, 4> {
-            using self = matrix<T, 4, 4>;
+    template <toy::Arithmetical T, size_t size_>
+        requires(size_ > 0)
+    struct matrix_sqr {
+            using self = matrix_sqr<T, size_>;
             using value_type = T;
             using reference = T&;
             using pointer = T*;
 
-            matrix() = default;
-            matrix(const self& rhs) = default;
-            matrix(self&& rhs) = default;
+            matrix_sqr() = default;
+            matrix_sqr(const self& rhs) = default;
+            matrix_sqr(self&& rhs) = default;
 
             self& operator=(const self& rhs) = default;
             self& operator=(self&& rhs) = default;
 
-            ~matrix() = default;
+            ~matrix_sqr() = default;
 
             // row-wise indexing operator
             reference operator[](size_t i, size_t j) {
@@ -117,23 +94,21 @@ export {
             }
 
         private:
-            static constexpr size_t size_ = 4;
-
             toy::array<T, size_ * size_> data_;
     };
 
     template <typename T>
-    using matrix2 = matrix<T, 2, 2>;
+    using matrix2 = matrix_sqr<T, 2>;
 
     template <typename T>
-    using matrix3 = matrix<T, 3, 3>;
+    using matrix3 = matrix_sqr<T, 3>;
 
     template <typename T>
-    using matrix4 = matrix<T, 4, 4>;
+    using matrix4 = matrix_sqr<T, 4>;
 
-    using matrix2f = matrix<float, 2, 2>;
-    using matrix3f = matrix<float, 3, 3>;
-    using matrix4f = matrix<float, 4, 4>;
+    using matrix2f = matrix2<float>;
+    using matrix3f = matrix3<float>;
+    using matrix4f = matrix4<float>;
 
     }  // namespace toy::algebra
 }

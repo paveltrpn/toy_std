@@ -8,10 +8,10 @@ import toy_std.array;
 
 #ifdef BROKEN_EXCLUDE
 void testDeclarations() {
-    toy::math::matrix<float, 0, 0> mtrx0x0{};
-    toy::math::matrix<float, 5, 0> mtrx5x0{};
-    toy::math::matrix<float, 0, 5> mtrx0x5{};
-    toy::math::matrix<int *, 6, 5> mtrx6x5{};
+    toy::algebra::matrix<float, 0, 0> mtrx0x0{};
+    toy::algebra::matrix<float, 5, 0> mtrx5x0{};
+    toy::algebra::matrix<float, 0, 5> mtrx0x5{};
+    toy::algebra::matrix<int *, 6, 5> mtrx6x5{};
 }
 #endif
 
