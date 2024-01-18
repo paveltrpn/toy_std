@@ -62,13 +62,29 @@ export {
 
             vector() = default;
 
+            vector(const self& rhs) : data_{ rhs.data_ } {
+            }
+
+            vector(self&& rhs) = delete;
+
             vector(value_type x, value_type y, value_type z) {
                 data_[0] = x;
                 data_[1] = y;
                 data_[2] = z;
             }
 
+            self& operator=(const self& rhs) = default;
+            self& operator=(self&& rhs) = delete;
+
             ~vector() = default;
+
+            value_type& operator[](size_t id) {
+                return data_[id];
+            }
+
+            const value_type& operator[](size_t id) const {
+                return data_[id];
+            }
 
             [[nodiscard]] value_type x() const {
                 return data_[0];
@@ -81,7 +97,7 @@ export {
             [[nodiscard]] value_type z() const {
                 return data_[2];
             }
-            
+
             void sum(self b) {
                 data_[0] += b.data_[0];
                 data_[1] += b.data_[1];
@@ -97,7 +113,17 @@ export {
             value_type dot(self b) {
                 return data_[0] * b.data_[0] + data_[1] * b.data_[1] + data_[2] * b.data_[2];
             }
-            
+
+            self cross(self b) {
+                return { data_[1] * b[2] - data_[2] * b[1],
+                         data_[2] * b[0] - data_[0] * b[2],
+                         data_[0] * b[1] - data_[1] * b[0] };
+            }
+
+            void cross_self(self b) {
+                *this = cross(b);
+            }
+
             value_type length() {
                 return sqrt(dot(*this));
             }

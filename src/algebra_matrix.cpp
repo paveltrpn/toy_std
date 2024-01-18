@@ -3,11 +3,22 @@ module;
 
 #include <cstddef>
 #include <algorithm>
+#include <mdspan>
 
 export module toy_std.algebra:matrix;
 
 import toy_std.concepts;
 import toy_std.array;
+
+template <std::unsigned_integral T>
+constexpr size_t idRw(T i, size_t j, T n) {
+    return (i * n + j);
+};
+
+template <std::unsigned_integral T>
+constexpr size_t idCw(T i, T j, T n) {
+    return (j * n + i);
+};
 
 export {
     namespace toy::algebra {
@@ -17,7 +28,7 @@ export {
     struct matrix {
             matrix() = default;
 
-            matrix(const matrix &rhs) : rows_(rhs.rows_), columnes_(rhs.columnes_) {
+            matrix(const matrix& rhs) : rows_(rhs.rows_), columnes_(rhs.columnes_) {
                 for (size_t i = 0; i < rows_; ++i) {
                     std::copy(rhs.data_[i], rhs.data_[i] + columnes_, data_[i]);
                 }
@@ -39,7 +50,7 @@ export {
             ~matrix() = default;
 
         private:
-            static constexpr inline size_t size_ = 4;
+            static constexpr size_t size_ = 2;
 
             toy::array<T, size_> data_;
     };
@@ -51,21 +62,64 @@ export {
             ~matrix() = default;
 
         private:
-            static constexpr inline size_t size_ = 9;
+            static constexpr size_t size_ = 3;
 
             toy::array<T, size_> data_;
     };
 
     template <toy::Arithmetical T>
     struct matrix<T, 4, 4> {
+            using self = matrix<T, 4, 4>;
+            using value_type = T;
+            using reference = T&;
+            using pointer = T*;
+
             matrix() = default;
+            matrix(const self& rhs) = default;
+            matrix(self&& rhs) = default;
+
+            self& operator=(const self& rhs) = default;
+            self& operator=(self&& rhs) = default;
 
             ~matrix() = default;
 
-        private:
-            static constexpr inline size_t size_ = 16;
+            // row-wise indexing operator
+            reference operator[](size_t i, size_t j) {
+                auto span = std::mdspan(data_.data(), size_, size_);
+                return span[i, j];
+            }
 
-            toy::array<T, size_> data_;
+            void set_idtt() {
+                auto span = std::mdspan(data_.data(), size_, size_);
+                for (size_t i = 0; i < size_; i++) {
+                    for (size_t j = 0; j < size_; j++) {
+                        if (i == j) {
+                            span[i, j] = static_cast<value_type>(1);
+                        } else {
+                            span[i, j] = value_type{};
+                        }
+                    }
+                }
+            }
+
+            self mult(self b) {
+                self rt{ value_type{} };
+
+                for (size_t i = 0; i < size_; i++) {
+                    for (size_t j = 0; j < size_; j++) {
+                        for (size_t k = 0; k < size_; k++) {
+                            rt[i, j] += *this[k, j] * b[i, k];
+                        }
+                    }
+                }
+
+                return rt;
+            }
+
+        private:
+            static constexpr size_t size_ = 4;
+
+            toy::array<T, size_ * size_> data_;
     };
 
     template <typename T>

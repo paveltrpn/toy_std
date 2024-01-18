@@ -23,6 +23,8 @@ BOOST_AUTO_TEST_CASE(case_construct_and_arithmetic, *utf::tolerance(0.00001)) {
     BOOST_TEST(two.z() == 3.0f);
 
     BOOST_TEST(two.length() == sqrt(14.0f));
+
+    // auto cr = two.cross(one);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

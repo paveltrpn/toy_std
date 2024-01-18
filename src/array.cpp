@@ -12,6 +12,10 @@ export {
     template <typename T, size_t len>
         requires(len > 0)
     struct array {
+            using value_type = T;
+            using reference = T&;
+            using pointer = T*;
+
             array() = default;
 
             explicit array(const array& rhs) {
@@ -68,7 +72,7 @@ export {
             const T& operator[](size_t id) const {
                 return data_[id];
             }
-
+            
             T& at(size_t id) {
                 if (id < len) {
                     return data_[id];
@@ -84,17 +88,13 @@ export {
                     throw std::invalid_argument{ "array bounds violition" };
                 }
             }
-
-            /*
-             * Test purpose members
-             */
-
-            [[nodiscard]] T* getData() {
+            
+            [[nodiscard]] pointer data() {
                 return data_;
-            };
+            }
 
         private:
-            T data_[len]{};
+            value_type data_[len]{};
     };
 
     }  // namespace toy

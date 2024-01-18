@@ -119,7 +119,7 @@ export {
              */
 
             [[nodiscard]] T* getData() {
-                return data_.getData();
+                return data_.data();
             };
 
         private:
