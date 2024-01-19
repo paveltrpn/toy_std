@@ -91,7 +91,7 @@ struct matrix {
         }
 
         self mult(self b) {
-            __matrix_sqr_mult(*this, b);
+            return __matrix_sqr_mult(*this, b);
         }
 
     private:
@@ -130,7 +130,7 @@ struct matrix<T, __SZ2, __SZ2> {
         }
 
         self mult(self b) {
-            __matrix_sqr_mult(*this, b);
+            return __matrix_sqr_mult(*this, b);
         }
 
     private:
@@ -169,7 +169,7 @@ struct matrix<T, __SZ3, __SZ3> {
         }
 
         self mult(self b) {
-            __matrix_sqr_mult(*this, b);
+            return __matrix_sqr_mult(*this, b);
         }
 
     private:
@@ -235,5 +235,9 @@ using matrix4 = matrix<T, __SZ4, __SZ4>;
 export using matrix2f = matrix2<float>;
 export using matrix3f = matrix3<float>;
 export using matrix4f = matrix4<float>;
+
+export using matrix2d = matrix2<double>;
+export using matrix3d = matrix3<double>;
+export using matrix4d = matrix4<double>;
 
 }  // namespace toy::algebra
