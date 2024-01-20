@@ -11,6 +11,10 @@ import toy_std.array;
 
 namespace toy::algebra {
 
+constexpr static size_t __SZ2 = 2;
+constexpr static size_t __SZ3 = 3;
+constexpr static size_t __SZ4 = 4;
+
 template <toy::Arithmetical T, size_t pSize_>
 struct vector_base {
         using self = vector_base<T, pSize_>;
@@ -30,8 +34,8 @@ template <toy::Arithmetical T, size_t size>
 struct vector;
 
 template <toy::Arithmetical T>
-struct vector<T, 2> {
-        using self = vector<T, 2>;
+struct vector<T, __SZ2> {
+        using self = vector<T, __SZ2>;
         using value_type = T;
         using reference = T&;
         using pointer = T*;
@@ -73,12 +77,13 @@ struct vector<T, 2> {
         }
 
     private:
-        toy::array<T, 2> data_;
+        toy::array<T, __SZ2> data_;
 };
 
+// vector3
 template <toy::Arithmetical T>
-struct vector<T, 3> {
-        using self = vector<T, 3>;
+struct vector<T, __SZ3> {
+        using self = vector<T, __SZ3>;
         using value_type = T;
         using reference = T&;
         using pointer = T*;
@@ -149,12 +154,12 @@ struct vector<T, 3> {
         }
 
     private:
-        toy::array<T, 3> data_;
+        toy::array<T, __SZ3> data_;
 };
 
 template <toy::Arithmetical T>
-struct vector<T, 4> {
-        using self = vector<T, 4>;
+struct vector<T, __SZ4> {
+        using self = vector<T, __SZ4>;
         using value_type = T;
         using reference = T&;
         using pointer = T*;
@@ -211,20 +216,24 @@ struct vector<T, 4> {
         }
 
     private:
-        toy::array<T, 4> data_;
+        toy::array<T, __SZ4> data_;
 };
 
 template <typename T>
-using vector2 = vector<T, 2>;
+using vector2 = vector<T, __SZ2>;
 
 template <typename T>
-using vector3 = vector<T, 3>;
+using vector3 = vector<T, __SZ3>;
 
 template <typename T>
-using vector4 = vector<T, 4>;
+using vector4 = vector<T, __SZ4>;
 
-export using vector2f = vector<float, 2>;
-export using vector3f = vector<float, 3>;
-export using vector4f = vector<float, 4>;
+export using vector2f = vector2<float>;
+export using vector3f = vector3<float>;
+export using vector4f = vector4<float>;
+
+export using vector2d = vector2<double>;
+export using vector3d = vector3<double>;
+export using vector4d = vector4<double>;
 
 }  // namespace toy::algebra

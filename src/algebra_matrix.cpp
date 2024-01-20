@@ -54,9 +54,9 @@ auto __matrix_sqr_mult(const matrix<T, pSize_, pSize_>& a, const matrix<T, pSize
     return rt;
 }
 
-constexpr size_t __SZ2 = 2;
-constexpr size_t __SZ3 = 3;
-constexpr size_t __SZ4 = 4;
+constexpr static size_t __SZ2 = 2;
+constexpr static size_t __SZ3 = 3;
+constexpr static size_t __SZ4 = 4;
 
 template <toy::Arithmetical T, size_t pWidth_, size_t pHeight_>
     requires(pWidth_ > 0 && pHeight_ > 0)
