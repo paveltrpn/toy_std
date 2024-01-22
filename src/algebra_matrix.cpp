@@ -184,6 +184,7 @@ struct matrix<T, __SZ4, __SZ4> {
         using self = matrix<T, __SZ4, __SZ4>;
         using value_type = T;
         using reference = T&;
+        using const_reference = const T&;
         using pointer = T*;
 
         matrix() = default;
@@ -201,7 +202,11 @@ struct matrix<T, __SZ4, __SZ4> {
         friend auto __matrix_sqr_mult(const matrix<U, pSize_, pSize_>& a,
                                       const matrix<U, pSize_, pSize_>& b);
 
-        reference operator[](size_t id) const {
+        reference operator[](size_t id) {
+            return data_[id];
+        }
+
+        const_reference operator[](size_t id) const {
             return data_[id];
         }
 
@@ -210,7 +215,7 @@ struct matrix<T, __SZ4, __SZ4> {
             return std::mdspan(data_.data(), __SZ4, __SZ4)[i, j];
         }
 
-        const T& operator[](size_t i, size_t j) const {
+        const_reference operator[](size_t i, size_t j) const {
             return std::mdspan(data_.data(), __SZ4, __SZ4)[i, j];
         }
 
@@ -219,12 +224,12 @@ struct matrix<T, __SZ4, __SZ4> {
         }
 
         self mult(self b) {
-            __matrix_sqr_mult(*this, b);
+            return __matrix_sqr_mult(*this, b);
         }
     
         self operator*(self& rhs) {
             *this = mult(rhs);
-            return this;
+            return *this;
         }
 
         void set_perspective(value_type fovy, value_type aspect, value_type near, value_type far) {
@@ -256,7 +261,7 @@ struct matrix<T, __SZ4, __SZ4> {
             }
         }
 
-        void set_offset(const toy::algebra::vector4<value_type>& offset) {
+        void set_offset(const toy::algebra::vector3<value_type>& offset) {
             this->set_idtt();
 
             data_[0] = offset[0];

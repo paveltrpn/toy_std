@@ -13,8 +13,10 @@ export {
         requires(len > 0)
     struct array {
             using value_type = T;
-            using reference = T&;
-            using pointer = T*;
+            using reference = value_type&;
+            using const_reference = const value_type&;
+            using pointer = value_type*;
+            using const_pointer = const value_type*;
 
             array() = default;
 
@@ -65,11 +67,11 @@ export {
 
             ~array() = default;
 
-            T& operator[](size_t id) {
+            reference operator[](size_t id) {
                 return data_[id];
             }
 
-            const T& operator[](size_t id) const {
+            const_reference operator[](size_t id) const {
                 return data_[id];
             }
             
@@ -90,7 +92,11 @@ export {
             }
             
             [[nodiscard]] pointer data() {
-                return data_;
+                return static_cast<pointer>(data_);
+            }
+
+            [[nodiscard]] const_pointer data() const {
+                return static_cast<const_pointer>(data_);
             }
 
         private:
