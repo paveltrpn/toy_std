@@ -221,6 +221,11 @@ struct matrix<T, __SZ4, __SZ4> {
         self mult(self b) {
             __matrix_sqr_mult(*this, b);
         }
+    
+        self operator*(self& rhs) {
+            *this = mult(rhs);
+            return this;
+        }
 
         void set_perspective(value_type fovy, value_type aspect, value_type near, value_type far) {
             value_type f = 1.0 / tanf(fovy / std::numbers::sqrt2_v<float>);
@@ -319,7 +324,7 @@ struct matrix<T, __SZ4, __SZ4> {
         }
 
         void set_euler(value_type yaw, value_type pitch, value_type roll) {
-            self y,p,r;
+            self y, p, r;
 
             y.set_rotation_yaw(yaw);
             p.set_rotation_pith(pitch);
@@ -333,13 +338,13 @@ struct matrix<T, __SZ4, __SZ4> {
         toy::array<T, __SZ4 * __SZ4> data_;
 };
 
-template <typename T>
+export template <typename T>
 using matrix2 = matrix<T, __SZ2, __SZ2>;
 
-template <typename T>
+export template <typename T>
 using matrix3 = matrix<T, __SZ3, __SZ3>;
 
-template <typename T>
+export template <typename T>
 using matrix4 = matrix<T, __SZ4, __SZ4>;
 
 export using matrix2f = matrix2<float>;
