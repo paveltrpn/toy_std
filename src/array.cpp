@@ -42,6 +42,8 @@ export {
             explicit array(std::initializer_list<T> list) {
                 for (size_t i = 0; auto&& elem : list) {
                     data_[i] = elem;
+                    if (i > len)
+                        break;
                     ++i;
                 }
             }
@@ -74,7 +76,7 @@ export {
             const_reference operator[](size_t id) const {
                 return data_[id];
             }
-            
+
             T& at(size_t id) {
                 if (id < len) {
                     return data_[id];
@@ -90,7 +92,7 @@ export {
                     throw std::invalid_argument{ "array bounds violition" };
                 }
             }
-            
+
             [[nodiscard]] pointer data() {
                 return static_cast<pointer>(data_);
             }

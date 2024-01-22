@@ -41,4 +41,20 @@ BOOST_AUTO_TEST_CASE(case_construct, *utf::tolerance(0.00001)) {
     BOOST_TEST(to == 0.0);
 }
 
+BOOST_AUTO_TEST_CASE(case_det_lu, *utf::tolerance(0.00001)) {
+    toy::algebra::matrix4f one;
+
+    one.set_idtt();
+
+    BOOST_TEST(one.det_lu() == 1.0);
+    
+    one.transpose_self();
+
+    for (auto i = 0; i < 16; ++i) {
+        if ((i % 4) == 0)
+            std::cout << "\n";
+        std::cout << one[i];
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()

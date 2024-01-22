@@ -1,6 +1,7 @@
 
 module;
 
+#include <iostream>
 #include <cstddef>
 #include <algorithm>
 #include <mdspan>
@@ -61,13 +62,209 @@ auto __matrix_sqr_mult(const matrix<T, pSize_, pSize_>& a, const matrix<T, pSize
     return rt;
 }
 
+template <toy::Arithmetical T, size_t pSize_>
+auto __matrix_sqr_transpose(const matrix<T, pSize_, pSize_>& m) {
+    size_t i, j;
+    float tmp;
+    matrix<T, pSize_, pSize_> rt;
+
+    rt = m;
+
+    for (i = 0; i < pSize_; i++) {
+        for (j = 0; j < i; j++) {
+            tmp = rt[idRw(i, i, pSize_)];
+            rt[i, j] = rt[j, i];
+            rt[j, i] = tmp;
+        }
+    }
+
+    return rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+auto __matrix_sqr_multVec(const matrix<T, pSize_, pSize_>& m, const vector<T, pSize_>& v) {
+    matrix<T, pSize_, pSize_> rt;
+
+    for (size_t i = 0; i < pSize_; i++) {
+        for (size_t j = 0; j < pSize_; j++) {
+            rt[i] += m[i, j] * v[j];
+        }
+    }
+
+    return rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_lu(
+  const matrix<T, pSize_, pSize_>& m) {
+    matrix<T, pSize_, pSize_> lm, um;
+    size_t i, j, k;
+    T sum;
+
+    for (i = 0; i < pSize_; i++) {
+        for (k = i; k < pSize_; k++) {
+            sum = 0;
+            for (j = 0; j < i; j++) {
+                sum += (lm[i, j] * um[j, k]);
+            }
+            um[i, k] = m[i, k] - sum;
+        }
+
+        for (k = i; k < pSize_; k++) {
+            if (i == k) {
+                lm[i, i] = T{ 1 };
+            } else {
+                sum = 0;
+                for (j = 0; j < i; j++) {
+                    sum += lm[k, j] * um[j, i];
+                }
+                lm[k, i] = (m[k, i] - sum) / um[i, i];
+            }
+        }
+    }
+
+    return { lm, um };
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+T __matrix_sqr_det_lu(const matrix<T, pSize_, pSize_>& m) {
+    //matrix<T, pSize_, pSize_> l, u;
+    T l_det{}, u_det{};
+
+    auto [l, u] = __matrix_sqr_lu(m);
+
+    for (size_t i = 0; i < pSize_; i++) {
+        l_det *= l[i, i];
+        u_det *= u[i, i];
+    }
+
+    return l_det * u_det;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_ldlt(
+  const matrix<T, pSize_, pSize_>& m) {
+    matrix<T, pSize_, pSize_> lm;
+    vector<T, pSize_> dv;
+    size_t i, j, k;
+    T sum;
+
+    for (i = 0; i < pSize_; i++) {
+        for (j = i; j < pSize_; j++) {
+            sum = m[j, i];
+            for (k = 0; k < i; k++) {
+                sum = sum - lm[i, k] * dv[k] * lm[j, k];
+                if (i == j) {
+                    if (sum <= 0) {
+                        std::cout << "ldlt(): matrix is not positive deﬁnite";
+                        return { matrix<T, pSize_, pSize_>{}, vector<T, pSize_>{} };
+                    }
+                    dv[i] = sum;
+                    lm[i, i] = 1.0;
+                } else {
+                    lm[j, i] = sum / dv[i];
+                }
+            }
+        }
+    }
+
+    return { lm, dv };
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+vector<T, pSize_> __matrix_sqr_solve_gauss(const matrix<T, pSize_, pSize_>& m,
+                                           const vector<T, pSize_>& v) {
+    size_t i, j, k;
+    float t;
+    std::array<std::array<T, pSize_ + 1>, pSize_> a;
+    vector<T, pSize_> rt;
+
+    for (i = 0; i < pSize_; i++) {      // было ++i
+        for (j = 0; j < pSize_; j++) {  // было ++j
+            a[i][j] = m[i, j];
+            a[i][pSize_] = v[i];
+        }
+    }
+
+    /* Pivotisation */
+    for (i = 0; i < pSize_; i++) {
+        for (k = i + 1; k < pSize_; k++) {
+            if (fabs(a[i][i]) < fabs(a[k][i])) {
+                for (j = 0; j <= pSize_; j++) {
+                    t = a[i][j];
+                    a[i][j] = a[k][j];
+                    a[k][j] = t;
+                }
+            }
+        }
+    }
+
+    /* прямой ход */
+    for (k = 1; k < pSize_; k++) {
+        for (j = k; j < pSize_; j++) {
+            t = a[j][k - 1] / a[k - 1][k - 1];
+            for (i = 0; i < pSize_ + 1; i++) {
+                a[j][i] = a[j][i] - t * a[k - 1][i];
+            }
+        }
+    }
+
+    /* обратный ход */
+    for (i = pSize_ - 1; i > 0; i--) {
+        rt[i] = a[i][pSize_] / a[i][i];
+        for (j = pSize_ - 1; j > i; j--) {
+            rt[i] = rt[i] - a[i][j] * rt[j] / a[i][i];
+        }
+    }
+
+    return rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+void __matrix_sqr_insert_cmn(matrix<T, pSize_, pSize_>& m, const vector<T, pSize_>& v) {
+    size_t i, j = 0;
+
+    auto rt = m;
+
+    for (i = pSize_; i < pSize_ * pSize_; i += pSize_) {
+        rt[i] = v[j];
+        j++;
+    }
+
+    m = rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+vector<T, pSize_> __matrix_sqr_solve_kramer(const matrix<T, pSize_, pSize_>& m,
+                                            const vector<T, pSize_>& v) {
+    T det;
+    matrix<T, pSize_, pSize_> kr_mtrx;
+    vector<T, pSize_> rt;
+
+    det = __matrix_sqr_det_lu(m);
+
+    if (fabs(det) < std::numeric_limits<float>::epsilon()) {
+        std::cout << "__matrix_sqr_solve_kramer(): system has no solve\n";
+        return vector<T, pSize_>{};
+    }
+
+    for (size_t i = 0; i < pSize_; i++) {
+        __matrix_sqr_insert_cmn(kr_mtrx, v, i);
+        rt[i] = __matrix_sqr_det_lu(kr_mtrx) / det;
+    }
+
+    return rt;
+}
+
 template <toy::Arithmetical T, size_t pWidth_, size_t pHeight_>
     requires(pWidth_ > 0 && pHeight_ > 0)
 struct matrix {
         using self = matrix<T, pWidth_, pHeight_>;
         using value_type = T;
         using reference = T&;
+        using const_reference = const T&;
         using pointer = T*;
+        using const_pointer = const T*;
 
         matrix() = default;
         matrix(const self& rhs) = default;
@@ -89,24 +286,19 @@ struct matrix {
             return std::mdspan(data_.data(), pWidth_, pHeight_)[i, j];
         }
 
-        void set_idtt() {
-            __matrix_sqr_set_idtt(*this);
-        }
-
-        self mult(self b) {
-            return __matrix_sqr_mult(*this, b);
-        }
-
     private:
         toy::array<T, pWidth_ * pHeight_> data_;
 };
 
-template <toy::Arithmetical T>
-struct matrix<T, __SZ2, __SZ2> {
-        using self = matrix<T, __SZ2, __SZ2>;
+template <toy::Arithmetical T, size_t pSize_>
+    requires(pSize_ > 0)
+struct matrix<T, pSize_, pSize_> {
+        using self = matrix<T, pSize_, pSize_>;
         using value_type = T;
         using reference = T&;
+        using const_reference = const T&;
         using pointer = T*;
+        using const_pointer = const T*;
 
         matrix() = default;
         matrix(const self& rhs) = default;
@@ -117,14 +309,56 @@ struct matrix<T, __SZ2, __SZ2> {
 
         ~matrix() = default;
 
-        template <typename U, size_t pSize_>
-        friend void __matrix_sqr_set_idtt(matrix<U, pSize_, pSize_>& a);
-        template <typename U, size_t pSize_>
-        friend auto __matrix_sqr_mult(const matrix<U, pSize_, pSize_>& a,
-                                      const matrix<U, pSize_, pSize_>& b);
+        // row-wise indexing operator
+        reference operator[](size_t i, size_t j) {
+            return std::mdspan(data_.data(), pSize_, pSize_)[i, j];
+        }
+
+        void set_idtt() {
+            __matrix_sqr_set_idtt(*this);
+        }
+
+        self mult(self b) {
+            return __matrix_sqr_mult(*this, b);
+        }
+
+    private:
+        toy::array<T, pSize_ * pSize_> data_;
+};
+
+template <toy::Arithmetical T>
+struct matrix<T, __SZ2, __SZ2> {
+        using self = matrix<T, __SZ2, __SZ2>;
+        using self_vec = vector2<T>;
+        using value_type = T;
+        using reference = T&;
+        using const_reference = const T&;
+        using pointer = T*;
+        using const_pointer = const T*;
+
+        matrix() = default;
+        matrix(const self& rhs) = default;
+        matrix(self&& rhs) = default;
+
+        self& operator=(const self& rhs) = default;
+        self& operator=(self&& rhs) = default;
+
+        ~matrix() = default;
+
+        reference operator[](size_t id) {
+            return data_[id];
+        }
+
+        const_reference operator[](size_t id) const {
+            return data_[id];
+        }
 
         // row-wise indexing operator
         reference operator[](size_t i, size_t j) {
+            return std::mdspan(data_.data(), __SZ2, __SZ2)[i, j];
+        }
+
+        const_reference operator[](size_t i, size_t j) const {
             return std::mdspan(data_.data(), __SZ2, __SZ2)[i, j];
         }
 
@@ -136,6 +370,15 @@ struct matrix<T, __SZ2, __SZ2> {
             return __matrix_sqr_mult(*this, b);
         }
 
+        self_vec mult_vec(const self_vec& rhs) {
+            return __matrix_sqr_multVec(*this, rhs);
+        }
+
+        void mult_self(self b) {
+            auto tmp = __matrix_sqr_mult(*this, b);
+            *this = tmp;
+        }
+
     private:
         toy::array<T, __SZ2 * __SZ2> data_;
 };
@@ -143,9 +386,12 @@ struct matrix<T, __SZ2, __SZ2> {
 template <toy::Arithmetical T>
 struct matrix<T, __SZ3, __SZ3> {
         using self = matrix<T, __SZ3, __SZ3>;
+        using self_vec = vector3<T>;
         using value_type = T;
         using reference = T&;
+        using const_reference = const T&;
         using pointer = T*;
+        using const_pointer = const T*;
 
         matrix() = default;
         matrix(const self& rhs) = default;
@@ -156,14 +402,20 @@ struct matrix<T, __SZ3, __SZ3> {
 
         ~matrix() = default;
 
-        template <typename U, size_t pSize_>
-        friend void __matrix_sqr_set_idtt(matrix<U, pSize_, pSize_>& a);
-        template <typename U, size_t pSize_>
-        friend auto __matrix_sqr_mult(const matrix<U, pSize_, pSize_>& a,
-                                      const matrix<U, pSize_, pSize_>& b);
+        reference operator[](size_t id) {
+            return data_[id];
+        }
+
+        const_reference operator[](size_t id) const {
+            return data_[id];
+        }
 
         // row-wise indexing operator
         reference operator[](size_t i, size_t j) {
+            return std::mdspan(data_.data(), __SZ3, __SZ3)[i, j];
+        }
+
+        const_reference operator[](size_t i, size_t j) const {
             return std::mdspan(data_.data(), __SZ3, __SZ3)[i, j];
         }
 
@@ -175,6 +427,15 @@ struct matrix<T, __SZ3, __SZ3> {
             return __matrix_sqr_mult(*this, b);
         }
 
+        self_vec mult_vec(const self_vec& rhs) {
+            return __matrix_sqr_multVec(*this, rhs);
+        }
+
+        void mult_self(self b) {
+            auto tmp = __matrix_sqr_mult(*this, b);
+            *this = tmp;
+        }
+
     private:
         toy::array<T, __SZ3 * __SZ3> data_;
 };
@@ -182,10 +443,12 @@ struct matrix<T, __SZ3, __SZ3> {
 template <toy::Arithmetical T>
 struct matrix<T, __SZ4, __SZ4> {
         using self = matrix<T, __SZ4, __SZ4>;
+        using self_vec = vector4<T>;
         using value_type = T;
         using reference = T&;
         using const_reference = const T&;
         using pointer = T*;
+        using const_pointer = const T*;
 
         matrix() = default;
         matrix(const self& rhs) = default;
@@ -195,12 +458,6 @@ struct matrix<T, __SZ4, __SZ4> {
         self& operator=(self&& rhs) = default;
 
         ~matrix() = default;
-
-        template <typename U, size_t pSize_>
-        friend void __matrix_sqr_set_idtt(matrix<U, pSize_, pSize_>& a);
-        template <typename U, size_t pSize_>
-        friend auto __matrix_sqr_mult(const matrix<U, pSize_, pSize_>& a,
-                                      const matrix<U, pSize_, pSize_>& b);
 
         reference operator[](size_t id) {
             return data_[id];
@@ -226,7 +483,60 @@ struct matrix<T, __SZ4, __SZ4> {
         self mult(self b) {
             return __matrix_sqr_mult(*this, b);
         }
-    
+
+        self_vec mult_vec(const self_vec& rhs) {
+            return __matrix_sqr_multVec(*this, rhs);
+        }
+
+        void mult_self(self b) {
+            auto tmp = __matrix_sqr_mult(*this, b);
+            *this = tmp;
+        }
+
+        std::tuple<self, self> lu() {
+            return __matrix_sqr_lu(*this);
+        }
+
+        value_type det_lu() {
+            return __matrix_sqr_det_lu(*this);
+        }
+
+        std::tuple<self, self> ldlt() {
+            return __matrix_sqr_ldlt(*this);
+        }
+
+        vector4<value_type> solve_gauss(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_gauss(*this, v);
+        }
+
+        void insert_cmn(const vector4<value_type>& v) {
+            __matrix_sqr_insert_cmn(*this, v);
+        }
+
+        vector4<value_type> solve_kramer(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_kramer(*this, v);
+        }
+
+        vector3<value_type> mult_vec3(const vector3<value_type>& v) {
+            vector3<value_type> rt;
+            value_type w;
+
+            rt[0] = v[0] * *this[0] + v[1] * *this[1] + v[2] * *this[2] + *this[3];
+            rt[1] = v[0] * *this[4] + v[1] * *this[5] + v[2] * *this[6] + *this[7];
+            rt[2] = v[0] * *this[8] + v[1] * *this[9] + v[2] * *this[10] + *this[11];
+            w = v[0] * *this[12] + v[1] * *this[13] + v[2] * *this[14] + *this[15];
+
+            // normalize if w is different than 1 (convert from homogeneous to Cartesian
+            // coordinates)
+            if (w != 1.0f) {
+                rt[0] /= w;
+                rt[1] /= w;
+                rt[2] /= w;
+            }
+
+            return rt;
+        }
+
         self operator*(self& rhs) {
             *this = mult(rhs);
             return *this;
@@ -251,7 +561,7 @@ struct matrix<T, __SZ4, __SZ4> {
             data_[13] = 0.0;
             data_[15] = 0.0;
 
-            if (far >= std::numeric_limits<float>::epsilon()) {
+            if (far >= std::numeric_limits<value_type>::epsilon()) {
                 nf = 1.0 / (near - far);
                 data_[10] = (far + near) * nf;
                 data_[14] = 2.0 * far * near * nf;
@@ -261,11 +571,116 @@ struct matrix<T, __SZ4, __SZ4> {
             }
         }
 
-        void set_offset(const toy::algebra::vector3<value_type>& offset) {
+        void set_lookAt(const vector3<value_type>& eye,
+                        const vector3<value_type>& center,
+                        const vector3<value_type> up) {
+            set_idtt();
+            vector3<value_type> eyeDir;
+
+            constexpr float floatEps = std::numeric_limits<float>::epsilon();
+            if (std::fabs(eye[0] - center[0]) < floatEps && std::fabs(eye[1] - center[1]) < floatEps
+                && std::fabs(eye[2] - center[2]) < floatEps) {
+                return;
+            }
+
+            float z0 = eye[0] - center[0];
+            float z1 = eye[1] - center[1];
+            float z2 = eye[2] - center[2];
+
+            float len = 1.0f / std::hypot(z0, z1, z2);  //??? было просто hypot
+            z0 *= len;
+            z1 *= len;
+            z2 *= len;
+
+            float x0 = up[1] * z2 - up[2] * z1;
+            float x1 = up[2] * z0 - up[0] * z2;
+            float x2 = up[0] * z1 - up[1] * z0;
+            len = std::hypot(x0, x1, x2);
+            if (len == 0.0f) {
+                x0 = 0;
+                x1 = 0;
+                x2 = 0;
+            } else {
+                len = 1.0f / len;
+                x0 *= len;
+                x1 *= len;
+                x2 *= len;
+            }
+
+            float y0 = z1 * x2 - z2 * x1;
+            float y1 = z2 * x0 - z0 * x2;
+            float y2 = z0 * x1 - z1 * x0;
+
+            len = std::hypot(y0, y1, y2);
+            if (len == 0.0f) {
+                y0 = 0;
+                y1 = 0;
+                y2 = 0;
+            } else {
+                len = 1.0f / len;
+                y0 *= len;
+                y1 *= len;
+                y2 *= len;
+            }
+
+            data_[0] = x0;
+            data_[1] = y0;
+            data_[2] = z0;
+            data_[3] = 0.0f;
+            data_[4] = x1;
+            data_[5] = y1;
+            data_[6] = z1;
+            data_[7] = 0.0f;
+            data_[8] = x2;
+            data_[9] = y2;
+            data_[10] = z2;
+            data_[11] = 0.0f;
+            data_[12] = -(x0 * eye[0] + x1 * eye[1] + x2 * eye[2]);
+            data_[13] = -(y0 * eye[0] + y1 * eye[1] + y2 * eye[2]);
+            data_[14] = -(z0 * eye[0] + z1 * eye[1] + z2 * eye[2]);
+            data_[15] = 1.0f;
+        }
+
+        void set_orthographic(value_type left,
+                              value_type right,
+                              value_type bottom,
+                              value_type top,
+                              value_type near,
+                              value_type far) {
+            data_[0] = 2.0f / (right - left);
+            data_[1] = 0;
+            data_[2] = 0;
+            data_[3] = 0;
+
+            data_[4] = 0;
+            data_[5] = 2.0f / (top - bottom);
+            data_[6] = 0;
+            data_[7] = 0;
+
+            data_[8] = 0;
+            data_[9] = 0;
+            data_[10] = -2.0f / (far - near);
+            data_[11] = 0;
+
+            data_[12] = -(right + left) / (right - left);
+            data_[13] = -(top + bottom) / (top - bottom);
+            data_[14] = -(far + near) / (far - near);
+            data_[15] = 1.0f;
+        }
+
+        void set_scale(const toy::algebra::vector3<value_type>& offset) {
             this->set_idtt();
 
             data_[0] = offset[0];
             data_[5] = offset[1];
+            data_[11] = offset[2];
+        }
+
+        void set_offset(const toy::algebra::vector3<value_type>& offset) {
+            this->set_idtt();
+
+            data_[3] = offset[0];
+            data_[7] = offset[1];
             data_[11] = offset[2];
         }
 
@@ -304,7 +719,7 @@ struct matrix<T, __SZ4, __SZ4> {
             data_[10] = ca;
         }
 
-        void set_rotation_pith(value_type angl) {
+        void set_rotation_pitch(value_type angl) {
             this->set_idtt();
             float sa, ca;
 
@@ -332,11 +747,52 @@ struct matrix<T, __SZ4, __SZ4> {
             self y, p, r;
 
             y.set_rotation_yaw(yaw);
-            p.set_rotation_pith(pitch);
+            p.set_rotation_pitch(pitch);
             r.set_rotation_roll(roll);
 
             *this = y.mult(p);
-            *this = this->mult(r);
+            mult_self(r);
+        }
+
+        void set_axis_angl(const vector3<value_type>& ax, value_type phi) {
+            value_type cosphi, sinphi, vxvy, vxvz, vyvz, vx, vy, vz;
+
+            cosphi = cosf(degToRad(phi));
+            sinphi = sinf(degToRad(phi));
+            vxvy = ax[0] * ax[1];
+            vxvz = ax[0] * ax[2];
+            vyvz = ax[1] * ax[2];
+            vx = ax[0];
+            vy = ax[1];
+            vz = ax[2];
+
+            data_[0] = cosphi + (1.0 - cosphi) * vx * vx;
+            data_[1] = (1.0 - cosphi) * vxvy - sinphi * vz;
+            data_[2] = (1.0 - cosphi) * vxvz + sinphi * vy;
+            data_[3] = 0.0f;
+
+            data_[4] = (1.0 - cosphi) * vxvy + sinphi * vz;
+            data_[5] = cosphi + (1.0 - cosphi) * vy * vy;
+            data_[6] = (1.0 - cosphi) * vyvz - sinphi * vx;
+            data_[7] = 0.0f;
+
+            data_[8] = (1.0 - cosphi) * vxvz - sinphi * vy;
+            data_[9] = (1.0 - cosphi) * vyvz + sinphi * vx;
+            data_[10] = cosphi + (1.0 - cosphi) * vz * vz;
+            data_[11] = 0.0f;
+
+            data_[12] = 0.0f;
+            data_[13] = 0.0f;
+            data_[14] = 0.0f;
+            data_[15] = 1.0f;
+        }
+
+        [[nodiscard]] pointer data() {
+            return data_.data();
+        }
+
+        [[nodiscard]] const_pointer data() const {
+            return data_.data();
         }
 
     private:
@@ -344,22 +800,22 @@ struct matrix<T, __SZ4, __SZ4> {
 };
 
 export {
-template <typename T>
-using matrix2 = matrix<T, __SZ2, __SZ2>;
+    template <typename T>
+    using matrix2 = matrix<T, __SZ2, __SZ2>;
 
-template <typename T>
-using matrix3 = matrix<T, __SZ3, __SZ3>;
+    template <typename T>
+    using matrix3 = matrix<T, __SZ3, __SZ3>;
 
-template <typename T>
-using matrix4 = matrix<T, __SZ4, __SZ4>;
+    template <typename T>
+    using matrix4 = matrix<T, __SZ4, __SZ4>;
 
-using matrix2f = matrix2<float>;
-using matrix3f = matrix3<float>;
-using matrix4f = matrix4<float>;
+    using matrix2f = matrix2<float>;
+    using matrix3f = matrix3<float>;
+    using matrix4f = matrix4<float>;
 
-using matrix2d = matrix2<double>;
-using matrix3d = matrix3<double>;
-using matrix4d = matrix4<double>;
+    using matrix2d = matrix2<double>;
+    using matrix3d = matrix3<double>;
+    using matrix4d = matrix4<double>;
 }
 
 }  // namespace toy::algebra
