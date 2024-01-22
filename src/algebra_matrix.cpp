@@ -4,13 +4,20 @@ module;
 #include <cstddef>
 #include <algorithm>
 #include <mdspan>
+#include <numbers>
 
 export module toy_std.algebra:matrix;
 
 import toy_std.concepts;
 import toy_std.array;
+import :vector;
 
 namespace toy::algebra {
+
+template <typename T>
+constexpr T degToRad(T deg) {
+    return deg * M_PI / 180.0;
+}
 
 template <std::unsigned_integral T>
 constexpr size_t idRw(T i, size_t j, T n) {
@@ -53,10 +60,6 @@ auto __matrix_sqr_mult(const matrix<T, pSize_, pSize_>& a, const matrix<T, pSize
 
     return rt;
 }
-
-constexpr static size_t __SZ2 = 2;
-constexpr static size_t __SZ3 = 3;
-constexpr static size_t __SZ4 = 4;
 
 template <toy::Arithmetical T, size_t pWidth_, size_t pHeight_>
     requires(pWidth_ > 0 && pHeight_ > 0)
@@ -217,6 +220,113 @@ struct matrix<T, __SZ4, __SZ4> {
 
         self mult(self b) {
             __matrix_sqr_mult(*this, b);
+        }
+
+        void set_perspective(value_type fovy, value_type aspect, value_type near, value_type far) {
+            value_type f = 1.0 / tanf(fovy / std::numbers::sqrt2_v<float>);
+            value_type nf;
+
+            data_[0] = f / aspect;
+            data_[1] = 0.0;
+            data_[2] = 0.0;
+            data_[3] = 0.0;
+            data_[4] = 0.0;
+            data_[5] = f;
+            data_[6] = 0.0;
+            data_[7] = 0.0;
+            data_[8] = 0.0;
+            data_[9] = 0.0;
+            data_[11] = -1.0;
+            data_[12] = 0.0;
+            data_[13] = 0.0;
+            data_[15] = 0.0;
+
+            if (far >= std::numeric_limits<float>::epsilon()) {
+                nf = 1.0 / (near - far);
+                data_[10] = (far + near) * nf;
+                data_[14] = 2.0 * far * near * nf;
+            } else {
+                data_[10] = -1.0;
+                data_[14] = -2.0 * near;
+            }
+        }
+
+        void set_offset(const toy::algebra::vector4<value_type>& offset) {
+            this->set_idtt();
+
+            data_[0] = offset[0];
+            data_[5] = offset[1];
+            data_[11] = offset[2];
+        }
+
+        void transpose_self() {
+            self tmp;
+
+            tmp[0] = data_[0];
+            tmp[1] = data_[4];
+            tmp[2] = data_[8];
+            tmp[3] = data_[12];
+            tmp[4] = data_[1];
+            tmp[5] = data_[5];
+            tmp[6] = data_[9];
+            tmp[7] = data_[13];
+            tmp[8] = data_[2];
+            tmp[9] = data_[6];
+            tmp[10] = data_[10];
+            tmp[11] = data_[14];
+            tmp[12] = data_[3];
+            tmp[13] = data_[7];
+            tmp[14] = data_[11];
+            tmp[15] = data_[15];
+
+            *this = tmp;
+        }
+
+        void set_rotation_yaw(value_type angl) {
+            this->set_idtt();
+            value_type sa, ca;
+
+            sincosf(degToRad(angl), &sa, &ca);
+
+            data_[5] = ca;
+            data_[6] = -sa;
+            data_[9] = sa;
+            data_[10] = ca;
+        }
+
+        void set_rotation_pith(value_type angl) {
+            this->set_idtt();
+            float sa, ca;
+
+            sincosf(degToRad(angl), &sa, &ca);
+
+            data_[0] = ca;
+            data_[2] = sa;
+            data_[8] = -sa;
+            data_[10] = ca;
+        }
+
+        void set_rotation_roll(value_type angl) {
+            this->set_idtt();
+            float sa, ca;
+
+            sincosf(degToRad(angl), &sa, &ca);
+
+            data_[0] = ca;
+            data_[1] = -sa;
+            data_[4] = sa;
+            data_[5] = ca;
+        }
+
+        void set_euler(value_type yaw, value_type pitch, value_type roll) {
+            self y,p,r;
+
+            y.set_rotation_yaw(yaw);
+            p.set_rotation_pith(pitch);
+            r.set_rotation_roll(roll);
+
+            *this = y.mult(p);
+            *this = this->mult(r);
         }
 
     private:

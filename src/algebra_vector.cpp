@@ -11,9 +11,9 @@ import toy_std.array;
 
 namespace toy::algebra {
 
-constexpr static size_t __SZ2 = 2;
-constexpr static size_t __SZ3 = 3;
-constexpr static size_t __SZ4 = 4;
+static constexpr size_t __SZ2 = 2;
+static constexpr size_t __SZ3 = 3;
+static constexpr size_t __SZ4 = 4;
 
 template <toy::Arithmetical T, size_t pSize_>
 struct vector_base {
@@ -219,13 +219,13 @@ struct vector<T, __SZ4> {
         toy::array<T, __SZ4> data_;
 };
 
-template <typename T>
+export template <typename T>
 using vector2 = vector<T, __SZ2>;
 
-template <typename T>
+export template <typename T>
 using vector3 = vector<T, __SZ3>;
 
-template <typename T>
+export template <typename T>
 using vector4 = vector<T, __SZ4>;
 
 export using vector2f = vector2<float>;
