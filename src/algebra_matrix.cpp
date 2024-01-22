@@ -338,21 +338,23 @@ struct matrix<T, __SZ4, __SZ4> {
         toy::array<T, __SZ4 * __SZ4> data_;
 };
 
-export template <typename T>
+export {
+template <typename T>
 using matrix2 = matrix<T, __SZ2, __SZ2>;
 
-export template <typename T>
+template <typename T>
 using matrix3 = matrix<T, __SZ3, __SZ3>;
 
-export template <typename T>
+template <typename T>
 using matrix4 = matrix<T, __SZ4, __SZ4>;
 
-export using matrix2f = matrix2<float>;
-export using matrix3f = matrix3<float>;
-export using matrix4f = matrix4<float>;
+using matrix2f = matrix2<float>;
+using matrix3f = matrix3<float>;
+using matrix4f = matrix4<float>;
 
-export using matrix2d = matrix2<double>;
-export using matrix3d = matrix3<double>;
-export using matrix4d = matrix4<double>;
+using matrix2d = matrix2<double>;
+using matrix3d = matrix3<double>;
+using matrix4d = matrix4<double>;
+}
 
 }  // namespace toy::algebra
