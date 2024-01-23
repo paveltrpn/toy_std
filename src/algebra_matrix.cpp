@@ -6,6 +6,9 @@ module;
 #include <algorithm>
 #include <mdspan>
 #include <numbers>
+#include <initializer_list>
+#include <type_traits>
+#include <format>
 
 export module toy_std.algebra:matrix;
 
@@ -34,8 +37,39 @@ template <toy::Arithmetical T, size_t pWidth_, size_t pHeight_>
     requires(pWidth_ > 0 && pHeight_ > 0)
 struct matrix;
 
+export {
+    template <typename T>
+    using matrix2 = matrix<T, __SZ2, __SZ2>;
+
+    template <typename T>
+    using matrix3 = matrix<T, __SZ3, __SZ3>;
+
+    template <typename T>
+    using matrix4 = matrix<T, __SZ4, __SZ4>;
+
+    using matrix2f = matrix2<float>;
+    using matrix3f = matrix3<float>;
+    using matrix4f = matrix4<float>;
+
+    using matrix2d = matrix2<double>;
+    using matrix3d = matrix3<double>;
+    using matrix4d = matrix4<double>;
+}
+
+template <typename T, size_t pSize_>
+using matrix_sqr = matrix<T, pSize_, pSize_>;
+
 template <toy::Arithmetical T, size_t pSize_>
-void __matrix_sqr_set_idtt(matrix<T, pSize_, pSize_>& a) {
+void __matrix_sqr_set_zero(matrix_sqr<T, pSize_>& a) {
+    for (size_t i = 0; i < pSize_; i++) {
+        for (size_t j = 0; j < pSize_; j++) {
+            a[i, j] = static_cast<T>(0);
+        }
+    }
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+void __matrix_sqr_set_idtt(matrix_sqr<T, pSize_>& a) {
     for (size_t i = 0; i < pSize_; i++) {
         for (size_t j = 0; j < pSize_; j++) {
             if (i == j) {
@@ -48,7 +82,7 @@ void __matrix_sqr_set_idtt(matrix<T, pSize_, pSize_>& a) {
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-auto __matrix_sqr_mult(const matrix<T, pSize_, pSize_>& a, const matrix<T, pSize_, pSize_>& b) {
+auto __matrix_sqr_mult(const matrix_sqr<T, pSize_>& a, const matrix_sqr<T, pSize_>& b) {
     matrix<T, pSize_, pSize_> rt;
 
     for (size_t i = 0; i < pSize_; i++) {
@@ -63,16 +97,39 @@ auto __matrix_sqr_mult(const matrix<T, pSize_, pSize_>& a, const matrix<T, pSize
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-auto __matrix_sqr_transpose(const matrix<T, pSize_, pSize_>& m) {
-    size_t i, j;
-    float tmp;
+auto __matrix_sqr_sum(const matrix_sqr<T, pSize_>& a, const matrix_sqr<T, pSize_>& b) {
     matrix<T, pSize_, pSize_> rt;
 
-    rt = m;
+    for (size_t i = 0; i < pSize_; i++) {
+        for (size_t j = 0; j < pSize_; j++) {
+            rt[i, j] = a[i, j] + b[i, j];
+        }
+    }
 
-    for (i = 0; i < pSize_; i++) {
-        for (j = 0; j < i; j++) {
-            tmp = rt[idRw(i, i, pSize_)];
+    return rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+auto __matrix_sqr_sub(const matrix_sqr<T, pSize_>& a, const matrix_sqr<T, pSize_>& b) {
+    matrix<T, pSize_, pSize_> rt;
+
+    for (size_t i = 0; i < pSize_; i++) {
+        for (size_t j = 0; j < pSize_; j++) {
+            rt[i, j] = a[i, j] - b[i, j];
+        }
+    }
+
+    return rt;
+}
+
+template <toy::Arithmetical T, size_t pSize_>
+auto __matrix_sqr_transpose(const matrix_sqr<T, pSize_>& m) {
+    T tmp;
+    auto rt = m;
+
+    for (size_t i = 0; i < pSize_; ++i) {
+        for (size_t j = 0; j < i; ++j) {
+            tmp = rt[i, j];
             rt[i, j] = rt[j, i];
             rt[j, i] = tmp;
         }
@@ -82,8 +139,8 @@ auto __matrix_sqr_transpose(const matrix<T, pSize_, pSize_>& m) {
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-auto __matrix_sqr_multVec(const matrix<T, pSize_, pSize_>& m, const vector<T, pSize_>& v) {
-    matrix<T, pSize_, pSize_> rt;
+auto __matrix_sqr_multVec(const matrix_sqr<T, pSize_>& m, const vector<T, pSize_>& v) {
+    std::decay_t<decltype(m)> rt;
 
     for (size_t i = 0; i < pSize_; i++) {
         for (size_t j = 0; j < pSize_; j++) {
@@ -95,9 +152,9 @@ auto __matrix_sqr_multVec(const matrix<T, pSize_, pSize_>& m, const vector<T, pS
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_lu(
-  const matrix<T, pSize_, pSize_>& m) {
-    matrix<T, pSize_, pSize_> lm, um;
+std::pair<matrix_sqr<T, pSize_>, matrix_sqr<T, pSize_>> __matrix_sqr_lu(
+  const matrix_sqr<T, pSize_>& m) {
+    std::decay_t<decltype(m)> lm, um;
     size_t i, j, k;
     T sum;
 
@@ -127,24 +184,21 @@ std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_lu
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-T __matrix_sqr_det_lu(const matrix<T, pSize_, pSize_>& m) {
-    //matrix<T, pSize_, pSize_> l, u;
-    T l_det{}, u_det{};
+T __matrix_sqr_det_lu(const matrix_sqr<T, pSize_>& m) {
+    T det{ 1 };
 
-    auto [l, u] = __matrix_sqr_lu(m);
-
+    auto [_, u] = __matrix_sqr_lu(m);
     for (size_t i = 0; i < pSize_; i++) {
-        l_det *= l[i, i];
-        u_det *= u[i, i];
+        det *= u[i, i];
     }
 
-    return l_det * u_det;
+    return det;
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_ldlt(
-  const matrix<T, pSize_, pSize_>& m) {
-    matrix<T, pSize_, pSize_> lm;
+std::pair<matrix_sqr<T, pSize_>, matrix_sqr<T, pSize_>> __matrix_sqr_ldlt(
+  const matrix_sqr<T, pSize_>& m) {
+    std::decay_t<decltype(m)> lm;
     vector<T, pSize_> dv;
     size_t i, j, k;
     T sum;
@@ -172,15 +226,15 @@ std::tuple<matrix<T, pSize_, pSize_>, matrix<T, pSize_, pSize_>> __matrix_sqr_ld
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-vector<T, pSize_> __matrix_sqr_solve_gauss(const matrix<T, pSize_, pSize_>& m,
+vector<T, pSize_> __matrix_sqr_solve_gauss(const matrix_sqr<T, pSize_>& m,
                                            const vector<T, pSize_>& v) {
     size_t i, j, k;
-    float t;
+    T t;
     std::array<std::array<T, pSize_ + 1>, pSize_> a;
     vector<T, pSize_> rt;
 
-    for (i = 0; i < pSize_; i++) {      // было ++i
-        for (j = 0; j < pSize_; j++) {  // было ++j
+    for (i = 0; i < pSize_; i++) {
+        for (j = 0; j < pSize_; j++) {
             a[i][j] = m[i, j];
             a[i][pSize_] = v[i];
         }
@@ -221,7 +275,7 @@ vector<T, pSize_> __matrix_sqr_solve_gauss(const matrix<T, pSize_, pSize_>& m,
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-void __matrix_sqr_insert_cmn(matrix<T, pSize_, pSize_>& m, const vector<T, pSize_>& v) {
+void __matrix_sqr_insert_cmn(matrix_sqr<T, pSize_>& m, const vector<T, pSize_>& v) {
     size_t i, j = 0;
 
     auto rt = m;
@@ -235,10 +289,10 @@ void __matrix_sqr_insert_cmn(matrix<T, pSize_, pSize_>& m, const vector<T, pSize
 }
 
 template <toy::Arithmetical T, size_t pSize_>
-vector<T, pSize_> __matrix_sqr_solve_kramer(const matrix<T, pSize_, pSize_>& m,
+vector<T, pSize_> __matrix_sqr_solve_kramer(const matrix_sqr<T, pSize_>& m,
                                             const vector<T, pSize_>& v) {
     T det;
-    matrix<T, pSize_, pSize_> kr_mtrx;
+    std::decay_t<decltype(m)> kr_mtrx;
     vector<T, pSize_> rt;
 
     det = __matrix_sqr_det_lu(m);
@@ -340,6 +394,16 @@ struct matrix<T, __SZ2, __SZ2> {
         matrix(const self& rhs) = default;
         matrix(self&& rhs) = default;
 
+        explicit matrix(std::initializer_list<value_type> list) {
+            set_zero();
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                if (i > __SZ4 * __SZ4)
+                    break;
+                ++i;
+            }
+        }
+
         self& operator=(const self& rhs) = default;
         self& operator=(self&& rhs) = default;
 
@@ -362,6 +426,10 @@ struct matrix<T, __SZ2, __SZ2> {
             return std::mdspan(data_.data(), __SZ2, __SZ2)[i, j];
         }
 
+        void set_zero() {
+            __matrix_sqr_set_zero(*this);
+        }
+
         void set_idtt() {
             __matrix_sqr_set_idtt(*this);
         }
@@ -377,6 +445,38 @@ struct matrix<T, __SZ2, __SZ2> {
         void mult_self(self b) {
             auto tmp = __matrix_sqr_mult(*this, b);
             *this = tmp;
+        }
+
+        std::pair<self, self> lu() {
+            return __matrix_sqr_lu(*this);
+        }
+
+        value_type det_lu() {
+            return __matrix_sqr_det_lu(*this);
+        }
+
+        std::pair<self, self> ldlt() {
+            return __matrix_sqr_ldlt(*this);
+        }
+
+        vector4<value_type> solve_gauss(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_gauss(*this, v);
+        }
+
+        void insert_cmn(const vector4<value_type>& v) {
+            __matrix_sqr_insert_cmn(*this, v);
+        }
+
+        vector4<value_type> solve_kramer(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_kramer(*this, v);
+        }
+
+        self transpose() {
+            return __matrix_sqr_transpose(*this);
+        }
+
+        void transpose_self() {
+            std::swap(data_[2], data_[1]);
         }
 
     private:
@@ -397,6 +497,16 @@ struct matrix<T, __SZ3, __SZ3> {
         matrix(const self& rhs) = default;
         matrix(self&& rhs) = default;
 
+        explicit matrix(std::initializer_list<value_type> list) {
+            set_zero();
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                if (i > __SZ4 * __SZ4)
+                    break;
+                ++i;
+            }
+        }
+
         self& operator=(const self& rhs) = default;
         self& operator=(self&& rhs) = default;
 
@@ -419,12 +529,24 @@ struct matrix<T, __SZ3, __SZ3> {
             return std::mdspan(data_.data(), __SZ3, __SZ3)[i, j];
         }
 
+        void set_zero() {
+            __matrix_sqr_set_zero(*this);
+        }
+
         void set_idtt() {
             __matrix_sqr_set_idtt(*this);
         }
 
         self mult(self b) {
             return __matrix_sqr_mult(*this, b);
+        }
+
+        self sum(self b) {
+            return __matrix_sqr_sum(*this, b);
+        }
+
+        self sub(self b) {
+            return __matrix_sqr_sub(*this, b);
         }
 
         self_vec mult_vec(const self_vec& rhs) {
@@ -436,9 +558,42 @@ struct matrix<T, __SZ3, __SZ3> {
             *this = tmp;
         }
 
+        std::pair<self, self> lu() {
+            return __matrix_sqr_lu(*this);
+        }
+
+        value_type det_lu() {
+            return __matrix_sqr_det_lu(*this);
+        }
+
+        std::pair<self, self> ldlt() {
+            return __matrix_sqr_ldlt(*this);
+        }
+
+        vector4<value_type> solve_gauss(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_gauss(*this, v);
+        }
+
+        void insert_cmn(const vector4<value_type>& v) {
+            __matrix_sqr_insert_cmn(*this, v);
+        }
+
+        vector4<value_type> solve_kramer(const vector4<value_type>& v) {
+            return __matrix_sqr_solve_kramer(*this, v);
+        }
+
+        self transpose() {
+            return __matrix_sqr_transpose(*this);
+        }
+
     private:
         toy::array<T, __SZ3 * __SZ3> data_;
 };
+
+std::ostream& operator<<(std::ostream& os, const matrix<float, __SZ3, __SZ3>& m) {
+    os << std::format("{} {} {}\n{} {} {}\n{} {} {}\n", m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
+    return os;
+}
 
 template <toy::Arithmetical T>
 struct matrix<T, __SZ4, __SZ4> {
@@ -454,6 +609,16 @@ struct matrix<T, __SZ4, __SZ4> {
         matrix(const self& rhs) = default;
         matrix(self&& rhs) = default;
 
+        explicit matrix(std::initializer_list<value_type> list) {
+            set_zero();
+            for (size_t i = 0; auto&& elem : list) {
+                data_[i] = elem;
+                if (i > __SZ4 * __SZ4)
+                    break;
+                ++i;
+            }
+        }
+
         self& operator=(const self& rhs) = default;
         self& operator=(self&& rhs) = default;
 
@@ -476,6 +641,10 @@ struct matrix<T, __SZ4, __SZ4> {
             return std::mdspan(data_.data(), __SZ4, __SZ4)[i, j];
         }
 
+        void set_zero() {
+            __matrix_sqr_set_zero(*this);
+        }
+
         void set_idtt() {
             __matrix_sqr_set_idtt(*this);
         }
@@ -493,7 +662,7 @@ struct matrix<T, __SZ4, __SZ4> {
             *this = tmp;
         }
 
-        std::tuple<self, self> lu() {
+        std::pair<self, self> lu() {
             return __matrix_sqr_lu(*this);
         }
 
@@ -501,7 +670,7 @@ struct matrix<T, __SZ4, __SZ4> {
             return __matrix_sqr_det_lu(*this);
         }
 
-        std::tuple<self, self> ldlt() {
+        std::pair<self, self> ldlt() {
             return __matrix_sqr_ldlt(*this);
         }
 
@@ -515,6 +684,10 @@ struct matrix<T, __SZ4, __SZ4> {
 
         vector4<value_type> solve_kramer(const vector4<value_type>& v) {
             return __matrix_sqr_solve_kramer(*this, v);
+        }
+
+        self transpose() {
+            return __matrix_sqr_transpose(*this);
         }
 
         vector3<value_type> mult_vec3(const vector3<value_type>& v) {
@@ -798,24 +971,5 @@ struct matrix<T, __SZ4, __SZ4> {
     private:
         toy::array<T, __SZ4 * __SZ4> data_;
 };
-
-export {
-    template <typename T>
-    using matrix2 = matrix<T, __SZ2, __SZ2>;
-
-    template <typename T>
-    using matrix3 = matrix<T, __SZ3, __SZ3>;
-
-    template <typename T>
-    using matrix4 = matrix<T, __SZ4, __SZ4>;
-
-    using matrix2f = matrix2<float>;
-    using matrix3f = matrix3<float>;
-    using matrix4f = matrix4<float>;
-
-    using matrix2d = matrix2<double>;
-    using matrix3d = matrix3<double>;
-    using matrix4d = matrix4<double>;
-}
 
 }  // namespace toy::algebra
