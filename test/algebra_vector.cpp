@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE(case_construct_and_arithmetic, *utf::tolerance(0.00001)) {
     BOOST_TEST(one.z() == 2.0f);
 
     toy::algebra::vector3f two{ 1.0f, 1.0f, 1.0f };
-    two.sum(one);
+    two.sum_self(one);
 
     BOOST_TEST(two.x() == 1.0f);
     BOOST_TEST(two.y() == 2.0f);

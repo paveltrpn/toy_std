@@ -9,6 +9,7 @@ module;
 #include <initializer_list>
 #include <type_traits>
 #include <format>
+#include <print>
 
 export module toy_std.algebra:matrix;
 
@@ -210,7 +211,7 @@ std::pair<matrix_sqr<T, pSize_>, matrix_sqr<T, pSize_>> __matrix_sqr_ldlt(
                 sum = sum - lm[i, k] * dv[k] * lm[j, k];
                 if (i == j) {
                     if (sum <= 0) {
-                        std::cout << "ldlt(): matrix is not positive deﬁnite";
+                        std::cout << "__matrix_sqr_ldlt(): matrix is not positive deﬁnite";
                         return { matrix<T, pSize_, pSize_>{}, vector<T, pSize_>{} };
                     }
                     dv[i] = sum;
@@ -329,12 +330,6 @@ struct matrix {
 
         ~matrix() = default;
 
-        template <typename U, size_t pSize_>
-        friend void __matrix_sqr_set_idtt(matrix<U, pSize_, pSize_>& a);
-        template <typename U, size_t pSize_>
-        friend auto __matrix_sqr_mult(const matrix<U, pSize_, pSize_>& a,
-                                      const matrix<U, pSize_, pSize_>& b);
-
         // row-wise indexing operator
         reference operator[](size_t i, size_t j) {
             return std::mdspan(data_.data(), pWidth_, pHeight_)[i, j];
@@ -438,8 +433,24 @@ struct matrix<T, __SZ2, __SZ2> {
             return __matrix_sqr_mult(*this, b);
         }
 
+        self operator*(const self& rhs) {
+            return this->mult(rhs);
+        }
+
+        self sum(self b) {
+            return __matrix_sqr_sum(*this, b);
+        }
+
+        self sub(self b) {
+            return __matrix_sqr_sub(*this, b);
+        }
+
         self_vec mult_vec(const self_vec& rhs) {
             return __matrix_sqr_multVec(*this, rhs);
+        }
+
+        self_vec operator*(const self_vec& rhs) {
+            return this->mult_vec(rhs);
         }
 
         void mult_self(self b) {
@@ -498,12 +509,17 @@ struct matrix<T, __SZ3, __SZ3> {
         matrix(self&& rhs) = default;
 
         explicit matrix(std::initializer_list<value_type> list) {
-            set_zero();
-            for (size_t i = 0; auto&& elem : list) {
-                data_[i] = elem;
-                if (i > __SZ4 * __SZ4)
-                    break;
-                ++i;
+            if (list.size() >= 9) {
+                for (size_t i = 0; auto&& elem : list) {
+                    data_[i] = elem;
+                    ++i;
+                }
+            } else if (list.size() < 9) {
+                set_zero();
+                for (size_t i = 0; auto&& elem : list) {
+                    data_[i] = elem;
+                    ++i;
+                }
             }
         }
 
@@ -537,15 +553,19 @@ struct matrix<T, __SZ3, __SZ3> {
             __matrix_sqr_set_idtt(*this);
         }
 
-        self mult(self b) {
+        self mult(const self& b) {
             return __matrix_sqr_mult(*this, b);
         }
 
-        self sum(self b) {
+        self operator*(const self& rhs) {
+            return this->mult(rhs);
+        }
+
+        self sum(const self& b) {
             return __matrix_sqr_sum(*this, b);
         }
 
-        self sub(self b) {
+        self sub(const self& b) {
             return __matrix_sqr_sub(*this, b);
         }
 
@@ -553,7 +573,11 @@ struct matrix<T, __SZ3, __SZ3> {
             return __matrix_sqr_multVec(*this, rhs);
         }
 
-        void mult_self(self b) {
+        self_vec operator*(const self_vec& rhs) {
+            return this->mult_vec(rhs);
+        }
+
+        void mult_self(const self& b) {
             auto tmp = __matrix_sqr_mult(*this, b);
             *this = tmp;
         }
@@ -586,12 +610,27 @@ struct matrix<T, __SZ3, __SZ3> {
             return __matrix_sqr_transpose(*this);
         }
 
+        void display() {
+            std::cout << std::format("{:.5f} {:.5f} {:.5f}\n{:5f} {:5f} {:5f}\n{:5f} {:5f} {:5f}\n",
+                                     data_[0],
+                                     data_[1],
+                                     data_[2],
+                                     data_[3],
+                                     data_[4],
+                                     data_[5],
+                                     data_[6],
+                                     data_[7],
+                                     data_[8]);
+        }
+
     private:
         toy::array<T, __SZ3 * __SZ3> data_;
 };
 
-std::ostream& operator<<(std::ostream& os, const matrix<float, __SZ3, __SZ3>& m) {
-    os << std::format("{} {} {}\n{} {} {}\n{} {} {}\n", m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
+template <typename T>
+std::ostream& operator<<(std::ostream& os, matrix<T, __SZ3, __SZ3>& m) {
+    os << std::format(
+      "{} {} {}\n{} {} {}\n{} {} {}\n", m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]);
     return os;
 }
 
@@ -653,8 +692,24 @@ struct matrix<T, __SZ4, __SZ4> {
             return __matrix_sqr_mult(*this, b);
         }
 
+        self operator*(const self& rhs) {
+            return this->mult(rhs);
+        }
+
+        self sum(self b) {
+            return __matrix_sqr_sum(*this, b);
+        }
+
+        self sub(self b) {
+            return __matrix_sqr_sub(*this, b);
+        }
+
         self_vec mult_vec(const self_vec& rhs) {
             return __matrix_sqr_multVec(*this, rhs);
+        }
+
+        self_vec operator*(const self_vec& rhs) {
+            return this->mult_vec(rhs);
         }
 
         void mult_self(self b) {
@@ -710,9 +765,8 @@ struct matrix<T, __SZ4, __SZ4> {
             return rt;
         }
 
-        self operator*(self& rhs) {
-            *this = mult(rhs);
-            return *this;
+        vector3<value_type> operator*(const vector3<value_type>& rhs) {
+            return this->mult_vec3(rhs);
         }
 
         void set_perspective(value_type fovy, value_type aspect, value_type near, value_type far) {
@@ -746,51 +800,51 @@ struct matrix<T, __SZ4, __SZ4> {
 
         void set_lookAt(const vector3<value_type>& eye,
                         const vector3<value_type>& center,
-                        const vector3<value_type> up) {
+                        const vector3<value_type>& up) {
             set_idtt();
             vector3<value_type> eyeDir;
 
-            constexpr float floatEps = std::numeric_limits<float>::epsilon();
+            constexpr value_type floatEps = std::numeric_limits<value_type>::epsilon();
             if (std::fabs(eye[0] - center[0]) < floatEps && std::fabs(eye[1] - center[1]) < floatEps
                 && std::fabs(eye[2] - center[2]) < floatEps) {
                 return;
             }
 
-            float z0 = eye[0] - center[0];
-            float z1 = eye[1] - center[1];
-            float z2 = eye[2] - center[2];
+            value_type z0 = eye[0] - center[0];
+            value_type z1 = eye[1] - center[1];
+            value_type z2 = eye[2] - center[2];
 
-            float len = 1.0f / std::hypot(z0, z1, z2);  //??? было просто hypot
+            value_type len = 1.0 / std::hypot(z0, z1, z2);  //??? было просто hypot
             z0 *= len;
             z1 *= len;
             z2 *= len;
 
-            float x0 = up[1] * z2 - up[2] * z1;
-            float x1 = up[2] * z0 - up[0] * z2;
-            float x2 = up[0] * z1 - up[1] * z0;
+            value_type x0 = up[1] * z2 - up[2] * z1;
+            value_type x1 = up[2] * z0 - up[0] * z2;
+            value_type x2 = up[0] * z1 - up[1] * z0;
             len = std::hypot(x0, x1, x2);
-            if (len == 0.0f) {
+            if (len == 0.0) {
                 x0 = 0;
                 x1 = 0;
                 x2 = 0;
             } else {
-                len = 1.0f / len;
+                len = 1.0 / len;
                 x0 *= len;
                 x1 *= len;
                 x2 *= len;
             }
 
-            float y0 = z1 * x2 - z2 * x1;
-            float y1 = z2 * x0 - z0 * x2;
-            float y2 = z0 * x1 - z1 * x0;
+            value_type y0 = z1 * x2 - z2 * x1;
+            value_type y1 = z2 * x0 - z0 * x2;
+            value_type y2 = z0 * x1 - z1 * x0;
 
             len = std::hypot(y0, y1, y2);
-            if (len == 0.0f) {
+            if (len == 0.0) {
                 y0 = 0;
                 y1 = 0;
                 y2 = 0;
             } else {
-                len = 1.0f / len;
+                len = 1.0 / len;
                 y0 *= len;
                 y1 *= len;
                 y2 *= len;
@@ -799,19 +853,19 @@ struct matrix<T, __SZ4, __SZ4> {
             data_[0] = x0;
             data_[1] = y0;
             data_[2] = z0;
-            data_[3] = 0.0f;
+            data_[3] = 0.0;
             data_[4] = x1;
             data_[5] = y1;
             data_[6] = z1;
-            data_[7] = 0.0f;
+            data_[7] = 0.0;
             data_[8] = x2;
             data_[9] = y2;
             data_[10] = z2;
-            data_[11] = 0.0f;
+            data_[11] = 0.0;
             data_[12] = -(x0 * eye[0] + x1 * eye[1] + x2 * eye[2]);
             data_[13] = -(y0 * eye[0] + y1 * eye[1] + y2 * eye[2]);
             data_[14] = -(z0 * eye[0] + z1 * eye[1] + z2 * eye[2]);
-            data_[15] = 1.0f;
+            data_[15] = 1.0;
         }
 
         void set_orthographic(value_type left,
@@ -820,25 +874,25 @@ struct matrix<T, __SZ4, __SZ4> {
                               value_type top,
                               value_type near,
                               value_type far) {
-            data_[0] = 2.0f / (right - left);
+            data_[0] = 2.0 / (right - left);
             data_[1] = 0;
             data_[2] = 0;
             data_[3] = 0;
 
             data_[4] = 0;
-            data_[5] = 2.0f / (top - bottom);
+            data_[5] = 2.0 / (top - bottom);
             data_[6] = 0;
             data_[7] = 0;
 
             data_[8] = 0;
             data_[9] = 0;
-            data_[10] = -2.0f / (far - near);
+            data_[10] = -2.0 / (far - near);
             data_[11] = 0;
 
             data_[12] = -(right + left) / (right - left);
             data_[13] = -(top + bottom) / (top - bottom);
             data_[14] = -(far + near) / (far - near);
-            data_[15] = 1.0f;
+            data_[15] = 1.0;
         }
 
         void set_scale(const toy::algebra::vector3<value_type>& offset) {
@@ -923,7 +977,7 @@ struct matrix<T, __SZ4, __SZ4> {
             p.set_rotation_pitch(pitch);
             r.set_rotation_roll(roll);
 
-            *this = y.mult(p);
+            *this = y * p;
             mult_self(r);
         }
 
@@ -958,6 +1012,29 @@ struct matrix<T, __SZ4, __SZ4> {
             data_[13] = 0.0f;
             data_[14] = 0.0f;
             data_[15] = 1.0f;
+        }
+
+        void display() {
+            std::cout << std::format("{:.5f} {:.5f} {:.5f} {:5f}\n"
+                                     "{ : .5f } { : .5f } { : .5f } { : 5f }\n"
+                                     "{ : .5f } { : .5f } { : .5f } { : 5f }\n"
+                                     "{ : .5f } { : .5f } { : .5f } { : 5f }\n",
+                                     data_[0],
+                                     data_[1],
+                                     data_[2],
+                                     data_[3],
+                                     data_[4],
+                                     data_[5],
+                                     data_[6],
+                                     data_[7],
+                                     data_[8],
+                                     data_[9],
+                                     data_[10],
+                                     data_[11],
+                                     data_[12],
+                                     data_[13],
+                                     data_[14],
+                                     data_[15]);
         }
 
         [[nodiscard]] pointer data() {

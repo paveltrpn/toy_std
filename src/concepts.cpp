@@ -18,7 +18,7 @@ export {
                              || std::is_same_v<std::string, T> || std::is_same_v<std::wstring, T>;
 
     template <typename T>
-    concept Arithmetical = requires(T value) {
+    concept Arithmetical = std::is_signed_v<T> && requires(T value) {
         value + value;
         value - value;
         value *value;

@@ -140,6 +140,17 @@ BOOST_AUTO_TEST_CASE(matrix3_case_mult, *utf::tolerance(0.00001)) {
         }
 }
 
+BOOST_AUTO_TEST_CASE(matrix3_case_mult_operator, *utf::tolerance(0.00001)) {
+    auto one = fibo3_tr * fibo3;
+
+    for (auto i = 0; i < 3; ++i)
+        for (auto j = 0; j < 3; ++j) {
+            auto foo = one[i, j];
+            auto bar = mult3_tr[i, j];
+            BOOST_TEST(foo == bar);
+        }
+}
+
 BOOST_AUTO_TEST_CASE(matrix3_case_sub_det_lu, *utf::tolerance(0.00001)) {
     auto A = fibo3;
     /* A =
@@ -148,7 +159,7 @@ BOOST_AUTO_TEST_CASE(matrix3_case_sub_det_lu, *utf::tolerance(0.00001)) {
      * 8  13 31
      */
     A[8] = 31;
-
+    
     auto one = A.sub(mult3_tr);
     /* one =
      * -2   -7   -33

@@ -33,6 +33,25 @@ struct vector_base {
 template <toy::Arithmetical T, size_t size>
 struct vector;
 
+export {
+    template <typename T>
+    using vector2 = vector<T, __SZ2>;
+
+    template <typename T>
+    using vector3 = vector<T, __SZ3>;
+
+    template <typename T>
+    using vector4 = vector<T, __SZ4>;
+
+    using vector2f = vector2<float>;
+    using vector3f = vector3<float>;
+    using vector4f = vector4<float>;
+
+    using vector2d = vector2<double>;
+    using vector3d = vector3<double>;
+    using vector4d = vector4<double>;
+}
+
 template <toy::Arithmetical T>
 struct vector<T, __SZ2> {
         using self = vector<T, __SZ2>;
@@ -123,20 +142,42 @@ struct vector<T, __SZ3> {
             return data_[2];
         }
 
-        void sum(self b) {
+        void sum_self(const self& b) {
             data_[0] += b.data_[0];
             data_[1] += b.data_[1];
             data_[2] += b.data_[2];
         };
 
-        void sub(self b) {
+        void sub_self(const self& b) {
             data_[0] -= b.data_[0];
             data_[1] -= b.data_[1];
             data_[2] -= b.data_[2];
         };
 
+        value_type sum(const self& b) {
+            return { data_[0] + b.data_[0], data_[1] + b.data_[1], data_[2] + b.data_[2] };
+        };
+
+        value_type sub(const self& b) {
+            return { data_[0] - b.data_[0], data_[1] - b.data_[1], data_[2] - b.data_[2] };
+        };
+
         value_type dot(self b) {
             return data_[0] * b.data_[0] + data_[1] * b.data_[1] + data_[2] * b.data_[2];
+        }
+
+        self scale(const self& v, float scale) {
+            self rt;
+
+            rt[0] = v[0] * scale;
+            rt[1] = v[1] * scale;
+            rt[2] = v[2] * scale;
+
+            return rt;
+        }
+
+        void scale_self(float scale) {
+            *this = scale(*this, scale);
         }
 
         self cross(self b) {
@@ -196,18 +237,32 @@ struct vector<T, __SZ4> {
             return data_[3];
         }
 
-        void sum(self b) {
+        void sum_self(const self& b) {
             data_[0] += b.data_[0];
             data_[1] += b.data_[1];
             data_[2] += b.data_[2];
             data_[3] += b.data_[3];
         };
 
-        void sub(self b) {
+        void sub_self(const self& b) {
             data_[0] -= b.data_[0];
             data_[1] -= b.data_[1];
             data_[2] -= b.data_[2];
             data_[3] -= b.data_[3];
+        };
+
+        value_type sum(const self& b) {
+            return { data_[0] + b.data_[0],
+                     data_[1] + b.data_[1],
+                     data_[2] + b.data_[2],
+                     data_[3] + b.data_[3] };
+        };
+
+        value_type sub(const self& b) {
+            return { data_[0] - b.data_[0],
+                     data_[1] - b.data_[1],
+                     data_[2] - b.data_[2],
+                     data_[3] - b.data_[3] };
         };
 
         value_type dot(self b) {
@@ -215,25 +270,23 @@ struct vector<T, __SZ4> {
                    + data_[3] * b.data_[3];
         }
 
+        self scale(const self& v, float scale) {
+            self rt;
+
+            rt[0] = v[0] * scale;
+            rt[1] = v[1] * scale;
+            rt[2] = v[2] * scale;
+            rt[3] = v[3] * scale;
+
+            return rt;
+        }
+
+        void scale_self(float scale) {
+            *this = scale(*this, scale);
+        }
+
     private:
         toy::array<T, __SZ4> data_;
 };
-
-export template <typename T>
-using vector2 = vector<T, __SZ2>;
-
-export template <typename T>
-using vector3 = vector<T, __SZ3>;
-
-export template <typename T>
-using vector4 = vector<T, __SZ4>;
-
-export using vector2f = vector2<float>;
-export using vector3f = vector3<float>;
-export using vector4f = vector4<float>;
-
-export using vector2d = vector2<double>;
-export using vector3d = vector3<double>;
-export using vector4d = vector4<double>;
 
 }  // namespace toy::algebra
