@@ -2,6 +2,7 @@
 import toy_std.algebra;
 import toy_std.array;
 
+#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(quaternion)

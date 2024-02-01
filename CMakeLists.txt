@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_SCAN_FOR_MODULES)
 
 project (toy_containers)
 
@@ -42,16 +39,25 @@ if(WITH_MSAN)
   add_link_options(-fsanitize=memory)
 endif()
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_SCAN_FOR_MODULES)
 
-set(WORK_DIR "/mnt/Fdisk_ext4_ssd_sata/code")
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+#find_package(Boost 1.80.0 COMPONENTS filesystem system unit_test_framework REQUIRED)
+
+set(WORK_DIR "/mnt/main_disk/code")
+set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
 set(SRC_DIR "src")
 set(TST_DIR "test")
 
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/stage/lib)
+include_directories (${BOOST_LOCAL})
+link_directories(${BOOST_LOCAL}/stage/lib)
 
 add_library(toy_stl)
-# Add the module file to the library
 target_sources(toy_stl
   PUBLIC
     FILE_SET CXX_MODULES FILES
@@ -70,13 +76,7 @@ target_sources(toy_stl
     ${SRC_DIR}/algorithm.cpp
 )
 
-set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${WORK_DIR}/extern_libs/boost_1_83_0/stage/lib)
-
 enable_testing()
-set(Boost_INCLUDE_DIR "${WORK_DIR}/extern_libs/boost_1_83_0")
-set(Boost_LIBRARY_DIR "${WORK_DIR}/extern_libs/boost_1_83_0/stage/lib")
-find_package(Boost 1.80.0 COMPONENTS filesystem system unit_test_framework REQUIRED)
-include_directories (${Boost_INCLUDE_DIRS})
 
 add_executable(test_unit
     ${TST_DIR}/array.cpp
@@ -88,9 +88,8 @@ add_executable(test_unit
     ${TST_DIR}/algebra_vector.cpp
     ${TST_DIR}/algebra_quaternion.cpp)
 
-target_link_libraries(test_unit ${Boost_LIBRARIES})
-target_link_libraries(test_unit toy_stl)
+target_link_libraries(test_unit toy_stl boost_unit_test_framework)
 
 # target_compile_definitions(test_unit PUBLIC BOOST_TEST_DYN_LINK)
 
-add_test(array test_unit)
+add_test(test_all test_unit)

@@ -5,6 +5,7 @@ import toy_std.array;
 
 #define BOOST_TEST_MODULE test_unit
 
+#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
 // #define BROKEN_EXCLUDE

@@ -1,6 +1,7 @@
 
 import toy_std.raw_list;
 
+#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
 // #define BROKEN_EXCLUDE
