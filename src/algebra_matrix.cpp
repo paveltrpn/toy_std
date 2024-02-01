@@ -3,7 +3,6 @@ module;
 
 #include <iostream>
 #include <cstddef>
-#include <algorithm>
 #include <mdspan>
 #include <numbers>
 #include <initializer_list>

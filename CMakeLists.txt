@@ -46,8 +46,10 @@ set(CMAKE_SCAN_FOR_MODULES)
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+#find globally installed system package
 #find_package(Boost 1.80.0 COMPONENTS filesystem system unit_test_framework REQUIRED)
 
+# find local hand-build package
 set(WORK_DIR "/mnt/main_disk/code")
 set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
 set(SRC_DIR "src")
