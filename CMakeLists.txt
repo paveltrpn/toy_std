@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
-project (toy_containers)
+project (toy_stl)
 
 add_compile_options(-g 
                     -Wall 

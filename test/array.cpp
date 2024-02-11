@@ -66,12 +66,30 @@ BOOST_AUTO_TEST_CASE(case_at) {
 
 BOOST_AUTO_TEST_CASE(case_c_style_pointer_get) {
     toy::array<int, 3> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
-    
+
     auto ptr = first.data();
 
     BOOST_CHECK_EQUAL(ptr[0], 0);
     BOOST_CHECK_EQUAL(ptr[1], 1);
     BOOST_CHECK_EQUAL(ptr[2], 2);
+}
+
+BOOST_AUTO_TEST_CASE(case_iterator) {
+    toy::array<int, 8> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
+
+    for (size_t i = 0; const auto& elem : first) {
+        BOOST_CHECK_EQUAL(elem, i);
+        ++i;
+    }
+}
+
+BOOST_AUTO_TEST_CASE(case_const_iterator) {
+    toy::array<int, 8> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
+
+    for (size_t i = 0; const auto& elem : first) {
+        BOOST_CHECK_EQUAL(elem, i);
+        ++i;
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -6,8 +6,130 @@ module;
 
 export module toy_std.array;
 
+import toy_std.iterator_traits;
+
 export {
     namespace toy {
+
+    template <typename T>
+    struct array_iterator {
+            using self = array_iterator<T>;
+
+            using value_type = T;
+            using reference = T&;
+            using pointer = T*;
+            using const_reference = const T&;
+            using const_pointer = const T*;
+            using difference_type = std::ptrdiff_t;
+            using iterator_category = toy::contiguous_iterator_tag;
+
+            array_iterator() = default;
+            explicit array_iterator(pointer ptr) : element_{ ptr } {};
+
+            reference operator*() const {
+                return *element_;
+            };
+
+            pointer operator->() const {
+                return element_;
+            }
+
+            // pre-increment
+            reference operator++() {
+                element_ += 1;
+                return *element_;
+            }
+
+            // post-increment
+            value_type operator++(int) {
+                auto tmp{ *this };
+                ++(*this);
+                return tmp;
+            }
+
+            // pre-decrement
+            reference operator--() {
+                element_ -= 1;
+                return *element_;
+            }
+
+            // post-decrement
+            value_type operator--(int) {
+                auto tmp{ *this };
+                --(*this);
+                return tmp;
+            }
+
+            friend bool operator==(const self& a, const self& b) {
+                return a.element_ == b.element_;
+            };
+
+            friend bool operator!=(const self& a, const self& b) {
+                return !(a == b);
+            };
+
+            pointer element_;
+    };
+
+    template <typename T>
+    struct array_const_iterator {
+            using self = array_const_iterator<T>;
+
+            using value_type = T;
+            using reference = T&;
+            using pointer = T*;
+            using const_reference = const T&;
+            using const_pointer = const T*;
+            using difference_type = std::ptrdiff_t;
+            using iterator_category = toy::contiguous_iterator_tag;
+
+            array_const_iterator() = default;
+            explicit array_const_iterator(pointer ptr) : element_{ ptr } {};
+
+            const_reference operator*() const {
+                return *element_;
+            };
+
+            const_pointer operator->() const {
+                return element_;
+            }
+
+            // pre-increment
+            const_reference operator++() {
+                element_ += 1;
+                return *element_;
+            }
+
+            // post-increment
+            value_type operator++(int) {
+                auto tmp{ *this };
+                ++(*this);
+                return tmp;
+            }
+
+            // pre-decrement
+            const_reference operator--() {
+                element_ -= 1;
+                return *element_;
+            }
+
+            // post-decrement
+            value_type operator--(int) {
+                auto tmp{ *this };
+                --(*this);
+                return tmp;
+            }
+
+            friend bool operator==(const self& a, const self& b) {
+                return a.element_ == b.element_;
+            };
+
+            friend bool operator!=(const self& a, const self& b) {
+                return !(a == b);
+            };
+
+            pointer element_;
+    };
 
     template <typename T, size_t len>
         requires(len > 0)
@@ -17,6 +139,9 @@ export {
             using const_reference = const value_type&;
             using pointer = value_type*;
             using const_pointer = const value_type*;
+
+            using iterator = array_iterator<T>;
+            using const_iterator = array_const_iterator<T>;
 
             array() = default;
 
@@ -46,6 +171,22 @@ export {
                         break;
                     ++i;
                 }
+            }
+
+            iterator begin() {
+                return iterator{ &data_[0] };
+            }
+
+            iterator end() {
+                return iterator{ &data_[len] };
+            }
+
+            const_iterator cbegin() {
+                return const_iterator{ &data_[0] };
+            }
+
+            const_iterator cend() {
+                return const_iterator{ &data_[len] };
             }
 
             /*
