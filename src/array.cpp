@@ -26,46 +26,108 @@ export {
             array_iterator() = default;
             explicit array_iterator(pointer ptr) : element_{ ptr } {};
 
+            reference operator*() {
+                return *element_;
+            };
+
             reference operator*() const {
                 return *element_;
             };
+
+            pointer operator->() {
+                return element_;
+            }
 
             pointer operator->() const {
                 return element_;
             }
 
             // pre-increment
-            reference operator++() {
-                element_ += 1;
-                return *element_;
+            self& operator++() {
+                ++element_;
+                return *this;
             }
 
             // post-increment
-            value_type operator++(int) {
-                auto tmp{ *this };
-                ++(*this);
+            self operator++(int) {
+                auto tmp{ this };
+                ++this;
                 return tmp;
             }
 
             // pre-decrement
-            reference operator--() {
-                element_ -= 1;
-                return *element_;
+            self& operator--() {
+                --element_;
+                return *this;
             }
 
             // post-decrement
-            value_type operator--(int) {
-                auto tmp{ *this };
-                --(*this);
+            self operator--(int) {
+                auto tmp{ this };
+                --this;
                 return tmp;
             }
 
-            friend bool operator==(const self& a, const self& b) {
-                return a.element_ == b.element_;
+            self& operator+=(difference_type offst) {
+                element_ = element_ + offst;
+                return *this;
+            }
+
+            self& operator-=(difference_type offst) {
+                element_ = element_ - offst;
+                return *this;
+            }
+
+            self operator+(difference_type offst) {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            self operator+(difference_type offst) const {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) const {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            difference_type operator-(self rhs) const {
+                return rhs.element_ - element_;
+            }
+
+            bool operator==(const self& rhs) const {
+                return element_ == rhs.element_;
             };
 
-            friend bool operator!=(const self& a, const self& b) {
-                return !(a == b);
+            bool operator!=(const self& rhs) {
+                return !(*this == rhs);
+            };
+
+            friend bool operator>(const self& a, const self& b) {
+                return *a.element_ > *b.element_;
+            };
+
+            friend bool operator<(const self& a, const self& b) {
+                return *a.element_ < *b.element_;
+            };
+
+            friend bool operator<=(const self& a, const self& b) {
+                return *a.element_ <= *b.element_;
+            };
+
+            friend bool operator>=(const self& a, const self& b) {
+                return *a.element_ >= *b.element_;
             };
 
             pointer element_;
@@ -86,53 +148,114 @@ export {
             array_const_iterator() = default;
             explicit array_const_iterator(pointer ptr) : element_{ ptr } {};
 
+            const_reference operator*() {
+                return *element_;
+            };
+
             const_reference operator*() const {
                 return *element_;
             };
+
+            const_pointer operator->() {
+                return element_;
+            }
 
             const_pointer operator->() const {
                 return element_;
             }
 
             // pre-increment
-            const_reference operator++() {
-                element_ += 1;
-                return *element_;
+            self& operator++() {
+                ++element_;
+                return *this;
             }
 
             // post-increment
-            value_type operator++(int) {
-                auto tmp{ *this };
-                ++(*this);
+            self operator++(int) {
+                auto tmp{ this };
+                ++this;
                 return tmp;
             }
 
             // pre-decrement
-            const_reference operator--() {
-                element_ -= 1;
-                return *element_;
+            self& operator--() {
+                --element_;
+                return *this;
             }
 
             // post-decrement
-            value_type operator--(int) {
-                auto tmp{ *this };
-                --(*this);
+            self operator--(int) {
+                auto tmp{ this };
+                --this;
                 return tmp;
             }
 
-            friend bool operator==(const self& a, const self& b) {
-                return a.element_ == b.element_;
+            self& operator+=(difference_type offst) {
+                element_ = element_ + offst;
+                return *this;
+            }
+
+            self& operator-=(difference_type offst) {
+                element_ = element_ - offst;
+                return *this;
+            }
+
+            self operator+(difference_type offst) {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            self operator+(difference_type offst) const {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) const {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            difference_type operator-(self rhs) const {
+                return rhs.element_ - element_;
+            }
+
+            bool operator==(const self& rhs) const {
+                return element_ == rhs.element_;
             };
 
-            friend bool operator!=(const self& a, const self& b) {
-                return !(a == b);
+            bool operator!=(const self& rhs) {
+                return !(*this == rhs);
             };
 
+            friend bool operator>(const self& a, const self& b) {
+                return *a.element_ > *b.element_;
+            };
+
+            friend bool operator<(const self& a, const self& b) {
+                return *a.element_ < *b.element_;
+            };
+
+            friend bool operator<=(const self& a, const self& b) {
+                return *a.element_ <= *b.element_;
+            };
+
+            friend bool operator>=(const self& a, const self& b) {
+                return *a.element_ >= *b.element_;
+            };
             pointer element_;
     };
 
-    template <typename T, size_t len>
-        requires(len > 0)
+    template <typename T, size_t size_>
+        requires(size_ > 0)
     struct array {
             using value_type = T;
             using reference = value_type&;
@@ -149,8 +272,8 @@ export {
                 std::copy(std::begin(rhs.data_), std::end(rhs.data_), data_);
             }
 
-            explicit array(T rhs[len]) {
-                std::copy(rhs[0], rhs[len], data_);
+            explicit array(T rhs[size_]) {
+                std::copy(rhs[0], rhs[size_], data_);
             }
 
             /*
@@ -159,7 +282,7 @@ export {
             array(array&& rhs) = delete;
 
             explicit array(T value) {
-                for (size_t i = 0; i < len; ++i) {
+                for (size_t i = 0; i < size_; ++i) {
                     data_[i] = value;
                 }
             }
@@ -167,26 +290,26 @@ export {
             explicit array(std::initializer_list<T> list) {
                 for (size_t i = 0; auto&& elem : list) {
                     data_[i] = elem;
-                    if (i > len)
+                    if (i > size_)
                         break;
                     ++i;
                 }
             }
 
             iterator begin() {
-                return iterator{ &data_[0] };
+                return iterator{ data() };
             }
 
             iterator end() {
-                return iterator{ &data_[len] };
+                return iterator{ data() + size_ };
             }
 
             const_iterator cbegin() {
-                return const_iterator{ &data_[0] };
+                return const_iterator{ data() };
             }
 
             const_iterator cend() {
-                return const_iterator{ &data_[len] };
+                return const_iterator{ data() + size_ };
             }
 
             /*
@@ -199,8 +322,8 @@ export {
                 return *this;
             }
 
-            array& operator=(T rhs[len]) {
-                std::copy(rhs[0], rhs[len], data_);
+            array& operator=(T rhs[size_]) {
+                std::copy(rhs[0], rhs[size_], data_);
             }
 
             /*
@@ -219,7 +342,7 @@ export {
             }
 
             T& at(size_t id) {
-                if (id < len) {
+                if (id < size_) {
                     return data_[id];
                 } else {
                     throw std::invalid_argument{ "array bounds violition" };
@@ -227,11 +350,37 @@ export {
             }
 
             const T& at(size_t id) const {
-                if (id < len) {
+                if (id < size_) {
                     return data_[id];
                 } else {
                     throw std::invalid_argument{ "array bounds violition" };
                 }
+            }
+
+            reference front() {
+                return data_[0];
+            }
+
+            const_reference front() const {
+                return data_[0];
+            }
+
+            reference back() {
+                return data_[size_ - 1];
+            }
+
+            const_reference back() const {
+                return data_[size_ - 1];
+            }
+
+            [[nodiscard]]
+            size_t size() const {
+                return size_;
+            }
+
+            [[nodiscard]]
+            bool empty() const {
+                return size_ == 0;
             }
 
             [[nodiscard]] pointer data() {
@@ -242,8 +391,14 @@ export {
                 return static_cast<const_pointer>(data_);
             }
 
+            void fill(const value_type& value) {
+                for (auto& elem : *this) {
+                    elem = value;
+                }
+            }
+
         private:
-            value_type data_[len]{};
+            value_type data_[size_]{};
     };
 
     }  // namespace toy

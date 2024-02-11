@@ -7,17 +7,149 @@ module;
 #include <memory>
 #include <initializer_list>
 
-#define DEBUG
+// #define DEBUG
 
 export module toy_std.vector;
 
 import toy_std.concepts;
+import toy_std.iterator_traits;
 
 export {
     namespace toy {
 
-    template <NumberOrString T>
+    template <typename T>
+    struct vector_iterator {
+            using self = vector_iterator<T>;
+
+            using value_type = T;
+            using reference = T&;
+            using pointer = T*;
+            using const_reference = const T&;
+            using const_pointer = const T*;
+            using difference_type = std::ptrdiff_t;
+            using iterator_category = toy::contiguous_iterator_tag;
+
+            vector_iterator() = default;
+            explicit vector_iterator(pointer ptr) : element_{ ptr } {};
+
+            reference operator*() {
+                return *element_;
+            };
+
+            reference operator*() const {
+                return *element_;
+            };
+
+            pointer operator->() {
+                return element_;
+            }
+
+            pointer operator->() const {
+                return element_;
+            }
+
+            // pre-increment
+            self& operator++() {
+                ++element_;
+                return *this;
+            }
+
+            // post-increment
+            self operator++(int) {
+                auto tmp{ this };
+                ++this;
+                return tmp;
+            }
+
+            // pre-decrement
+            self& operator--() {
+                --element_;
+                return *this;
+            }
+
+            // post-decrement
+            self operator--(int) {
+                auto tmp{ this };
+                --this;
+                return tmp;
+            }
+
+            self& operator+=(difference_type offst) {
+                element_ = element_ + offst;
+                return *this;
+            }
+
+            self& operator-=(difference_type offst) {
+                element_ = element_ - offst;
+                return *this;
+            }
+
+            self operator+(difference_type offst) {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            self operator+(difference_type offst) const {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) const {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            difference_type operator-(self rhs) const {
+                return rhs.element_ - element_;
+            }
+
+            bool operator==(const self& rhs) const {
+                return element_ == rhs.element_;
+            };
+
+            bool operator!=(const self& rhs) {
+                return !(*this == rhs);
+            };
+
+            friend bool operator>(const self& a, const self& b) {
+                return *a.element_ > *b.element_;
+            };
+
+            friend bool operator<(const self& a, const self& b) {
+                return *a.element_ < *b.element_;
+            };
+
+            friend bool operator<=(const self& a, const self& b) {
+                return *a.element_ <= *b.element_;
+            };
+
+            friend bool operator>=(const self& a, const self& b) {
+                return *a.element_ >= *b.element_;
+            };
+
+            pointer element_;
+    };
+
+    template <typename T>
     class vector {
+            using value_type = T;
+            using reference = value_type&;
+            using const_reference = const value_type&;
+            using pointer = value_type*;
+            using const_pointer = const value_type*;
+
+            using iterator = vector_iterator<T>;
+            // using const_iterator = array_const_iterator<T>;
+
         public:
             /*
              * constructor with user-defined capacity
@@ -117,6 +249,14 @@ export {
 
             ~vector() = default;
 
+            iterator begin() {
+                return iterator{ data() };
+            }
+
+            iterator end() {
+                return iterator{ data() + size_ };
+            }
+
             void push_back(T&& elem) {
                 if (size_ == capacity_) {
 #ifdef DEBUG
@@ -173,19 +313,15 @@ export {
                 }
             }
 
-            /*
-             * Test purpose members
-             */
-
-            [[nodiscard]] constexpr size_t getSize() const {
+            [[nodiscard]] constexpr size_t size() const {
                 return size_;
             };
 
-            [[nodiscard]] constexpr size_t getCap() const {
+            [[nodiscard]] constexpr size_t capacity() const {
                 return capacity_;
             };
 
-            T* getPtr() const {
+            T* data() const {
                 return data_.get();
             }
 

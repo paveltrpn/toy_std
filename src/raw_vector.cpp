@@ -6,7 +6,7 @@ module;
 #include <type_traits>
 #include <string>
 
-#define DEBUG
+// #define DEBUG
 
 export module toy_std.raw_vector;
 
@@ -25,8 +25,8 @@ class raw_vector {
 };
 
 template <typename T>
-struct vector_iterator {
-        using self = vector_iterator<T>;
+struct raw_vector_iterator {
+        using self = raw_vector_iterator<T>;
 
         using value_type = T;
         using reference = T&;
@@ -36,9 +36,9 @@ struct vector_iterator {
 };
 
 template <typename T>
-struct vector_const_iterator {
-        using self = vector_const_iterator<T>;
-        using iterator = vector_iterator<T>;
+struct raw_vector_const_iterator {
+        using self = raw_vector_const_iterator<T>;
+        using iterator = raw_vector_iterator<T>;
 
         using value_type = T;
         using reference = const T&;
@@ -57,8 +57,8 @@ struct raw_vector<
         using pointer = T*;
         using reference = T&;
 
-        using iterator = vector_iterator<T>;
-        using const_terator = vector_const_iterator<T>;
+        using iterator = raw_vector_iterator<T>;
+        using const_terator = raw_vector_const_iterator<T>;
 
         /*
          * constructor with user-defined capacity

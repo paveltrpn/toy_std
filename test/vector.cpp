@@ -32,11 +32,11 @@ BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
 
     auto foo = first.pop_back();
     BOOST_CHECK_EQUAL(foo, "thirty");
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(2));
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(2));
 
     first.push_back("thirty");
     BOOST_CHECK_EQUAL(first[2], "thirty");
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_construct_init_list) {
@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE(case_construct_init_list) {
     BOOST_CHECK_EQUAL(initLst[0], "first");
     BOOST_CHECK_EQUAL(initLst[1], "second");
     BOOST_CHECK_EQUAL(initLst[2], "third");
-    BOOST_CHECK_EQUAL(initLst.getSize(), static_cast<size_t>(3));
-    BOOST_CHECK_EQUAL(initLst.getCap(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.size(), static_cast<size_t>(3));
+    BOOST_CHECK_EQUAL(initLst.capacity(), static_cast<size_t>(3));
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_create, *boost::unit_test::tolerance(0.00001)) {
@@ -71,10 +71,10 @@ BOOST_AUTO_TEST_CASE(case_move_create) {
     BOOST_CHECK_EQUAL(second[0], 10);
     BOOST_CHECK_EQUAL(second[1], 30);
 
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getCap(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getPtr(), nullptr);
-    BOOST_CHECK_NE(second.getPtr(), nullptr);
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.data(), nullptr);
+    BOOST_CHECK_NE(second.data(), nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(case_copy_assign) {
@@ -106,10 +106,10 @@ BOOST_AUTO_TEST_CASE(case_move_assign) {
     BOOST_CHECK_EQUAL(second[0], 10);
     BOOST_CHECK_EQUAL(second[1], 30);
 
-    BOOST_CHECK_EQUAL(first.getSize(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getCap(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.getPtr(), nullptr);
-    BOOST_CHECK_NE(second.getPtr(), nullptr);
+    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
+    BOOST_CHECK_EQUAL(first.data(), nullptr);
+    BOOST_CHECK_NE(second.data(), nullptr);
 }
 
 BOOST_AUTO_TEST_CASE(case_at) {
@@ -123,4 +123,43 @@ BOOST_AUTO_TEST_CASE(case_at) {
     BOOST_CHECK_THROW(first.at(4), std::invalid_argument);
 }
 
+BOOST_AUTO_TEST_CASE(case_iterator) {
+    toy::vector<int> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
+
+    for (size_t i = 0; auto& elem : first) {
+        BOOST_CHECK_EQUAL(elem, i);
+        ++i;
+    }
+}
+
+BOOST_AUTO_TEST_CASE(case_const_iterator) {
+    toy::vector<int> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
+
+    for (size_t i = 0; const auto& elem : first) {
+        BOOST_CHECK_EQUAL(elem, i);
+        ++i;
+    }
+}
+
+BOOST_AUTO_TEST_CASE(case_std_sort) {
+    toy::vector<int> sorted{ 0, 1, 2, 3, 4, 5, 6, 7 };
+    toy::vector<int> raw{ 5, 2, 6, 7, 4, 3, 1, 0 };
+
+    std::sort(raw.begin(), raw.end());
+
+    for (size_t i = 0; i < 8; ++i) {
+        BOOST_CHECK_EQUAL(raw[i], sorted[i]);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(case_std_for_each) {
+    toy::vector<int> doubled{ 0, 1, 4, 9, 16, 25, 36 };
+    toy::vector<int> raw{ 0, 1, 2, 3, 4, 5, 6 };
+
+    std::for_each(raw.begin(), raw.end(), [](auto& elem) { elem *= elem; });
+
+    for (size_t i = 0; i < 7; ++i) {
+        BOOST_CHECK_EQUAL(raw[i], doubled[i]);
+    }
+}
 BOOST_AUTO_TEST_SUITE_END()
