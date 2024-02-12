@@ -129,28 +129,169 @@ export {
                 return range_[element];
             }
 
-            bool operator==(const self& rhs) const {
+            bool operator==(const self& rhs) const noexcept {
                 return element_ == rhs.element_;
             };
 
-            bool operator!=(const self& rhs) {
+            bool operator!=(const self& rhs) const noexcept {
                 return !(*this == rhs);
             };
 
-            friend bool operator>(const self& a, const self& b) {
-                return a.range_[a.element_] > b.range_[b.element_];
+            bool operator<(const self& rhs) const noexcept {
+                return range_[element_] < rhs.range_[rhs.element_];
             };
 
-            friend bool operator<(const self& a, const self& b) {
-                return a.range_[a.element_] < b.range_[b.element_];
+            bool operator>(const self& rhs) const noexcept {
+                return !(*this < rhs) && !(this == rhs);
             };
 
-            friend bool operator>=(const self& a, const self& b) {
-                return a.range_[a.element_] >= b.range_[b.element_];
+            bool operator>=(const self& rhs) const noexcept {
+                return !(*this < rhs);
             };
 
-            friend bool operator<=(const self& a, const self& b) {
-                return a.range_[a.element_] <= b.range_[b.element_];
+            bool operator<=(const self& rhs) const noexcept {
+                return !(*this > rhs);
+            };
+
+            size_type element_;
+            range_type& range_;
+    };
+
+    template <typename T>
+    struct vector_const_iterator {
+            using self = vector_const_iterator<T>;
+
+            using range_type = T;
+            using size_type = std::size_t;
+
+            using value_type = typename range_type::value_type;
+            using reference = value_type&;
+            using pointer = value_type*;
+            using const_reference = const value_type&;
+            using const_pointer = const value_type*;
+            using difference_type = std::size_t;
+            using iterator_category = toy::contiguous_iterator_tag;
+
+            vector_const_iterator() = default;
+            explicit vector_const_iterator(range_type& range, size_type element)
+                : element_{ element }, range_{ range } {};
+
+            vector_const_iterator(const self& rhs)
+                : element_{ rhs.element_ }, range_{ rhs.range_ } {};
+
+            self& operator=(const self& rhs) {
+                this->element_ = rhs.element_;
+                this->range_ = rhs.range_;
+                return *this;
+            }
+
+            const value_type& operator*() {
+                return range_[element_];
+            };
+
+            const value_type& operator*() const {
+                return range_[element_];
+            };
+
+            const pointer operator->() {
+                return &range_[element_];
+            }
+
+            const pointer operator->() const {
+                return &range_[element_];
+            }
+
+            // pre-increment
+            self& operator++() {
+                ++element_;
+                return *this;
+            }
+
+            // post-increment
+            self operator++(int) {
+                auto tmp{ this };
+                ++this;
+                return tmp;
+            }
+
+            // pre-decrement
+            self& operator--() {
+                --element_;
+                return *this;
+            }
+
+            // post-decrement
+            self operator--(int) {
+                auto tmp{ this };
+                --this;
+                return tmp;
+            }
+
+            self& operator+=(difference_type offst) {
+                element_ = element_ + offst;
+                return *this;
+            }
+
+            self& operator-=(difference_type offst) {
+                element_ = element_ - offst;
+                return *this;
+            }
+
+            self operator+(difference_type offst) {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            self operator+(difference_type offst) const {
+                auto tmp{ *this };
+                tmp += offst;
+                return tmp;
+            }
+
+            self operator-(difference_type offst) const {
+                auto tmp{ *this };
+                tmp -= offst;
+                return tmp;
+            }
+
+            difference_type operator-(self rhs) const {
+                return std::abs(static_cast<long long>(rhs.element_)
+                                - static_cast<long long>(element_));
+            }
+
+            reference operator[](size_type element) {
+                return range_[element];
+            }
+
+            bool operator==(const self& rhs) const noexcept {
+                return element_ == rhs.element_;
+            };
+
+            bool operator!=(const self& rhs) const noexcept {
+                return !(*this == rhs);
+            };
+
+            bool operator<(const self& rhs) const noexcept {
+                return range_[element_] < rhs.range_[rhs.element_];
+            };
+
+            bool operator>(const self& rhs) const noexcept {
+                return !(*this < rhs) && !(this == rhs);
+            };
+
+            bool operator>=(const self& rhs) const noexcept {
+                return !(*this < rhs);
+            };
+
+            bool operator<=(const self& rhs) const noexcept {
+                return !(*this > rhs);
             };
 
             size_type element_;
@@ -166,7 +307,7 @@ export {
             using const_pointer = const value_type*;
 
             using iterator = vector_iterator<vector<T>>;
-            // using const_iterator = array_const_iterator<T>;
+            using const_iterator = vector_const_iterator<T>;
 
             /*
              * constructor with user-defined capacity
@@ -272,6 +413,14 @@ export {
 
             iterator end() {
                 return iterator{ *this, size_ };
+            }
+
+            const_iterator cbegin() {
+                return const_iterator{ *this, 0 };
+            }
+
+            const_iterator cend() {
+                return const_iterator{ *this, size_ };
             }
 
             void push_back(T&& elem) {

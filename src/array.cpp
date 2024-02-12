@@ -106,28 +106,28 @@ export {
                 return rhs.element_ - element_;
             }
 
-            bool operator==(const self& rhs) const {
+            bool operator==(const self& rhs) const noexcept {
                 return element_ == rhs.element_;
             };
 
-            bool operator!=(const self& rhs) {
+            bool operator!=(const self& rhs) const noexcept {
                 return !(*this == rhs);
             };
 
-            friend bool operator>(const self& a, const self& b) {
-                return *a.element_ > *b.element_;
+            bool operator<(const self& rhs) const noexcept {
+                return *element_ > *rhs.element_;
             };
 
-            friend bool operator<(const self& a, const self& b) {
-                return *a.element_ < *b.element_;
+            bool operator>(const self& rhs) const noexcept {
+                return !(*this < rhs) && !(this == rhs);
             };
 
-            friend bool operator<=(const self& a, const self& b) {
-                return *a.element_ <= *b.element_;
+            bool operator>=(const self& rhs) const noexcept {
+                return !(*this < rhs);
             };
 
-            friend bool operator>=(const self& a, const self& b) {
-                return *a.element_ >= *b.element_;
+            bool operator<=(const self& rhs) const noexcept {
+                return !(*this > rhs);
             };
 
             pointer element_;
