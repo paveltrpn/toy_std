@@ -21,31 +21,43 @@ export {
     struct vector_iterator {
             using self = vector_iterator<T>;
 
-            using value_type = T;
-            using reference = T&;
-            using pointer = T*;
-            using const_reference = const T&;
-            using const_pointer = const T*;
-            using difference_type = std::ptrdiff_t;
+            using range_type = T;
+            using size_type = std::size_t;
+
+            using value_type = typename range_type::value_type;
+            using reference = value_type&;
+            using pointer = value_type*;
+            using const_reference = const value_type&;
+            using const_pointer = const value_type*;
+            using difference_type = std::size_t;
             using iterator_category = toy::contiguous_iterator_tag;
 
             vector_iterator() = default;
-            explicit vector_iterator(pointer ptr) : element_{ ptr } {};
+            explicit vector_iterator(range_type& range, size_type element)
+                : element_{ element }, range_{ range } {};
+
+            vector_iterator(const self& rhs) : element_{ rhs.element_ }, range_{ rhs.range_ } {};
+
+            self& operator=(const self& rhs) {
+                this->element_ = rhs.element_;
+                this->range_ = rhs.range_;
+                return *this;
+            }
 
             reference operator*() {
-                return *element_;
+                return range_[element_];
             };
 
             reference operator*() const {
-                return *element_;
+                return range_[element_];
             };
 
             pointer operator->() {
-                return element_;
+                return &range_[element_];
             }
 
             pointer operator->() const {
-                return element_;
+                return &range_[element_];
             }
 
             // pre-increment
@@ -109,7 +121,12 @@ export {
             }
 
             difference_type operator-(self rhs) const {
-                return rhs.element_ - element_;
+                return std::abs(static_cast<long long>(rhs.element_)
+                                - static_cast<long long>(element_));
+            }
+
+            reference operator[](size_type element) {
+                return range_[element];
             }
 
             bool operator==(const self& rhs) const {
@@ -121,36 +138,36 @@ export {
             };
 
             friend bool operator>(const self& a, const self& b) {
-                return *a.element_ > *b.element_;
+                return a.range_[a.element_] > b.range_[b.element_];
             };
 
             friend bool operator<(const self& a, const self& b) {
-                return *a.element_ < *b.element_;
-            };
-
-            friend bool operator<=(const self& a, const self& b) {
-                return *a.element_ <= *b.element_;
+                return a.range_[a.element_] < b.range_[b.element_];
             };
 
             friend bool operator>=(const self& a, const self& b) {
-                return *a.element_ >= *b.element_;
+                return a.range_[a.element_] >= b.range_[b.element_];
             };
 
-            pointer element_;
+            friend bool operator<=(const self& a, const self& b) {
+                return a.range_[a.element_] <= b.range_[b.element_];
+            };
+
+            size_type element_;
+            range_type& range_;
     };
 
     template <typename T>
-    class vector {
+    struct vector {
             using value_type = T;
             using reference = value_type&;
             using const_reference = const value_type&;
             using pointer = value_type*;
             using const_pointer = const value_type*;
 
-            using iterator = vector_iterator<T>;
+            using iterator = vector_iterator<vector<T>>;
             // using const_iterator = array_const_iterator<T>;
 
-        public:
             /*
              * constructor with user-defined capacity
              * always create vector with size = 1
@@ -250,11 +267,11 @@ export {
             ~vector() = default;
 
             iterator begin() {
-                return iterator{ data() };
+                return iterator{ *this, 0 };
             }
 
             iterator end() {
-                return iterator{ data() + size_ };
+                return iterator{ *this, size_ };
             }
 
             void push_back(T&& elem) {
@@ -321,6 +338,7 @@ export {
                 return capacity_;
             };
 
+            [[nodiscard]]
             T* data() const {
                 return data_.get();
             }
