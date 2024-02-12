@@ -373,6 +373,8 @@ export {
                 rhs.capacity_ = rhs.size_ = 0;
             };
 
+            ~vector() = default;
+
             vector& operator=(const vector& rhs) {
                 if (this != &rhs) {
                     size_ = rhs.size_;
@@ -405,8 +407,37 @@ export {
                 return *this;
             }
 
-            ~vector() = default;
+            // element access
+            T& operator[](size_t id) {
+                return data_[id];
+            }
 
+            const T& operator[](size_t id) const {
+                return data_[id];
+            }
+
+            T& at(size_t id) {
+                if (id < size_) {
+                    return data_[id];
+                } else {
+                    throw std::invalid_argument{ "vector bounds violition" };
+                }
+            }
+
+            const T& at(size_t id) const {
+                if (id < size_) {
+                    return data_[id];
+                } else {
+                    throw std::invalid_argument{ "vector bounds violition" };
+                }
+            }
+
+            [[nodiscard]]
+            T* data() const {
+                return data_.get();
+            }
+
+            // iterators
             iterator begin() {
                 return iterator{ *this, 0 };
             }
@@ -423,6 +454,16 @@ export {
                 return const_iterator{ *this, size_ };
             }
 
+            // capacity
+            [[nodiscard]] constexpr size_t size() const {
+                return size_;
+            };
+
+            [[nodiscard]] constexpr size_t capacity() const {
+                return capacity_;
+            };
+
+            // modifiers
             void push_back(T&& elem) {
                 if (size_ == capacity_) {
 #ifdef DEBUG
@@ -453,43 +494,6 @@ export {
                 auto elem = data_[size_ - 1];
                 size_--;
                 return elem;
-            }
-
-            T& operator[](size_t id) {
-                return data_[id];
-            }
-
-            const T& operator[](size_t id) const {
-                return data_[id];
-            }
-
-            T& at(size_t id) {
-                if (id < size_) {
-                    return data_[id];
-                } else {
-                    throw std::invalid_argument{ "vector bounds violition" };
-                }
-            }
-
-            const T& at(size_t id) const {
-                if (id < size_) {
-                    return data_[id];
-                } else {
-                    throw std::invalid_argument{ "vector bounds violition" };
-                }
-            }
-
-            [[nodiscard]] constexpr size_t size() const {
-                return size_;
-            };
-
-            [[nodiscard]] constexpr size_t capacity() const {
-                return capacity_;
-            };
-
-            [[nodiscard]]
-            T* data() const {
-                return data_.get();
             }
 
         private:

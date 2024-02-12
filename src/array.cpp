@@ -296,22 +296,8 @@ export {
                 }
             }
 
-            iterator begin() {
-                return iterator{ data() };
-            }
-
-            iterator end() {
-                return iterator{ data() + size_ };
-            }
-
-            const_iterator cbegin() {
-                return const_iterator{ data() };
-            }
-
-            const_iterator cend() {
-                return const_iterator{ data() + size_ };
-            }
-
+            ~array() = default;
+            
             /*
              * copy assignment
              */
@@ -331,16 +317,7 @@ export {
              */
             array& operator=(array&& rhs) = delete;
 
-            ~array() = default;
-
-            reference operator[](size_t id) {
-                return data_[id];
-            }
-
-            const_reference operator[](size_t id) const {
-                return data_[id];
-            }
-
+            // element access
             T& at(size_t id) {
                 if (id < size_) {
                     return data_[id];
@@ -355,6 +332,14 @@ export {
                 } else {
                     throw std::invalid_argument{ "array bounds violition" };
                 }
+            }
+
+            reference operator[](size_t id) {
+                return data_[id];
+            }
+
+            const_reference operator[](size_t id) const {
+                return data_[id];
             }
 
             reference front() {
@@ -373,6 +358,32 @@ export {
                 return data_[size_ - 1];
             }
 
+            [[nodiscard]] pointer data() {
+                return static_cast<pointer>(data_);
+            }
+
+            [[nodiscard]] const_pointer data() const {
+                return static_cast<const_pointer>(data_);
+            }
+
+            // iterators
+            iterator begin() {
+                return iterator{ data() };
+            }
+
+            iterator end() {
+                return iterator{ data() + size_ };
+            }
+
+            const_iterator cbegin() {
+                return const_iterator{ data() };
+            }
+
+            const_iterator cend() {
+                return const_iterator{ data() + size_ };
+            }
+
+            // capacity
             [[nodiscard]]
             size_t size() const {
                 return size_;
@@ -383,19 +394,15 @@ export {
                 return size_ == 0;
             }
 
-            [[nodiscard]] pointer data() {
-                return static_cast<pointer>(data_);
-            }
-
-            [[nodiscard]] const_pointer data() const {
-                return static_cast<const_pointer>(data_);
-            }
-
+            // operations
             void fill(const value_type& value) {
                 for (auto& elem : *this) {
                     elem = value;
                 }
             }
+
+            // TODO
+            // void swap() {}
 
         private:
             value_type data_[size_]{};
