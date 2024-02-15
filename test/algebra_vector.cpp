@@ -26,6 +26,9 @@ BOOST_AUTO_TEST_CASE(case_vector_construct_and_arithmetic, *utf::tolerance(0.000
     for (size_t i = 0; i < __SZ; ++i) {
         BOOST_TEST(four[i] == 1.0f);
     }
+
+    toy::algebra::vector<int, __SZ> intv{ 1, 1, 1, 1, 1 };
+    auto l = intv.lenght();
     // three = one + two;
 }
 
@@ -47,7 +50,7 @@ BOOST_AUTO_TEST_CASE(case_vector2_construct_and_arithmetic, *utf::tolerance(0.00
     BOOST_TEST(three.x() == one.x());
     BOOST_TEST(three.y() == one.y());
 
-    auto lenght = two.sqrtLenght();
+    auto lenght = two.sqLenght();
 
     BOOST_TEST(lenght == 5.0f);
 
@@ -80,7 +83,7 @@ BOOST_AUTO_TEST_CASE(case_vector3_construct_and_arithmetic, *utf::tolerance(0.00
     BOOST_TEST(three.y() == one.y());
     BOOST_TEST(three.z() == one.z());
 
-    auto lenght = three.sqrtLenght();
+    auto lenght = three.sqLenght();
 
     BOOST_TEST(lenght == 5.0f);
 

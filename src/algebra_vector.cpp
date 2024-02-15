@@ -16,6 +16,26 @@ static constexpr size_t __SZ2 = 2;
 static constexpr size_t __SZ3 = 3;
 static constexpr size_t __SZ4 = 4;
 
+template <typename T>
+struct lenght_type {
+        using type = float;
+};
+
+template <>
+struct lenght_type<int> {
+        using type = float;
+};
+
+template <>
+struct lenght_type<double> {
+        using type = double;
+};
+
+template <>
+struct lenght_type<long double> {
+        using type = long double;
+};
+
 template <template <typename> typename Child, toy::Arithmetical T, size_t pSize_>
 struct vector_base {
         using self = vector_base<Child, T, pSize_>;
@@ -67,8 +87,12 @@ struct vector_base {
             return rt;
         }
 
-        value_type sqrtLenght() {
+        value_type sqLenght() {
             return dot(*this);
+        }
+
+        auto lenght() -> typename lenght_type<value_type>::type {
+            return std::sqrt(sqLenght());
         }
 
         self operator+(const self& a) {
@@ -80,6 +104,18 @@ struct vector_base {
         self operator-(const self& rhs) {
             auto rt = *this;
             rt.sum(rhs);
+            return rt;
+        }
+
+        self operator*(value_type factor) {
+            auto rt = *this;
+            rt.scale(factor);
+            return rt;
+        }
+
+        self operator*(const self& rhs) {
+            auto rt = *this;
+            rt.dot(rhs);
             return rt;
         }
 
