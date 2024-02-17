@@ -36,9 +36,9 @@ struct lenght_type<long double> {
         using type = long double;
 };
 
-template <template <typename> typename Child, toy::Arithmetical T, size_t pSize_>
+template <template <typename> typename derived, toy::Arithmetical T, size_t pSize_>
 struct vector_base {
-        using self = vector_base<Child, T, pSize_>;
+        using self = vector_base<derived, T, pSize_>;
         using value_type = T;
         using reference = T&;
         using pointer = T*;
@@ -73,12 +73,13 @@ struct vector_base {
                 data_[i] -= b.data_[i];
         };
 
-        void scale(float factor) {
+        template <toy::FloatingPoint U>
+        void scale(U factor) {
             for (size_t i = 0; i < pSize_; ++i)
                 data_[i] *= factor;
         }
 
-        value_type dot(const self& b) {
+        value_type dot(const self& b) const {
             value_type rt{};
 
             for (size_t i = 0; i < pSize_; ++i)
@@ -87,36 +88,74 @@ struct vector_base {
             return rt;
         }
 
-        value_type sqLenght() {
+        value_type sqLenght() const {
             return dot(*this);
         }
 
-        auto lenght() -> typename lenght_type<value_type>::type {
+        auto lenght() -> typename lenght_type<value_type>::type const {
             return std::sqrt(sqLenght());
         }
 
-        self operator+(const self& a) {
-            auto rt = *this;
-            rt.sum(a);
-            return rt;
+        void noramlize() {
+            auto len = lenght();
+
+            // check len != 0
+
+            for (auto& elem : data_) {
+                elem /= len;
+            }
         }
 
-        self operator-(const self& rhs) {
-            auto rt = *this;
+        void inverse() {
+            for (auto& elem : data_) {
+                elem = -elem;
+            }
+        }
+
+        friend self operator+(const self& lhs, const self& rhs) {
+            auto rt = lhs;
             rt.sum(rhs);
             return rt;
         }
 
-        self operator*(value_type factor) {
-            auto rt = *this;
+        self& operator+=(const self& rhs) {
+            (*this).sum(rhs);
+            return *this;
+        }
+
+        friend self operator-(const self& lhs, const self& rhs) {
+            auto rt = lhs;
+            rt.sub(rhs);
+            return rt;
+        }
+
+        self& operator-=(const self& rhs) {
+            (*this).sub(rhs);
+            return *this;
+        }
+
+        template <toy::FloatingPoint U>
+        friend self operator*(const self& lhs, U factor) {
+            auto rt = lhs;
             rt.scale(factor);
             return rt;
         }
 
-        self operator*(const self& rhs) {
-            auto rt = *this;
+        template <toy::FloatingPoint U>
+        self& operator*=(U factor) {
+            (*this).scale(factor);
+            return *this;
+        }
+
+        friend self operator*(const self& lhs, const self& rhs) {
+            auto rt = *lhs;
             rt.dot(rhs);
             return rt;
+        }
+
+        self& operator*=(const self& rhs) {
+            (*this).dot(rhs);
+            return *this;
         }
 
         toy::array<T, pSize_> data_;
@@ -155,28 +194,50 @@ struct vector2 : vector_base<vector2, T, __SZ2> {
             return data_[1];
         }
 
-        self operator+(const self& rhs) {
-            auto rt = *this;
+        friend self operator+(const self& lhs, const self& rhs) {
+            auto rt = lhs;
             rt.sum(rhs);
             return rt;
         }
 
-        self operator-(const self& rhs) {
-            auto rt = *this;
-            rt.sum(rhs);
+        self& operator+=(const self& rhs) {
+            (*this).sum(rhs);
+            return *this;
+        }
+
+        friend self operator-(const self& lhs, const self& rhs) {
+            auto rt = lhs;
+            rt.sub(rhs);
             return rt;
         }
 
-        self operator*(value_type factor) {
-            auto rt = *this;
+        self& operator-=(const self& rhs) {
+            (*this).sub(rhs);
+            return *this;
+        }
+
+        template <toy::FloatingPoint U>
+        friend self operator*(const self& lhs, U factor) {
+            auto rt = lhs;
             rt.scale(factor);
             return rt;
         }
 
-        self operator*(const self& rhs) {
-            auto rt = *this;
+        template <toy::FloatingPoint U>
+        self& operator*=(U factor) {
+            (*this).scale(factor);
+            return *this;
+        }
+
+        friend self operator*(const self& lhs, const self& rhs) {
+            auto rt = *lhs;
             rt.dot(rhs);
             return rt;
+        }
+
+        self& operator*=(const self& rhs) {
+            (*this).dot(rhs);
+            return *this;
         }
 };
 
@@ -220,28 +281,50 @@ struct vector3 : vector_base<vector3, T, __SZ3> {
             return data_[2];
         }
 
-        self operator+(const self& rhs) {
-            auto rt = *this;
+        friend self operator+(const self& lhs, const self& rhs) {
+            auto rt = lhs;
             rt.sum(rhs);
             return rt;
         }
 
-        self operator-(const self& rhs) {
-            auto rt = *this;
-            rt.sum(rhs);
+        self& operator+=(const self& rhs) {
+            (*this).sum(rhs);
+            return *this;
+        }
+
+        friend self operator-(const self& lhs, const self& rhs) {
+            auto rt = lhs;
+            rt.sub(rhs);
             return rt;
         }
 
-        self operator*(value_type factor) {
-            auto rt = *this;
+        self& operator-=(const self& rhs) {
+            (*this).sub(rhs);
+            return *this;
+        }
+
+        template <toy::FloatingPoint U>
+        friend self operator*(const self& lhs, U factor) {
+            auto rt = lhs;
             rt.scale(factor);
             return rt;
         }
 
-        self operator*(const self& rhs) {
-            auto rt = *this;
+        template <toy::FloatingPoint U>
+        self& operator*=(U factor) {
+            (*this).scale(factor);
+            return *this;
+        }
+
+        friend self operator*(const self& lhs, const self& rhs) {
+            auto rt = *lhs;
             rt.dot(rhs);
             return rt;
+        }
+
+        self& operator*=(const self& rhs) {
+            (*this).dot(rhs);
+            return *this;
         }
 
         void cross(self b) {
@@ -297,14 +380,60 @@ struct vector4 : vector_base<vector4, T, __SZ4> {
         [[nodiscard]] value_type w() const {
             return data_[3];
         }
+
+        friend self operator+(const self& lhs, const self& rhs) {
+            auto rt = lhs;
+            rt.sum(rhs);
+            return rt;
+        }
+
+        self& operator+=(const self& rhs) {
+            (*this).sum(rhs);
+            return *this;
+        }
+
+        friend self operator-(const self& lhs, const self& rhs) {
+            auto rt = lhs;
+            rt.sub(rhs);
+            return rt;
+        }
+
+        self& operator-=(const self& rhs) {
+            (*this).sub(rhs);
+            return *this;
+        }
+
+        template <toy::FloatingPoint U>
+        friend self operator*(const self& lhs, U factor) {
+            auto rt = lhs;
+            rt.scale(factor);
+            return rt;
+        }
+
+        template <toy::FloatingPoint U>
+        self& operator*=(U factor) {
+            (*this).scale(factor);
+            return *this;
+        }
+
+        friend self operator*(const self& lhs, const self& rhs) {
+            auto rt = *lhs;
+            rt.dot(rhs);
+            return rt;
+        }
+
+        self& operator*=(const self& rhs) {
+            (*this).dot(rhs);
+            return *this;
+        }
 };
 
 template <typename T>
-struct dummy {};
+struct dummy_derived {};
 
 export {
     template <typename T, size_t pSize_>
-    using vector = vector_base<dummy, T, pSize_>;
+    using vector = vector_base<dummy_derived, T, pSize_>;
 
     using vector2i = vector2<int>;
     using vector3i = vector3<int>;

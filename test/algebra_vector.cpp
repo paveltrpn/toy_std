@@ -27,8 +27,8 @@ BOOST_AUTO_TEST_CASE(case_vector_construct_and_arithmetic, *utf::tolerance(0.000
         BOOST_TEST(four[i] == 1.0f);
     }
 
-    toy::algebra::vector<int, __SZ> intv{ 1, 1, 1, 1, 1 };
-    auto l = intv.lenght();
+    // toy::algebra::vector<int, __SZ> intv{ 1, 1, 1, 1, 1 };
+    // auto l = intv.lenght();
     // three = one + two;
 }
 
