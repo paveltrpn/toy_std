@@ -161,7 +161,7 @@ struct vector_base {
         toy::array<T, pSize_> data_;
 };
 
-template <toy::Arithmetical T>
+export template <toy::Arithmetical T>
 struct vector2 : vector_base<vector2, T, __SZ2> {
         using self = vector2<T>;
         using value_type = T;
@@ -242,7 +242,7 @@ struct vector2 : vector_base<vector2, T, __SZ2> {
 };
 
 // vector3
-template <toy::Arithmetical T>
+export template <toy::Arithmetical T>
 struct vector3 : vector_base<vector3, T, __SZ3> {
         using self = vector3<T>;
         using value_type = T;
@@ -340,7 +340,7 @@ struct vector3 : vector_base<vector3, T, __SZ3> {
         }
 };
 
-template <toy::Arithmetical T>
+export template <toy::Arithmetical T>
 struct vector4 : vector_base<vector4, T, __SZ4> {
         using self = vector4<T>;
         using value_type = T;
