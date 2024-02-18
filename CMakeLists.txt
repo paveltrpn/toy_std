@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28)
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
-project (toy_stl)
+project (toy_std)
 
 add_compile_options(-g 
                     -Wall 
@@ -59,8 +59,8 @@ set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/stage/lib)
 include_directories (${BOOST_LOCAL})
 link_directories(${BOOST_LOCAL}/stage/lib)
 
-add_library(toy_stl)
-target_sources(toy_stl
+add_library(toy_std)
+target_sources(toy_std
   PUBLIC
     FILE_SET CXX_MODULES FILES
     ${SRC_DIR}/concepts.cpp
@@ -90,7 +90,7 @@ add_executable(test_unit
     ${TST_DIR}/algebra_vector.cpp
     ${TST_DIR}/algebra_quaternion.cpp)
 
-target_link_libraries(test_unit toy_stl boost_unit_test_framework)
+target_link_libraries(test_unit toy_std boost_unit_test_framework)
 
 # target_compile_definitions(test_unit PUBLIC BOOST_TEST_DYN_LINK)
 
