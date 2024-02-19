@@ -55,9 +55,11 @@ set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
 set(SRC_DIR "src")
 set(TST_DIR "test")
 
-set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/stage/lib)
+set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/lib)
 include_directories (${BOOST_LOCAL})
-link_directories(${BOOST_LOCAL}/stage/lib)
+link_directories(${BOOST_LOCAL}/lib)
+
+include_directories (${SRC_DIR})
 
 add_library(toy_std)
 target_sources(toy_std
@@ -88,7 +90,11 @@ add_executable(test_unit
     ${TST_DIR}/raw_list.cpp
     ${TST_DIR}/algebra_matrix.cpp
     ${TST_DIR}/algebra_vector.cpp
-    ${TST_DIR}/algebra_quaternion.cpp)
+    ${TST_DIR}/algebra_quaternion.cpp
+    ${TST_DIR}/optional.cpp
+    ${TST_DIR}/variant.cpp
+    ${TST_DIR}/any.cpp
+)
 
 target_link_libraries(test_unit toy_std boost_unit_test_framework)
 
