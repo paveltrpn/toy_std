@@ -12,3 +12,6 @@ export import toy_std.stack;
 export import toy_std.algebra;
 export import toy_std.iterator_traits;
 export import toy_std.algorithm;
+export import toy_std.optional;
+export import toy_std.variant;
+export import toy_std.any;

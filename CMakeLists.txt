@@ -78,6 +78,9 @@ target_sources(toy_std
     ${SRC_DIR}/iterator_traits.cpp
     ${SRC_DIR}/toy_std.cpp
     ${SRC_DIR}/algorithm.cpp
+    ${SRC_DIR}/optional.cpp
+    ${SRC_DIR}/variant.cpp
+    ${SRC_DIR}/any.cpp
 )
 
 enable_testing()

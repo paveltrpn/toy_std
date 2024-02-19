@@ -1,5 +1,5 @@
 
-#include "variant.h"
+import toy_std.variant;
 
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
