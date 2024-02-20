@@ -469,7 +469,7 @@ export {
 #ifdef DEBUG
                     std::cout << std::format("vector call realloc\n");
 #endif
-                    capacity_ *= 2;
+                    capacity_ = __expand(capacity_);
 
                     auto nd = std::make_unique<T[]>(capacity_);
 
@@ -497,6 +497,10 @@ export {
             }
 
         private:
+            constexpr size_t __expand(size_t capacity) {
+                return capacity * 2;
+            }
+
             size_t size_{};
             size_t capacity_{};
 
