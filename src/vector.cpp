@@ -2,7 +2,6 @@
 module;
 
 #include <algorithm>
-#include <iostream>
 #include <format>
 #include <memory>
 #include <initializer_list>
@@ -17,11 +16,11 @@ import toy_std.iterator_traits;
 export {
     namespace toy {
 
-    template <typename T>
+    template <typename Tp_>
     struct vector_iterator {
-            using self = vector_iterator<T>;
+            using self = vector_iterator<Tp_>;
 
-            using range_type = T;
+            using range_type = Tp_;
             using size_type = std::size_t;
 
             using value_type = typename range_type::value_type;
@@ -157,11 +156,11 @@ export {
             range_type& range_;
     };
 
-    template <typename T>
+    template <typename Tp_>
     struct vector_const_iterator {
-            using self = vector_const_iterator<T>;
+            using self = vector_const_iterator<Tp_>;
 
-            using range_type = T;
+            using range_type = Tp_;
             using size_type = std::size_t;
 
             using value_type = typename range_type::value_type;
@@ -298,16 +297,16 @@ export {
             range_type& range_;
     };
 
-    template <typename T>
+    template <typename Tp_>
     struct vector {
-            using value_type = T;
+            using value_type = Tp_;
             using reference = value_type&;
             using const_reference = const value_type&;
             using pointer = value_type*;
             using const_pointer = const value_type*;
 
-            using iterator = vector_iterator<vector<T>>;
-            using const_iterator = vector_const_iterator<T>;
+            using iterator = vector_iterator<vector<Tp_>>;
+            using const_iterator = vector_const_iterator<Tp_>;
 
             /*
              * constructor with user-defined capacity
@@ -318,17 +317,17 @@ export {
                     capacity_ = 1;
                 }
                 size_ = 0;
-                data_ = std::make_unique<T[]>(capacity_);
+                data_ = std::make_unique<value_type[]>(capacity_);
             }
 
             /*
              * constructor with user-defined size
              * and filled with default value
              */
-            vector(size_t s, T value) : size_{ s } {
+            vector(size_t s, value_type value) : size_{ s } {
                 if (s >= 1) {
                     capacity_ = size_;
-                    data_ = std::make_unique<T[]>(capacity_);
+                    data_ = std::make_unique<value_type[]>(capacity_);
 
                     for (size_t i = 0; i < size_; ++i) {
                         data_[i] = value;
@@ -336,16 +335,16 @@ export {
                     return;
                 }
                 capacity_ = 1;
-                data_ = std::make_unique<T[]>(capacity_);
+                data_ = std::make_unique<value_type[]>(capacity_);
                 data_[size_] = value;
 #ifdef DEBUG
                 std::cout << std::format("WARNING! vector(size_t, T): with zero size!\n");
 #endif
             }
 
-            explicit vector(std::initializer_list<T> list) {
+            explicit vector(std::initializer_list<value_type> list) {
                 size_ = capacity_ = std::size(list);
-                data_ = std::make_unique<T[]>(capacity_);
+                data_ = std::make_unique<value_type[]>(capacity_);
 
                 for (size_t i = 0; auto&& elem : list) {
                     data_[i] = elem;
@@ -357,7 +356,7 @@ export {
                 capacity_ = rhs.capacity_;
                 size_ = rhs.size_;
 
-                data_ = std::make_unique<T[]>(capacity_);
+                data_ = std::make_unique<value_type[]>(capacity_);
 
                 for (size_t i = 0; i < size_; ++i) {
                     data_[i] = rhs.data_[i];
@@ -385,7 +384,7 @@ export {
                     // auto old = data_.release();
                     // delete[] old;
 
-                    data_ = std::make_unique<T[]>(capacity_);
+                    data_ = std::make_unique<value_type[]>(capacity_);
 
                     for (size_t i = 0; i < size_; ++i) {
                         data_[i] = rhs.data_[i];
@@ -408,15 +407,15 @@ export {
             }
 
             // element access
-            T& operator[](size_t id) {
+            value_type& operator[](size_t id) {
                 return data_[id];
             }
 
-            const T& operator[](size_t id) const {
+            const value_type& operator[](size_t id) const {
                 return data_[id];
             }
 
-            T& at(size_t id) {
+            value_type& at(size_t id) {
                 if (id < size_) {
                     return data_[id];
                 } else {
@@ -424,7 +423,7 @@ export {
                 }
             }
 
-            const T& at(size_t id) const {
+            const value_type& at(size_t id) const {
                 if (id < size_) {
                     return data_[id];
                 } else {
@@ -433,7 +432,7 @@ export {
             }
 
             [[nodiscard]]
-            T* data() const {
+            value_type* data() const {
                 return data_.get();
             }
 
@@ -464,14 +463,14 @@ export {
             };
 
             // modifiers
-            void push_back(T&& elem) {
+            void push_back(value_type&& elem) {
                 if (size_ == capacity_) {
 #ifdef DEBUG
                     std::cout << std::format("vector call realloc\n");
 #endif
                     capacity_ = __expand(capacity_);
 
-                    auto nd = std::make_unique<T[]>(capacity_);
+                    auto nd = std::make_unique<value_type[]>(capacity_);
 
                     for (size_t i = 0; i < size_; ++i) {
                         nd[i] = data_[i];
@@ -490,7 +489,7 @@ export {
                 size_++;
             }
 
-            T pop_back() {
+            value_type pop_back() {
                 auto elem = data_[size_ - 1];
                 size_--;
                 return elem;
@@ -504,7 +503,7 @@ export {
             size_t size_{};
             size_t capacity_{};
 
-            std::unique_ptr<T[]> data_{};
+            std::unique_ptr<value_type[]> data_{};
     };
 
     }  // namespace toy
