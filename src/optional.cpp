@@ -15,12 +15,17 @@ export struct nullopt_t {
 
 constexpr nullopt_t nullopt{ nullopt_t::secret_::token_ };
 
-// optional manage thier underlying object lifetime
-// optional type must be conditionally trival destructible
+/* An optional object is an object that contains the storage for another object and manages the
+ * lifetime of this contained object, if any. The contained object may be initialized after the
+ * optional object has been initialized, and may be destroyed before the optional object has been
+ * destroyed. The initialization state of the contained object is tracked by the optional object.
+ *
+ * optional type must be conditionally trival destructible.
+ */
 export template <typename Tp_>
 struct optional {
         using value_type = Tp_;
-        using refeerence = Tp_&;
+        using reference = Tp_&;
         using pointer = Tp_*;
 
         // thank you, folly
@@ -29,10 +34,10 @@ struct optional {
         static_assert(!std::is_abstract<value_type>::value,
                       "Optional may not be used with abstract types");
 
-        optional() : emptyState_{ 0 }, engaged_(false) {
-        }
+        optional() noexcept : emptyState_{ 0 }, engaged_(false)  {
+        } 
 
-        optional(const value_type& value) : Tp_{ value }, engaged_(true) {
+        optional(const value_type& value) noexcept : Tp_{ value }, engaged_(true) {
         }
 
     private:
