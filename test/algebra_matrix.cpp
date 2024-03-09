@@ -1,8 +1,9 @@
 
+#include <format>
+
 import toy_std.algebra;
 import toy_std.array;
 
-#include <format>
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
@@ -62,7 +63,7 @@ BOOST_AUTO_TEST_CASE(matrix2_case_construct_idtt_zero, *utf::tolerance(0.00001))
 
 BOOST_AUTO_TEST_CASE(matrix2_case_transpose, *utf::tolerance(0.00001)) {
     auto one = fibo2;
-    
+
     one.transpose_self();
 
     for (auto i = 0; i < 2; ++i)
@@ -73,7 +74,7 @@ BOOST_AUTO_TEST_CASE(matrix2_case_transpose, *utf::tolerance(0.00001)) {
         }
 
     one.transpose_self();
-    
+
     auto tr = one.transpose();
 
     for (auto i = 0; i < 2; ++i)
@@ -160,7 +161,7 @@ BOOST_AUTO_TEST_CASE(matrix3_case_sub_det_lu, *utf::tolerance(0.00001)) {
      * 8  13 31
      */
     A[8] = 31;
-    
+
     auto one = A.sub(mult3_tr);
     /* one =
      * -2   -7   -33

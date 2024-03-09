@@ -26,4 +26,5 @@ Checks: >
   -misc-no-recursion,
   -modernize-use-trailing-return-type,
   -modernize-use-constraints,
-  -modernize-avoid-c-arrays
+  -modernize-avoid-c-arrays,
+  -modernize-type-traits

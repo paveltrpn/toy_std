@@ -1,10 +1,10 @@
 
-import toy_std;
-
 #include <string>
 
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
+
+import toy_std.vector;
 
 // #define BROKEN_EXCLUDE
 

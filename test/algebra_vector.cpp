@@ -1,9 +1,10 @@
 
-import toy_std.algebra;
+#include <cmath>
 
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
-#include <cmath>
+
+import toy_std.algebra;
 
 namespace utf = boost::unit_test;
 

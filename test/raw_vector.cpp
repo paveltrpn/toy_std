@@ -1,7 +1,8 @@
 
+#include <string>
+
 import toy_std.raw_vector;
 
-#include <string>
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 

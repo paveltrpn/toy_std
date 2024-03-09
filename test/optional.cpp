@@ -1,8 +1,8 @@
 
-import toy_std.optional;
-
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
+
+import toy_std.optional;
 
 BOOST_AUTO_TEST_SUITE(optional)
 
