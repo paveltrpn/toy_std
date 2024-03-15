@@ -71,10 +71,6 @@ target_sources(toy_std
     ${SRC_DIR}/stack.cpp
     ${SRC_DIR}/vector.cpp
     ${SRC_DIR}/raw_vector.cpp
-    ${SRC_DIR}/algebra.cpp
-    ${SRC_DIR}/algebra_matrix.cpp
-    ${SRC_DIR}/algebra_quaternion.cpp
-    ${SRC_DIR}/algebra_vector.cpp
     ${SRC_DIR}/iterator_traits.cpp
     ${SRC_DIR}/toy_std.cpp
     ${SRC_DIR}/algorithm.cpp
@@ -91,9 +87,6 @@ add_executable(test_unit
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
     ${TST_DIR}/raw_list.cpp
-    ${TST_DIR}/algebra_matrix.cpp
-    ${TST_DIR}/algebra_vector.cpp
-    ${TST_DIR}/algebra_quaternion.cpp
     ${TST_DIR}/optional.cpp
     ${TST_DIR}/variant.cpp
     ${TST_DIR}/any.cpp
