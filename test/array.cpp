@@ -1,14 +1,12 @@
 
 #include <algorithm>
 
-import toy_std.array;
-
 #define BOOST_TEST_DYN_LINK
-
 #define BOOST_TEST_MODULE test_unit
-
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
+
+import toy_std.array;
 
 // #define BROKEN_EXCLUDE
 

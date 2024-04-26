@@ -9,10 +9,10 @@ add_compile_options(-g
                     -Wall 
                     -Wextra 
                     -Wpedantic 
-                    -stdlib=libc++ 
+                    #-stdlib=libc++ 
                     -Wno-unused-parameter)
 
-add_link_options(-stdlib=libc++)
+#add_link_options(-stdlib=libc++)
 
 option(WITH_UBSAN "build with undefined behavior sanitizer" OFF)
 option(WITH_ASAN  "build with address sanitizer" OFF)
@@ -46,18 +46,19 @@ set(CMAKE_SCAN_FOR_MODULES)
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-#find globally installed system package
-#find_package(Boost 1.80.0 COMPONENTS filesystem system unit_test_framework REQUIRED)
-
-# find local hand-build package
-set(WORK_DIR "/mnt/main_disk/code")
-set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
 set(SRC_DIR "src")
 set(TST_DIR "test")
+set(WORK_DIR "/mnt/main_disk/code")
 
-set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/lib)
-include_directories (${BOOST_LOCAL})
-link_directories(${BOOST_LOCAL}/lib)
+# find globally installed system package
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+
+# find local hand-build package
+# set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
+# 
+# set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/lib)
+# include_directories (${BOOST_LOCAL})
+# link_directories(${BOOST_LOCAL}/lib)
 
 include_directories (${SRC_DIR})
 
