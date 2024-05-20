@@ -78,19 +78,21 @@ target_sources(toy_std
     ${SRC_DIR}/optional.cpp
     ${SRC_DIR}/variant.cpp
     ${SRC_DIR}/any.cpp
+    ${SRC_DIR}/generator.cpp
 )
 
 enable_testing()
 
 add_executable(test_unit
     ${TST_DIR}/array.cpp
-    ${TST_DIR}/vector.cpp
+    # ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
     ${TST_DIR}/raw_list.cpp
     ${TST_DIR}/optional.cpp
     ${TST_DIR}/variant.cpp
     ${TST_DIR}/any.cpp
+    ${TST_DIR}/generator.cpp
 )
 
 target_link_libraries(test_unit toy_std boost_unit_test_framework)

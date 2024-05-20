@@ -1,166 +1,104 @@
 
-#include <string>
+#include <cmath>
+
+#include "algebra/Vector.h"
 
 #define BOOST_TEST_DYN_LINK
+
+#define BOOST_TEST_MODULE test_unit
+
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
-import toy_std.vector;
+namespace utf = boost::unit_test;
 
-// #define BROKEN_EXCLUDE
+BOOST_AUTO_TEST_SUITE(algebra)
 
-#ifdef BROKEN_EXCLUDE
-void testDeclarations() {
-    toy::vector<std::basic_string<wchar_t>> wcharSrt{ 3, L"nil" };
-    toy::vector<std::basic_string<std::byte>> byteStr{ 1, "nil" };
-    toy::vector<std::wstring> wstr{ 1, L"nil" };
-    toy::vector<std::basic_string<char>> charStr{ 1, "nil" };
-}
-#endif
+BOOST_AUTO_TEST_CASE(case_vector_construct_and_arithmetic, *utf::tolerance(0.00001)) {
+    constexpr size_t __SZ = 5;
+    tire::vector<float, __SZ> one{ 0.0f, 1.0f, 2.0f, 3.0f, 4.0f };
+    tire::vector<float, __SZ> two{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+    tire::vector<float, __SZ> three{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
-BOOST_AUTO_TEST_SUITE(vector)
-
-BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
-    toy::vector<std::string> first{ 3, "nil" };
-
-    BOOST_CHECK_EQUAL(first[1], "nil");
-
-    first[0] = "ten";
-    BOOST_CHECK_EQUAL(first[0], "ten");
-
-    first[2] = std::string{ "thirty" };
-    BOOST_CHECK_EQUAL(first[2], "thirty");
-
-    auto foo = first.pop_back();
-    BOOST_CHECK_EQUAL(foo, "thirty");
-    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(2));
-
-    first.push_back("thirty");
-    BOOST_CHECK_EQUAL(first[2], "thirty");
-    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(3));
-}
-
-BOOST_AUTO_TEST_CASE(case_construct_init_list) {
-    toy::vector<std::string> initLst{ "first", "second", "third" };
-    BOOST_CHECK_EQUAL(initLst[0], "first");
-    BOOST_CHECK_EQUAL(initLst[1], "second");
-    BOOST_CHECK_EQUAL(initLst[2], "third");
-    BOOST_CHECK_EQUAL(initLst.size(), static_cast<size_t>(3));
-    BOOST_CHECK_EQUAL(initLst.capacity(), static_cast<size_t>(3));
-}
-
-BOOST_AUTO_TEST_CASE(case_copy_create, *boost::unit_test::tolerance(0.00001)) {
-    toy::vector<float> first;
-
-    first.push_back(10.0f);
-    first.push_back(30.0f);
-
-    toy::vector<float> second{ first };
-
-    BOOST_TEST(second[0] == 10.0f);
-    BOOST_TEST(second[1] == 30.0f);
-}
-
-BOOST_AUTO_TEST_CASE(case_move_create) {
-    toy::vector<int> first;
-
-    first.push_back(10);
-    first.push_back(30);
-
-    toy::vector<int> second{ std::move(first) };
-
-    BOOST_CHECK_EQUAL(second[0], 10);
-    BOOST_CHECK_EQUAL(second[1], 30);
-
-    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.data(), nullptr);
-    BOOST_CHECK_NE(second.data(), nullptr);
-}
-
-BOOST_AUTO_TEST_CASE(case_copy_assign) {
-    toy::vector<int> first(1);
-    toy::vector<int> second(0);
-
-    first.push_back(10);
-    first.push_back(30);
-    first.push_back(0);
-
-    second = first;
-
-    BOOST_CHECK_EQUAL(second[0], 10);
-    BOOST_CHECK_EQUAL(second[1], 30);
-    BOOST_CHECK_EQUAL(second[2], 0);
-
-    toy::vector<int> greter(5);
-}
-
-BOOST_AUTO_TEST_CASE(case_move_assign) {
-    toy::vector<int> first(1);
-    toy::vector<int> second(0);
-
-    first.push_back(10);
-    first.push_back(30);
-
-    second = std::move(first);
-
-    BOOST_CHECK_EQUAL(second[0], 10);
-    BOOST_CHECK_EQUAL(second[1], 30);
-
-    BOOST_CHECK_EQUAL(first.size(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.capacity(), static_cast<size_t>(0));
-    BOOST_CHECK_EQUAL(first.data(), nullptr);
-    BOOST_CHECK_NE(second.data(), nullptr);
-}
-
-BOOST_AUTO_TEST_CASE(case_at) {
-    toy::vector<int> first(0);
-
-    first.push_back(10);
-    first.push_back(20);
-    first.push_back(30);
-
-    BOOST_CHECK_NO_THROW(first.at(2));
-    BOOST_CHECK_THROW(first.at(4), std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(case_iterator) {
-    toy::vector<int> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
-
-    for (size_t i = 0; auto& elem : first) {
-        BOOST_CHECK_EQUAL(elem, i);
-        ++i;
+    for (size_t i = 0; i < __SZ; ++i) {
+        BOOST_TEST(two[i] == 0.0f);
+        BOOST_TEST(three[i] == 1.0f);
     }
-}
 
-BOOST_AUTO_TEST_CASE(case_const_iterator) {
-    toy::vector<int> first{ 0, 1, 2, 3, 4, 5, 6, 7 };
+    tire::vector<float, __SZ> four = three;
+    four = two + three;
 
-    for (size_t i = 0; const auto& elem : first) {
-        BOOST_CHECK_EQUAL(elem, i);
-        ++i;
+    for (size_t i = 0; i < __SZ; ++i) {
+        BOOST_TEST(four[i] == 1.0f);
     }
+
+    // toy::algebra::vector<int, __SZ> intv{ 1, 1, 1, 1, 1 };
+    // auto l = intv.lenght();
+    // three = one + two;
 }
 
-BOOST_AUTO_TEST_CASE(case_std_sort) {
-    toy::vector<int> sorted{ 0, 1, 2, 3, 4, 5, 6, 7 };
-    toy::vector<int> raw{ 5, 2, 6, 7, 4, 3, 1, 0 };
+BOOST_AUTO_TEST_CASE(case_vector2_construct_and_arithmetic, *utf::tolerance(0.00001)) {
+    tire::vector2f one{ 0.0f, 1.0f };
 
-    std::sort(raw.begin(), raw.end());
+    BOOST_TEST(one.x() == 0.0f);
+    BOOST_TEST(one.y() == 1.0f);
 
-    for (size_t i = 0; i < 8; ++i) {
-        BOOST_CHECK_EQUAL(raw[i], sorted[i]);
-    }
+    tire::vector2f two{ 1.0f, 1.0f };
+    two.sum(one);
+
+    BOOST_TEST(two.x() == 1.0f);
+    BOOST_TEST(two.y() == 2.0f);
+
+    tire::vector2f three{ 0.0f, 0.0f };
+    three = one;
+
+    BOOST_TEST(three.x() == one.x());
+    BOOST_TEST(three.y() == one.y());
+
+    auto lenght = two.sqLenght();
+
+    BOOST_TEST(lenght == 5.0f);
+
+    tire::vector2f four = one + two + three;
+
+    BOOST_TEST(four.x() == 1.0f);
+    BOOST_TEST(four.y() == 4.0f);
+
+    // auto cr = two.cross(one);
 }
 
-BOOST_AUTO_TEST_CASE(case_std_for_each) {
-    toy::vector<int> doubled{ 0, 1, 4, 9, 16, 25, 36 };
-    toy::vector<int> raw{ 0, 1, 2, 3, 4, 5, 6 };
+BOOST_AUTO_TEST_CASE(case_vector3_construct_and_arithmetic, *utf::tolerance(0.00001)) {
+    tire::vector3f one{ 0.0f, 1.0f, 2.0f };
 
-    std::for_each(raw.begin(), raw.end(), [](auto& elem) { elem *= elem; });
+    BOOST_TEST(one.x() == 0.0f);
+    BOOST_TEST(one.y() == 1.0f);
+    BOOST_TEST(one.z() == 2.0f);
 
-    for (size_t i = 0; i < 7; ++i) {
-        BOOST_CHECK_EQUAL(raw[i], doubled[i]);
-    }
+    tire::vector3f two{ 1.0f, 1.0f, 1.0f };
+    two.sum(one);
+
+    BOOST_TEST(two.x() == 1.0f);
+    BOOST_TEST(two.y() == 2.0f);
+    BOOST_TEST(two.z() == 3.0f);
+
+    tire::vector3f three{ 0.0f, 0.0f, 0.0f };
+    three = one;
+
+    BOOST_TEST(three.x() == one.x());
+    BOOST_TEST(three.y() == one.y());
+    BOOST_TEST(three.z() == one.z());
+
+    auto lenght = three.sqLenght();
+
+    BOOST_TEST(lenght == 5.0f);
+
+    tire::vector3f four = one + two + three;
+
+    BOOST_TEST(four.x() == 1.0f);
+    BOOST_TEST(four.y() == 4.0f);
+    BOOST_TEST(four.z() == 7.0f);
+
+    // auto cr = two.cross(one);
 }
+
 BOOST_AUTO_TEST_SUITE_END()
