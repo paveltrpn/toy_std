@@ -1,5 +1,4 @@
 
-#define BOOST_TEST_MODULE test_unit
 #include <boost/test/unit_test.hpp>
 
 #include <algorithm>
