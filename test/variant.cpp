@@ -1,11 +1,7 @@
 
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
 
 import toy_std.variant;
 
-BOOST_AUTO_TEST_SUITE(variant)
-
-BOOST_AUTO_TEST_CASE(case_construct) {
+TEST(variant, construct) {
 }
-
-BOOST_AUTO_TEST_SUITE_END()

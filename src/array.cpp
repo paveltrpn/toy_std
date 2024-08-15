@@ -51,7 +51,7 @@ export {
             // post-increment
             self operator++(int) {
                 auto tmp{ this };
-                ++this;
+                ++(*this);
                 return tmp;
             }
 
@@ -64,7 +64,7 @@ export {
             // post-decrement
             self operator--(int) {
                 auto tmp{ this };
-                --this;
+                --(*this);
                 return tmp;
             }
 
@@ -173,7 +173,7 @@ export {
             // post-increment
             self operator++(int) {
                 auto tmp{ this };
-                ++this;
+                ++(*this);
                 return tmp;
             }
 
@@ -186,7 +186,7 @@ export {
             // post-decrement
             self operator--(int) {
                 auto tmp{ this };
-                --this;
+                --(*this);
                 return tmp;
             }
 

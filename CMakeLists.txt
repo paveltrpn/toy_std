@@ -9,11 +9,10 @@ add_compile_options(-g
                     -Wall 
                     -Wextra 
                     -Wpedantic 
-                    # -stdlib=libc++
+                    -stdlib=libc++
                     -Wno-unused-parameter)
 
-# BOOST.test won't build with clang c++ stdlib, use gcc std lib
-# add_link_options(-stdlib=libc++)
+add_link_options(-stdlib=libc++)
 
 option(WITH_UBSAN "build with undefined behavior sanitizer" OFF)
 option(WITH_ASAN  "build with address sanitizer" OFF)
@@ -50,11 +49,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(SRC_DIR "src")
 set(TST_DIR "test")
 
-include_directories (${SRC_DIR})
-# For BOOST.test
-# Automatic generate int main(...)
-add_definitions(-DBOOST_TEST_DYN_LINK)
-include_directories ("third_party")
+add_subdirectory("third_party/googletest")
 
 add_library(toy_std)
 target_sources(toy_std
@@ -87,21 +82,32 @@ target_sources(toy_std
 
 enable_testing()
 
-add_executable(test_unit
+# add_executable(test_unit
+#     ${TST_DIR}/main.cpp
+#     ${TST_DIR}/array.cpp
+#     ${TST_DIR}/matrix.cpp
+#     ${TST_DIR}/raw_vector.cpp
+#     ${TST_DIR}/stack.cpp
+#     ${TST_DIR}/raw_list.cpp
+#     ${TST_DIR}/optional.cpp
+#     ${TST_DIR}/variant.cpp
+#     ${TST_DIR}/any.cpp
+#     ${TST_DIR}/generator.cpp
+# )
+
+add_executable(test_unit 
     ${TST_DIR}/main.cpp
     ${TST_DIR}/array.cpp
-    ${TST_DIR}/matrix.cpp
+    ${TST_DIR}/vector.cpp
     ${TST_DIR}/raw_vector.cpp
-    ${TST_DIR}/stack.cpp
     ${TST_DIR}/raw_list.cpp
+    ${TST_DIR}/stack.cpp
     ${TST_DIR}/optional.cpp
     ${TST_DIR}/variant.cpp
     ${TST_DIR}/any.cpp
     ${TST_DIR}/generator.cpp
 )
 
-target_link_libraries(test_unit toy_std boost_unit_test_framework)
+target_link_libraries(test_unit gtest_main gmock_main toy_std)
 
-# target_compile_definitions(test_unit PUBLIC BOOST_TEST_DYN_LINK)
-
-add_test(test_all test_unit)
+#add_test(test_all test_unit)

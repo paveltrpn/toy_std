@@ -1,11 +1,7 @@
 
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
 
 import toy_std.optional;
 
-BOOST_AUTO_TEST_SUITE(optional)
-
-BOOST_AUTO_TEST_CASE(case_construct) {
+TEST(optional, construct) {
 }
-
-BOOST_AUTO_TEST_SUITE_END()

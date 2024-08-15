@@ -1,7 +1,6 @@
 
+#include <gtest/gtest.h>
 #include <coroutine>
-
-#include <boost/test/unit_test.hpp>
 
 import toy_std.generator;
 
@@ -11,13 +10,9 @@ toy::Generator<int32_t> counter() {
     }
 }
 
-BOOST_AUTO_TEST_SUITE(generator)
-
-BOOST_AUTO_TEST_CASE(case_generator) {
+TEST(generator, generator) {
     auto gen = counter();
-    while (gen) {
-        std::cout << "counter: " << gen() << std::endl;
-    }
-}
 
-BOOST_AUTO_TEST_SUITE_END()
+    EXPECT_EQ(1, gen());
+    EXPECT_EQ(2, gen());
+}

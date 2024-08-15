@@ -1,10 +1,11 @@
 
-#define BOOST_TEST_MODULE test_unit
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
-void log_boost() {
-    std::cout << "Using Boost " << BOOST_VERSION / 100000 << "."  // major version
-              << BOOST_VERSION / 100 % 1000 << "."                // minor version
-              << BOOST_VERSION % 100                              // patch level
-              << std::endl;
+int main(int argc, char **argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  ::testing::InitGoogleMock(&argc, argv);
+  
+  return RUN_ALL_TESTS();
 }

@@ -1,80 +1,72 @@
+ 
+#include <gtest/gtest.h>
+#include <algorithm>
 
 import toy_std.raw_list;
 
-#include <boost/test/unit_test.hpp>
-
-// #define BROKEN_EXCLUDE
-
-#ifdef BROKEN_EXCLUDE
-void testDeclarations() {
-}
-#endif
-
-BOOST_AUTO_TEST_SUITE(raw_list)
-
-BOOST_AUTO_TEST_CASE(case_construct_push_pop) {
+TEST(raw_list, construct_push_pop) {
     toy::raw_list<std::string> first{};
 
     first.push_back("lisa");
-    BOOST_CHECK_EQUAL(first.back(), "lisa");
+    EXPECT_EQ(first.back(), "lisa");
     first.push_back("bob");
-    BOOST_CHECK_EQUAL(first.back(), "bob");
+    EXPECT_EQ(first.back(), "bob");
     first.push_back("woody");
-    BOOST_CHECK_EQUAL(first.back(), "woody");
+    EXPECT_EQ(first.back(), "woody");
     first.push_back("martin");
-    BOOST_CHECK_EQUAL(first.back(), "martin");
+    EXPECT_EQ(first.back(), "martin");
 
-    BOOST_CHECK(first.size() == 4);
+    EXPECT_TRUE(first.size() == 4);
     
     auto str = first.back();
     first.pop_back();
-    BOOST_CHECK_EQUAL(str, "martin");
+    EXPECT_EQ(str, "martin");
 
     str = first.back();
     first.pop_back();
-    BOOST_CHECK_EQUAL(str, "woody");
+    EXPECT_EQ(str, "woody");
     
     str = first.back();
     first.pop_back();
-    BOOST_CHECK_EQUAL(str, "bob");
+    EXPECT_EQ(str, "bob");
     
     str = first.back();
     first.pop_back();
-    BOOST_CHECK_EQUAL(str, "lisa");
+    EXPECT_EQ(str, "lisa");
 
-    BOOST_CHECK(first.size() == 0);
+    EXPECT_TRUE(first.size() == 0);
 
     first.push_front("lisa");
-    BOOST_CHECK_EQUAL(first.front(), "lisa");
+    EXPECT_EQ(first.front(), "lisa");
     first.push_front("bob");
-    BOOST_CHECK_EQUAL(first.front(), "bob");
+    EXPECT_EQ(first.front(), "bob");
     first.push_front("woody");
-    BOOST_CHECK_EQUAL(first.front(), "woody");
+    EXPECT_EQ(first.front(), "woody");
     first.push_front("martin");
-    BOOST_CHECK_EQUAL(first.front(), "martin");
+    EXPECT_EQ(first.front(), "martin");
 
-    BOOST_CHECK(first.size() == 4);
+    EXPECT_TRUE(first.size() == 4);
     
     str = first.front();
     first.pop_front();
-    BOOST_CHECK_EQUAL(str, "martin");
+    EXPECT_EQ(str, "martin");
 
     str = first.front();
     first.pop_front();
-    BOOST_CHECK_EQUAL(str, "woody");
+    EXPECT_EQ(str, "woody");
     
     str = first.front();
     first.pop_front();
-    BOOST_CHECK_EQUAL(str, "bob");
+    EXPECT_EQ(str, "bob");
     
     str = first.front();
     first.pop_front();
-    BOOST_CHECK_EQUAL(str, "lisa");
+    EXPECT_EQ(str, "lisa");
 
-    BOOST_CHECK(first.size() == 0);
+    EXPECT_TRUE(first.size() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(case_range_for) {
+TEST(raw_list, range_for) {
     toy::raw_list<std::string> first;
     std::vector<std::string> tst{ "lisa", "bob", "woody", "martin" };
 
@@ -83,19 +75,17 @@ BOOST_AUTO_TEST_CASE(case_range_for) {
     }
 
     for (size_t i = 0; auto &elem : first) {
-        BOOST_CHECK_EQUAL(elem, tst[i]);
+        EXPECT_EQ(elem, tst[i]);
         ++i;
     }
 }
 
-BOOST_AUTO_TEST_CASE(case_initializer_list_ctor) {
+TEST(raw_list, initializer_list_ctor) {
     toy::raw_list<std::string> first{"lisa", "bob", "woody", "martin"};
     std::vector<std::string> tst{ "lisa", "bob", "woody", "martin" };
 
     for (size_t i = 0; auto &elem : first) {
-        BOOST_CHECK_EQUAL(elem, tst[i]);
+        EXPECT_EQ(elem, tst[i]);
         ++i;
     }
 }
-
-BOOST_AUTO_TEST_SUITE_END()  // raw_list:
