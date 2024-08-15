@@ -53,7 +53,7 @@ set(TST_DIR "test")
 include_directories (${SRC_DIR})
 # For BOOST.test
 # Automatic generate int main(...)
-#add_definitions(-DBOOST_TEST_DYN_LINK)
+add_definitions(-DBOOST_TEST_DYN_LINK)
 include_directories ("third_party")
 
 add_library(toy_std)
@@ -90,7 +90,7 @@ enable_testing()
 add_executable(test_unit
     ${TST_DIR}/main.cpp
     ${TST_DIR}/array.cpp
-    # ${TST_DIR}/vector.cpp
+    ${TST_DIR}/matrix.cpp
     ${TST_DIR}/raw_vector.cpp
     ${TST_DIR}/stack.cpp
     ${TST_DIR}/raw_list.cpp
