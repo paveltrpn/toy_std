@@ -51,7 +51,9 @@ set(SRC_DIR "src")
 set(TST_DIR "test")
 
 include_directories (${SRC_DIR})
-# for BOOST.test
+# For BOOST.test
+# Automatic generate int main(...)
+add_definitions(-DBOOST_TEST_DYN_LINK)
 include_directories ("third_party")
 
 add_library(toy_std)

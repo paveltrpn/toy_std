@@ -1,6 +1,4 @@
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
 import toy_std.variant;
