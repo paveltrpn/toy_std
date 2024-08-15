@@ -9,10 +9,11 @@ add_compile_options(-g
                     -Wall 
                     -Wextra 
                     -Wpedantic 
-                    #-stdlib=libc++ 
+                    # -stdlib=libc++
                     -Wno-unused-parameter)
 
-#add_link_options(-stdlib=libc++)
+# BOOST.test won't build with clang c++ stdlib, use gcc std lib
+# add_link_options(-stdlib=libc++)
 
 option(WITH_UBSAN "build with undefined behavior sanitizer" OFF)
 option(WITH_ASAN  "build with address sanitizer" OFF)
@@ -48,19 +49,10 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(SRC_DIR "src")
 set(TST_DIR "test")
-set(WORK_DIR "/mnt/main_disk/code")
-
-# find globally installed system package
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-
-# find local hand-build package
-# set(BOOST_LOCAL "${WORK_DIR}/extern_libs/boost_1_84_0-clang")
-# 
-# set(ENV{LD_LIBRARY_PATH} ${LD_LIBRARY_PATH}:${BOOST_LOCAL}/lib)
-# include_directories (${BOOST_LOCAL})
-# link_directories(${BOOST_LOCAL}/lib)
 
 include_directories (${SRC_DIR})
+# for BOOST.test
+include_directories ("third_party")
 
 add_library(toy_std)
 target_sources(toy_std

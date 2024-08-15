@@ -1,7 +1,4 @@
 
-#include <format>
-#include "algebra/Matrix.h"
-
 #define BOOST_NO_CXX98_FUNCTION_BASE
 #include <boost/test/unit_test.hpp>
 
@@ -21,7 +18,7 @@ tire::matrix3f fibo3_tr{ 0, 2, 8, 1, 3, 13, 1, 5, 21 };
 // fibo3_tr * fibo3
 tire::matrix3f mult3_tr{ 2, 8, 34, 8, 38, 160, 34, 160, 674 };
 
-tire::matrix4f zero4{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+tire::matrix4f zero4{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 tire::matrix4f idtt4{ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
 tire::matrix4f fibo4{ 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610 };
 tire::matrix4f fibo4_tr{ 0, 3, 21, 144, 1, 5, 34, 233, 1, 8, 55, 377, 2, 13, 89, 610 };
