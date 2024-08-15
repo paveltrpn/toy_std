@@ -73,6 +73,16 @@ target_sources(toy_std
     ${SRC_DIR}/variant.cpp
     ${SRC_DIR}/any.cpp
     ${SRC_DIR}/generator.cpp
+    ${SRC_DIR}/algebra/algebra.cpp
+    ${SRC_DIR}/algebra/matrix.cpp
+    ${SRC_DIR}/algebra/matrix2.cpp
+    ${SRC_DIR}/algebra/matrix3.cpp
+    ${SRC_DIR}/algebra/matrix4.cpp
+    ${SRC_DIR}/algebra/vector.cpp
+    ${SRC_DIR}/algebra/vector2.cpp
+    ${SRC_DIR}/algebra/vector3.cpp
+    ${SRC_DIR}/algebra/vector4.cpp
+    ${SRC_DIR}/algebra/quaternion.cpp
 )
 
 enable_testing()

@@ -1,4 +1,8 @@
 
+// Module interface unit for toy_std module, that contains some
+// submodules with implementations of containers, algorithms etc.
+// Also contains a submodule algebra which devided on module partitions
+// each of it implements some vector and matrix routines.
 module;
 
 export module toy_std;
@@ -15,3 +19,6 @@ export import toy_std.optional;
 export import toy_std.variant;
 export import toy_std.any;
 export import toy_std.generator;
+
+export import toy_std.algebra;
+
