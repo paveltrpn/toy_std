@@ -12,8 +12,8 @@ namespace toy::algebra {
 template <typename T>
 struct quaternion_base {
         using value_type = T;
-        using reference = T&;
-        using const_reference = const T&;
+        using reference = value_type&;
+        using const_reference = const value_type&;
         using pointer = value_type*;
         using const_pointer = const value_type*;
 
@@ -75,24 +75,24 @@ struct quaternion_base {
             return *this;
         };
 
-        quaternion_base operator+(const quaternion_base& b) {
+        quaternion_base operator+(const quaternion_base& rhs) {
             return quaternion_base{
-                data_[0] + b[0], data_[1] + b[1], data_[2] + b[2], data_[3] + b[3]
+                data_[0] + rhs[0], data_[1] + rhs[1], data_[2] + rhs[2], data_[3] + rhs[3]
             };
         }
 
-        quaternion_base operator+=(const quaternion_base& b) {
-            return this + b;
+        quaternion_base operator+=(const quaternion_base& rhs) {
+            return *this + rhs;
         }
 
-        quaternion_base operator-(const quaternion_base& b) {
+        quaternion_base operator-(const quaternion_base& rhs) {
             return quaternion_base{
-                data_[0] - b[0], data_[1] - b[1], data_[2] - b[2], data_[3] - b[3]
+                data_[0] - rhs[0], data_[1] - rhs[1], data_[2] - rhs[2], data_[3] - rhs[3]
             };
         }
 
-        quaternion_base operator-=(const quaternion_base& b) {
-            return this - b;
+        quaternion_base operator-=(const quaternion_base& rhs) {
+            return *this - rhs;
         }
 
         quaternion_base& operator=(quaternion_base&& rhs) = delete;

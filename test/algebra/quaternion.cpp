@@ -48,18 +48,34 @@ TEST(quaterniond, assign) {
     EXPECT_EQ(second[3], 4.0);
 }
 
-TEST(quaterniondm, arithmetics) {
+TEST(quaterniond, arithmetics) {
     toy::algebra::quaterniond first{ 1.0, 2.0, 3.0, 4.0 };
     toy::algebra::quaterniond second{ 10.0, 20.0, 30.0, 40.0 };
 
-    auto sum(second + first);
+    auto sum{ second + first };
 
     EXPECT_EQ(sum.x(), 10.0 + 1.0);
     EXPECT_EQ(sum.y(), 20.0 + 2.0);
     EXPECT_EQ(sum.z(), 30.0 + 3.0);
     EXPECT_EQ(sum.w(), 40.0 + 4.0);
 
-    auto sub(second - first);
+    auto sum2{ second };
+    sum2 += first;
+
+    EXPECT_EQ(sum.x(), 10.0 + 1.0);
+    EXPECT_EQ(sum.y(), 20.0 + 2.0);
+    EXPECT_EQ(sum.z(), 30.0 + 3.0);
+    EXPECT_EQ(sum.w(), 40.0 + 4.0);
+
+    auto sub{ second - first };
+
+    EXPECT_EQ(sub.x(), 10.0 - 1.0);
+    EXPECT_EQ(sub.y(), 20.0 - 2.0);
+    EXPECT_EQ(sub.z(), 30.0 - 3.0);
+    EXPECT_EQ(sub.w(), 40.0 - 4.0);
+
+    auto sub2{ second };
+    sub2 -= first;
 
     EXPECT_EQ(sub.x(), 10.0 - 1.0);
     EXPECT_EQ(sub.y(), 20.0 - 2.0);

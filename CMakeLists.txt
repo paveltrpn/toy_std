@@ -93,6 +93,7 @@ add_executable(test_unit
     ${TST_DIR}/variant.cpp
     ${TST_DIR}/any.cpp
     ${TST_DIR}/generator.cpp
+    ${TST_DIR}/algebra/matrix.cpp
     ${TST_DIR}/algebra/quaternion.cpp
 )
 
