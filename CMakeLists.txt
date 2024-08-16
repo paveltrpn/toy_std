@@ -82,19 +82,6 @@ target_sources(toy_std
 
 enable_testing()
 
-# add_executable(test_unit
-#     ${TST_DIR}/main.cpp
-#     ${TST_DIR}/array.cpp
-#     ${TST_DIR}/matrix.cpp
-#     ${TST_DIR}/raw_vector.cpp
-#     ${TST_DIR}/stack.cpp
-#     ${TST_DIR}/raw_list.cpp
-#     ${TST_DIR}/optional.cpp
-#     ${TST_DIR}/variant.cpp
-#     ${TST_DIR}/any.cpp
-#     ${TST_DIR}/generator.cpp
-# )
-
 add_executable(test_unit 
     ${TST_DIR}/main.cpp
     ${TST_DIR}/array.cpp
@@ -106,6 +93,7 @@ add_executable(test_unit
     ${TST_DIR}/variant.cpp
     ${TST_DIR}/any.cpp
     ${TST_DIR}/generator.cpp
+    ${TST_DIR}/algebra/quaternion.cpp
 )
 
 target_link_libraries(test_unit gtest_main gmock_main toy_std)

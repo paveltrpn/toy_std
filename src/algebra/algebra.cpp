@@ -8,3 +8,4 @@ export module toy_std.algebra;
 export import :matrix;
 export import :matrix2;
 export import :matrix3;
+export import :quaternion;
