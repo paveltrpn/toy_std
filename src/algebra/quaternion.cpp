@@ -5,6 +5,8 @@ module;
 
 export module toy_std.algebra:quaternion;
 
+import toy_std.array;
+
 namespace toy::algebra {
 
 template <typename T>
@@ -12,6 +14,8 @@ struct quaternion_base {
         using value_type = T;
         using reference = T&;
         using const_reference = const T&;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
 
         quaternion_base() {
             data_[0] = value_type{};
@@ -95,19 +99,20 @@ struct quaternion_base {
 
         ~quaternion_base() = default;
 
-        [[nodiscard]] T* data() {
+        [[nodiscard]] pointer data() {
             return data_.data();
         };
 
-        [[nodiscard]] const T* data() const {
+        [[nodiscard]] const_pointer data() const {
             return data_.data();
         };
 
     private:
-        std::array<T, 4> data_{};
+        toy::array<value_type, 4> data_{};
 };
 
 export {
+    using quaternionl = quaternion_base<long long>;
     using quaterniond = quaternion_base<double>;
 }
 

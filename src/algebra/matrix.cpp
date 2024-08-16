@@ -10,7 +10,7 @@ import toy_std.array;
 
 namespace toy::algebra {
 
-export template <typename T, size_t _rng>
+template <typename T, size_t _rng>
 struct matrix_base {
         using value_type = T;
         using reference = value_type&;
