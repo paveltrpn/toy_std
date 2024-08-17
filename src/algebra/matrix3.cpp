@@ -11,7 +11,7 @@ import :matrix;
 
 namespace toy::algebra {
 
-template <typename T, size_t rng = 3>
+export template <typename T, size_t rng = 3>
 struct matrix3 final : public matrix_base<T, rng> {
         using base_type = matrix_base<T, rng>;
         using typename base_type::value_type;
