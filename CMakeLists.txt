@@ -1,18 +1,34 @@
 cmake_minimum_required(VERSION 3.28)
 
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+# Set variable that define wheather toy_std build as submodule or not.
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(NOT_AS_MODULE false)
+else()
+    set(NOT_AS_MODULE true)
+endif()
 
-project (toy_std)
-
-add_compile_options(-g 
+# If it standalone build then set compiler.
+if (NOT_AS_MODULE)
+    set(CMAKE_C_COMPILER clang)
+    set(CMAKE_CXX_COMPILER clang++)
+    add_compile_options(-g 
                     -Wall 
                     -Wextra 
                     -Wpedantic 
                     -stdlib=libc++
                     -Wno-unused-parameter)
 
-add_link_options(-stdlib=libc++)
+    add_link_options(-stdlib=libc++)
+endif()
+
+project (toy_std)
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_SCAN_FOR_MODULES)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 option(WITH_UBSAN "build with undefined behavior sanitizer" OFF)
 option(WITH_ASAN  "build with address sanitizer" OFF)
@@ -38,13 +54,6 @@ if(WITH_MSAN)
   add_compile_options(-fsanitize=memory)
   add_link_options(-fsanitize=memory)
 endif()
-
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_SCAN_FOR_MODULES)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS true)
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library(toy_std)
 target_sources(toy_std
@@ -75,5 +84,9 @@ target_sources(toy_std
     src/algebra/quaternion.cpp
 )
 
-add_subdirectory(test)
+# If it standalone build then need to build tests as well.
+if (NOT_AS_MODULE)
+    add_subdirectory(test )
+endif()
+
 
