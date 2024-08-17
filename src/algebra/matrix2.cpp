@@ -43,7 +43,8 @@ struct matrix2 final : public matrix_base<T, 2> {
         self operator*(const self &rhs) {
             auto tmp{ *this };
             tmp.multiply(rhs);
-            return tmp;
+            *this = tmp;
+            return *this;
         }
 
         value_type determinant() {

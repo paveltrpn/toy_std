@@ -123,6 +123,13 @@ struct matrix4 final : public matrix_base<T, 4> {
                             + (*this)[3, 3] * rhs[3, 3];
         }
 
+        self operator*(const self& rhs) {
+            auto tmp{ *this };
+            tmp.multiply(rhs);
+            *this = tmp;
+            return *this;
+        }
+
         value_type determinant() {
         }
 

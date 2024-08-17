@@ -77,6 +77,13 @@ struct matrix3 final : public matrix_base<T, 3> {
             (*this)[2, 2] = this20 * rhs[0, 2] + this21 * rhs[1, 2] + (*this)[2, 2] * rhs[2, 2];
         }
 
+        self operator*(const self &rhs) {
+            auto tmp{ *this };
+            tmp.multiply(rhs);
+            *this = tmp;
+            return *this;
+        }
+        
         value_type determinant() {
         }
 
