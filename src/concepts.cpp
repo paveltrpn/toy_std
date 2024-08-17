@@ -37,10 +37,10 @@ export {
         || std::is_same_v<T, algebra::vector2l> || std::is_same_v<T, algebra::vector2d>;
 
     template <typename T>
-        concept ConceptMatrixFloat
-          = std::is_same_v<T, algebra::matrix2<float>> || std::is_same_v<T, algebra::matrix3<float>>
-            || std::is_same_v<T, algebra::matrix4<float>>;
-    
+    concept ConceptMatrixFloat
+      = std::is_same_v<T, algebra::matrix2<float>> || std::is_same_v<T, algebra::matrix3<float>>
+        || std::is_same_v<T, algebra::matrix4<float>>;
+
     template <typename T>
     concept ConceptMatrix
       = std::is_same_v<T, algebra::matrix4<long long>> || std::is_same_v<T, algebra::matrix4<float>>

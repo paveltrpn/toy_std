@@ -11,11 +11,11 @@ import :matrix;
 
 namespace toy::algebra {
 
-export template <typename T, size_t rng = 3>
-struct matrix3 final : public matrix_base<T, rng> {
-        using base_type = matrix_base<T, rng>;
+export template <typename T>
+struct matrix3 final : public matrix_base<T, 3> {
+        using base_type = matrix_base<T, 3>;
         using typename base_type::value_type;
-        using self = matrix3<value_type, 3>;
+        using self = matrix3<value_type>;
         // Introduce name _data from matrix_base namespace because of parent type is template.
         using base_type::_data;
 
@@ -104,6 +104,7 @@ struct matrix3 final : public matrix_base<T, rng> {
 
 export {
     using matrix3l = matrix3<long long>;
+    using matrix3f = matrix3<float>;
     using matrix3d = matrix3<double>;
 }
 

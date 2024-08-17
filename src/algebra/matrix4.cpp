@@ -12,11 +12,11 @@ import :vector3;
 
 namespace toy::algebra {
 
-export template <typename T, size_t rng = 4>
-struct matrix4 final : public matrix_base<T, rng> {
-        using base_type = matrix_base<T, rng>;
+export template <typename T>
+struct matrix4 final : public matrix_base<T, 4> {
+        using base_type = matrix_base<T, 4>;
         using typename base_type::value_type;
-        using self = matrix4<value_type, 4>;
+        using self = matrix4<value_type>;
         // Introduce name _data from matrix_base namespace because of parent type is template.
         using base_type::_data;
 
@@ -386,7 +386,55 @@ struct matrix4 final : public matrix_base<T, rng> {
 };
 
 export {
+    template <typename T>
+    auto transpose(matrix4<T> & arg) -> decltype(auto) {
+        return __matrix_sqr_transpose(arg);
+    }
+
+    template <typename T>
+    matrix4<T> translate(T dx, T dy, T dz) {
+        matrix4<T> rt{};
+        rt.translate(dx, dy, dz);
+        return rt;
+    }
+
+    template <typename T>
+    matrix4<T> translate(vector3<T> & offset) {
+        matrix4<T> rt{};
+        rt.translate(offset.x(), offset.y(), offset.z());
+        return rt;
+    }
+
+    template <typename T>
+    matrix4<T> rotate(T dy, T dp, T dr) {
+        matrix4<T> rt;
+        rt.euler(dy, dp, dr);
+        return rt;
+    }
+
+    template <typename T>
+    matrix4<T> rotate(vector3<T> ax, T phi) {
+        matrix4<T> rt;
+        rt.axis_angle(ax, phi);
+        return rt;
+    }
+
+    template <typename T>
+    matrix4<T> perspective(float fov, float aspect, float ncp, float fcp) {
+        matrix4<T> rt;
+        rt.perspective(fov, aspect, ncp, fcp);
+        return rt;
+    }
+
+    template <typename T>
+    matrix4<T> orthographic(T left, T right, T bottom, T top, T near, T far) {
+        matrix4<T> rt;
+        rt.orthographic(left, right, bottom, top, near, far);
+        return rt;
+    }
+
     using matrix4l = matrix4<long long>;
+    using matrix4f = matrix4<float>;
     using matrix4d = matrix4<double>;
 }
 
