@@ -23,7 +23,6 @@ endif()
 
 project (toy_std)
 
-set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_SCAN_FOR_MODULES)
 

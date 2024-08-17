@@ -31,8 +31,9 @@ export {
     concept FloatingPoint = std::is_floating_point_v<T>;
 
     template <typename T>
-    concept ConceptVector = std::is_same_v<T, algebra::vector4l> || std::is_same_v<T, algebra::vector3l>
-                            || std::is_same_v<T, algebra::vector4d> || std::is_same_v<T, algebra::vector3d>
-                            || std::is_same_v<T, algebra::vector2l> || std::is_same_v<T, algebra::vector2d>;
+    concept ConceptVector
+      = std::is_same_v<T, algebra::vector4l> || std::is_same_v<T, algebra::vector3l>
+        || std::is_same_v<T, algebra::vector4d> || std::is_same_v<T, algebra::vector3d>
+        || std::is_same_v<T, algebra::vector2l> || std::is_same_v<T, algebra::vector2d>;
 }
 }  // namespace toy
