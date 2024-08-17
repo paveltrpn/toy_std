@@ -10,8 +10,8 @@ namespace toy::algebra {
 export template <typename T>
 struct vector2 : vector_base<T, 2> {
         using base_type = vector_base<T, 2>;
-        using typename base_type::self;
         using base_type::data_;
+        using typename base_type::self;
         using typename base_type::value_type;
 
         vector2() {
@@ -23,7 +23,7 @@ struct vector2 : vector_base<T, 2> {
             data_[0] = x;
             data_[1] = y;
         }
-        
+
         vector2(const self &rhs) {
             (*this)[0] = rhs[0];
             (*this)[1] = rhs[1];
@@ -40,6 +40,7 @@ struct vector2 : vector_base<T, 2> {
 
 export {
     using vector2l = vector2<long long>;
+    using vector2f = vector2<float>;
     using vector2d = vector2<double>;
 }
 

@@ -54,6 +54,7 @@ struct vector4 : vector_base<T, 4> {
 
 export {
     using vector4l = vector4<long long>;
+    using vector4f = vector4<float>;
     using vector4d = vector4<double>;
 }
 
