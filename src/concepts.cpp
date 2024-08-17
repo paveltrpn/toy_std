@@ -6,9 +6,11 @@ module;
 
 export module toy_std.concepts;
 
-export {
-    namespace toy {
+import toy_std.algebra;
 
+namespace toy {
+
+export {
     template <typename T>
     concept Character
       = std::is_same_v<char, std::remove_cv_t<T>> || std::is_same_v<wchar_t, std::remove_cv_t<T>>;
@@ -28,5 +30,9 @@ export {
     template <typename T>
     concept FloatingPoint = std::is_floating_point_v<T>;
 
-    }  // namespace toy
+    template <typename T>
+    concept ConceptVector = std::is_same_v<T, algebra::vector4l> || std::is_same_v<T, algebra::vector3l>
+                            || std::is_same_v<T, algebra::vector4d> || std::is_same_v<T, algebra::vector3d>
+                            || std::is_same_v<T, algebra::vector2l> || std::is_same_v<T, algebra::vector2d>;
 }
+}  // namespace toy
