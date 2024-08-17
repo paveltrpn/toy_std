@@ -35,5 +35,24 @@ export {
       = std::is_same_v<T, algebra::vector4l> || std::is_same_v<T, algebra::vector3l>
         || std::is_same_v<T, algebra::vector4d> || std::is_same_v<T, algebra::vector3d>
         || std::is_same_v<T, algebra::vector2l> || std::is_same_v<T, algebra::vector2d>;
+
+    template <typename T>
+        concept ConceptMatrixFloat
+          = std::is_same_v<T, algebra::matrix2<float>> || std::is_same_v<T, algebra::matrix3<float>>
+            || std::is_same_v<T, algebra::matrix4<float>>;
+    
+    template <typename T>
+    concept ConceptMatrix
+      = std::is_same_v<T, algebra::matrix4<long long>> || std::is_same_v<T, algebra::matrix4<float>>
+        || std::is_same_v<T, algebra::matrix4<double>> || std::is_same_v<T, algebra::matrix4<int>>
+        || std::is_same_v<T, algebra::matrix4<unsigned int>>
+        || std::is_same_v<T, algebra::matrix3<long long>>
+        || std::is_same_v<T, algebra::matrix3<float>> || std::is_same_v<T, algebra::matrix3<double>>
+        || std::is_same_v<T, algebra::matrix3<int>>
+        || std::is_same_v<T, algebra::matrix3<unsigned int>>
+        || std::is_same_v<T, algebra::matrix2<long long>>
+        || std::is_same_v<T, algebra::matrix2<float>> || std::is_same_v<T, algebra::matrix2<double>>
+        || std::is_same_v<T, algebra::matrix2<int>>
+        || std::is_same_v<T, algebra::matrix2<unsigned int>>;
 }
 }  // namespace toy
