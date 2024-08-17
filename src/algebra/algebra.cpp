@@ -4,6 +4,7 @@
 // :matrix, :vector, :matrix2 and so on.
 module;
 
+
 export module toy_std.algebra;
 
 export import :matrix;
@@ -15,3 +16,4 @@ export import :vector2;
 export import :vector3;
 export import :vector4;
 export import :quaternion;
+

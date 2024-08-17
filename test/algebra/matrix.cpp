@@ -87,3 +87,9 @@ TEST(matrix3, mult) {
             EXPECT_DOUBLE_EQ(foo, bar);
         }
 }
+
+TEST(matrix4, compile) {
+    toy::algebra::matrix4d euler{};
+    euler.euler(100.0, 100.0, 100.0);
+    EXPECT_TRUE(true);
+}

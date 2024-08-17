@@ -4,6 +4,8 @@ module;
 #include <cstddef>
 #include <initializer_list>
 #include <cmath>
+#include <concepts>
+#include <numbers>
 
 export module toy_std.algebra:matrix4;
 
@@ -11,6 +13,14 @@ import :matrix;
 import :vector3;
 
 namespace toy::algebra {
+
+template <std::floating_point T>
+constexpr T _half_circle = T(180.0L);
+
+template <std::floating_point T>
+constexpr T degToRad(T deg) {
+    return deg * std::numbers::pi_v<T> / _half_circle<T>;
+}
 
 export template <typename T>
 struct matrix4 final : public matrix_base<T, 4> {
@@ -331,7 +341,9 @@ struct matrix4 final : public matrix_base<T, 4> {
             idtt();
             value_type sa{}, ca{};
 
-            sincosf(degToRad(angl), &sa, &ca);
+            auto a = degToRad(angl);
+            sa = std::sin(a);
+            ca = std::cos(a);
 
             (*this)[5] = ca;
             (*this)[6] = -sa;
@@ -343,7 +355,9 @@ struct matrix4 final : public matrix_base<T, 4> {
             idtt();
             value_type sa{}, ca{};
 
-            sincosf(degToRad(angl), &sa, &ca);
+            auto a = degToRad(angl);
+            sa = std::sin(a);
+            ca = std::cos(a);
 
             (*this)[0] = ca;
             (*this)[2] = -sa;
@@ -355,7 +369,9 @@ struct matrix4 final : public matrix_base<T, 4> {
             idtt();
             value_type sa{}, ca{};
 
-            sincosf(degToRad(angl), &sa, &ca);
+            auto a = degToRad(angl);
+            sa = std::sin(a);
+            ca = std::cos(a);
 
             (*this)[0] = ca;
             (*this)[1] = -sa;
@@ -410,7 +426,7 @@ struct matrix4 final : public matrix_base<T, 4> {
 export {
     template <typename T>
     auto transpose(matrix4<T> & arg) -> decltype(auto) {
-        matrix4<T> rt{arg};
+        matrix4<T> rt{ arg };
         rt.transpose();
         return rt;
     }
