@@ -53,8 +53,8 @@ struct vector4 : vector_base<T, 4> {
 };
 
 export {
-    using vevtor4l = vector4<long long>;
-    using vevtor4d = vector4<double>;
+    using vector4l = vector4<long long>;
+    using vector4d = vector4<double>;
 }
 
 }  // namespace toy::algebra

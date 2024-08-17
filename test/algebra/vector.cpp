@@ -1,29 +1,26 @@
 
+
+#include <gtest/gtest.h>
 #include <cmath>
 
-#include "algebra/Vector.h"
-#include <boost/test/unit_test.hpp>
+import toy_std.algebra;
 
-namespace utf = boost::unit_test;
-
-BOOST_AUTO_TEST_SUITE(algebra)
-
-BOOST_AUTO_TEST_CASE(case_vector_construct_and_arithmetic, *utf::tolerance(0.00001)) {
+TEST(vector, vector_construct_and_arithmetic) {
     constexpr size_t __SZ = 5;
-    tire::vector<float, __SZ> one{ 0.0f, 1.0f, 2.0f, 3.0f, 4.0f };
-    tire::vector<float, __SZ> two{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-    tire::vector<float, __SZ> three{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
+    toy::algebra::vector_base<double, __SZ> one{ 0.0, 1.0, 2.0, 3.0, 4.0 };
+    toy::algebra::vector_base<double, __SZ> two{ 0.0, 0.0, 0.0, 0.0, 0.0 };
+    toy::algebra::vector_base<double, __SZ> three{ 1.0, 1.0, 1.0, 1.0, 1.0 };
 
     for (size_t i = 0; i < __SZ; ++i) {
-        BOOST_TEST(two[i] == 0.0f);
-        BOOST_TEST(three[i] == 1.0f);
+        EXPECT_DOUBLE_EQ(two[i], 0.0);
+        EXPECT_DOUBLE_EQ(three[i], 1.0);
     }
 
-    tire::vector<float, __SZ> four = three;
+    toy::algebra::vector_base<double, __SZ> four = three;
     four = two + three;
 
     for (size_t i = 0; i < __SZ; ++i) {
-        BOOST_TEST(four[i] == 1.0f);
+        EXPECT_DOUBLE_EQ(four[i], 1.0);
     }
 
     // toy::algebra::vector<int, __SZ> intv{ 1, 1, 1, 1, 1 };
@@ -31,68 +28,64 @@ BOOST_AUTO_TEST_CASE(case_vector_construct_and_arithmetic, *utf::tolerance(0.000
     // three = one + two;
 }
 
-BOOST_AUTO_TEST_CASE(case_vector2_construct_and_arithmetic, *utf::tolerance(0.00001)) {
-    tire::vector2f one{ 0.0f, 1.0f };
+TEST(vector2, construct_and_arithmetic) {
+    toy::algebra::vector2d one{ 0.0, 1.0 };
 
-    BOOST_TEST(one.x() == 0.0f);
-    BOOST_TEST(one.y() == 1.0f);
+    EXPECT_DOUBLE_EQ(one.x(), 0.0);
+    EXPECT_DOUBLE_EQ(one.y(), 1.0);
 
-    tire::vector2f two{ 1.0f, 1.0f };
-    two.sum(one);
+    toy::algebra::vector2d two{ 1.0, 1.0 };
+    two.plus(one);
 
-    BOOST_TEST(two.x() == 1.0f);
-    BOOST_TEST(two.y() == 2.0f);
+    EXPECT_DOUBLE_EQ(two.x(), 1.0);
+    EXPECT_DOUBLE_EQ(two.y(), 2.0);
 
-    tire::vector2f three{ 0.0f, 0.0f };
+    toy::algebra::vector2d three{ 0.0, 0.0 };
     three = one;
 
-    BOOST_TEST(three.x() == one.x());
-    BOOST_TEST(three.y() == one.y());
+    EXPECT_DOUBLE_EQ(three.x(), one.x());
+    EXPECT_DOUBLE_EQ(three.y(), one.y());
 
     auto lenght = two.sqLenght();
 
-    BOOST_TEST(lenght == 5.0f);
+    EXPECT_DOUBLE_EQ(lenght, 5.0);
 
-    tire::vector2f four = one + two + three;
+    toy::algebra::vector2d four = one + two + three;
 
-    BOOST_TEST(four.x() == 1.0f);
-    BOOST_TEST(four.y() == 4.0f);
-
-    // auto cr = two.cross(one);
+    EXPECT_DOUBLE_EQ(four.x(), 1.0);
+    EXPECT_DOUBLE_EQ(four.y(), 4.0);
 }
 
-BOOST_AUTO_TEST_CASE(case_vector3_construct_and_arithmetic, *utf::tolerance(0.00001)) {
-    tire::vector3f one{ 0.0f, 1.0f, 2.0f };
+TEST(vector3, vector3_construct_and_arithmetic) {
+    toy::algebra::vector3d one{ 0.0, 1.0, 2.0 };
 
-    BOOST_TEST(one.x() == 0.0f);
-    BOOST_TEST(one.y() == 1.0f);
-    BOOST_TEST(one.z() == 2.0f);
+    EXPECT_DOUBLE_EQ(one.x(), 0.0);
+    EXPECT_DOUBLE_EQ(one.y(), 1.0);
+    EXPECT_DOUBLE_EQ(one.z(), 2.0);
 
-    tire::vector3f two{ 1.0f, 1.0f, 1.0f };
-    two.sum(one);
+    toy::algebra::vector3d two{ 1.0, 1.0, 1.0 };
+    two.plus(one);
 
-    BOOST_TEST(two.x() == 1.0f);
-    BOOST_TEST(two.y() == 2.0f);
-    BOOST_TEST(two.z() == 3.0f);
+    EXPECT_DOUBLE_EQ(two.x(), 1.0);
+    EXPECT_DOUBLE_EQ(two.y(), 2.0);
+    EXPECT_DOUBLE_EQ(two.z(), 3.0);
 
-    tire::vector3f three{ 0.0f, 0.0f, 0.0f };
+    toy::algebra::vector3d three{ 0.0, 0.0, 0.0 };
     three = one;
 
-    BOOST_TEST(three.x() == one.x());
-    BOOST_TEST(three.y() == one.y());
-    BOOST_TEST(three.z() == one.z());
+    EXPECT_DOUBLE_EQ(three.x(), one.x());
+    EXPECT_DOUBLE_EQ(three.y(), one.y());
+    EXPECT_DOUBLE_EQ(three.z(), one.z());
 
     auto lenght = three.sqLenght();
 
-    BOOST_TEST(lenght == 5.0f);
+    EXPECT_DOUBLE_EQ(lenght, 5.0);
 
-    tire::vector3f four = one + two + three;
+    toy::algebra::vector3d four = one + two + three;
 
-    BOOST_TEST(four.x() == 1.0f);
-    BOOST_TEST(four.y() == 4.0f);
-    BOOST_TEST(four.z() == 7.0f);
+    EXPECT_DOUBLE_EQ(four.x(), 1.0);
+    EXPECT_DOUBLE_EQ(four.y(), 4.0);
+    EXPECT_DOUBLE_EQ(four.z(), 7.0);
 
     // auto cr = two.cross(one);
 }
-
-BOOST_AUTO_TEST_SUITE_END()

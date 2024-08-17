@@ -94,9 +94,11 @@ add_executable(test_unit
     ${TST_DIR}/any.cpp
     ${TST_DIR}/generator.cpp
     ${TST_DIR}/algebra/matrix.cpp
+    ${TST_DIR}/algebra/vector.cpp
     ${TST_DIR}/algebra/quaternion.cpp
 )
 
-target_link_libraries(test_unit gtest_main gmock_main toy_std)
+# set_target_properties(test_unit PROPERTIES EXCLUDE_FROM_ALL True)
 
-#add_test(test_all test_unit)
+target_link_libraries(test_unit gtest_main gmock_main toy_std)
+add_test(NAME toy_std_test COMMAND test_unit)

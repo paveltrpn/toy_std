@@ -39,8 +39,8 @@ struct vector2 : vector_base<T, 2> {
 };
 
 export {
-    using vevtor2l = vector2<long long>;
-    using vevtor2d = vector2<double>;
+    using vector2l = vector2<long long>;
+    using vector2d = vector2<double>;
 }
 
 }  // namespace toy::algebra

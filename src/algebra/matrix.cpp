@@ -203,7 +203,7 @@ T matrix_sqr_det_lu(const matrix_base<T, pSize_>& m) {
 }
 
 template <typename T, size_t pSize_>
-std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> __matrix_sqr_ldlt(
+std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> matrix_sqr_ldlt(
   const matrix_base<T, pSize_>& m) {
     std::decay_t<decltype(m)> lm;
     vector_base<T, pSize_> dv;
@@ -217,7 +217,7 @@ std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> __matrix_sqr_ldlt(
                 sum = sum - lm[i, k] * dv[k] * lm[j, k];
                 if (i == j) {
                     if (sum <= 0) {
-                        std::cout << "__matrix_sqr_ldlt(): matrix is not positive deﬁnite";
+                        std::cout << "matrix_sqr_ldlt(): matrix is not positive deﬁnite";
                         return { matrix_base<T, pSize_>{}, vector_base<T, pSize_>{} };
                     }
                     dv[i] = sum;
@@ -233,7 +233,7 @@ std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> __matrix_sqr_ldlt(
 }
 
 template <typename T, size_t pSize_>
-vector_base<T, pSize_> __matrix_sqr_solve_gauss(const matrix_base<T, pSize_>& m,
+vector_base<T, pSize_> matrix_sqr_solve_gauss(const matrix_base<T, pSize_>& m,
                                                 const vector_base<T, pSize_>& v) {
     size_t i, j, k;
     T t;
@@ -296,22 +296,22 @@ void matrix_sqr_insert_cmn(matrix_base<T, pSize_>& m, const vector_base<T, pSize
 }
 
 template <typename T, size_t pSize_>
-vector_base<T, pSize_> __matrix_sqr_solve_kramer(const matrix_base<T, pSize_>& m,
+vector_base<T, pSize_> matrix_sqr_solve_kramer(const matrix_base<T, pSize_>& m,
                                                  const vector_base<T, pSize_>& v) {
     T det;
     std::decay_t<decltype(m)> kr_mtrx;
     vector_base<T, pSize_> rt;
 
-    det = __matrix_sqr_det_lu(m);
+    det = matrix_sqr_det_lu(m);
 
     if (fabs(det) < std::numeric_limits<float>::epsilon()) {
-        std::cout << "__matrix_sqr_solve_kramer(): system has no solve\n";
+        std::cout << "matrix_sqr_solve_kramer(): system has no solve\n";
         return vector_base<T, pSize_>{};
     }
 
     for (size_t i = 0; i < pSize_; i++) {
-        __matrix_sqr_insert_cmn(kr_mtrx, v, i);
-        rt[i] = __matrix_sqr_det_lu(kr_mtrx) / det;
+        matrix_sqr_insert_cmn(kr_mtrx, v, i);
+        rt[i] = matrix_sqr_det_lu(kr_mtrx) / det;
     }
 
     return rt;
