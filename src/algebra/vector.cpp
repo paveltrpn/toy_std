@@ -20,7 +20,7 @@ struct vector_base {
         using const_pointer = const value_type*;
 
         vector_base() = default;
-        
+
         vector_base(std::initializer_list<value_type> list) {
             for (auto i = 0; const auto e : list) {
                 data_[i] = e;
@@ -91,6 +91,14 @@ struct vector_base {
         self& operator-=(const self& rhs) {
             (*this).minus(rhs);
             return *this;
+        }
+
+        pointer data() {
+            return data_.data();
+        }
+
+        const_pointer data() const {
+            return data_.data();
         }
 
     protected:
