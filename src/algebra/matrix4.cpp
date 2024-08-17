@@ -8,6 +8,7 @@ module;
 export module toy_std.algebra:matrix4;
 
 import :matrix;
+import :vector3;
 
 namespace toy::algebra {
 
@@ -184,75 +185,74 @@ struct matrix4 final : public matrix_base<T, rng> {
             }
         }
 
-        // void lookAt(const vector3_base<value_type>& eye,
-        //             const vector3_base<value_type>& center,
-        //             const vector3_base<value_type>& up) {
-        //     vector3_base<value_type> eyeDir;
+        void lookAt(const vector3<value_type>& eye,
+                    const vector3<value_type>& center,
+                    const vector3<value_type>& up) {
+            vector3<value_type> eyeDir;
 
-        //     constexpr value_type floatEps = std::numeric_limits<value_type>::epsilon();
-        //     if (std::fabs(eye[0] - center[0]) < floatEps && std::fabs(eye[1] - center[1]) <
-        //     floatEps
-        //         && std::fabs(eye[2] - center[2]) < floatEps) {
-        //         return;
-        //     }
+            constexpr value_type floatEps = std::numeric_limits<value_type>::epsilon();
+            if (std::fabs(eye[0] - center[0]) < floatEps && std::fabs(eye[1] - center[1]) < floatEps
+                && std::fabs(eye[2] - center[2]) < floatEps) {
+                return;
+            }
 
-        //     value_type z0 = eye[0] - center[0];
-        //     value_type z1 = eye[1] - center[1];
-        //     value_type z2 = eye[2] - center[2];
+            value_type z0 = eye[0] - center[0];
+            value_type z1 = eye[1] - center[1];
+            value_type z2 = eye[2] - center[2];
 
-        //     value_type len = 1.0 / std::hypot(z0, z1, z2);
-        //     z0 *= len;
-        //     z1 *= len;
-        //     z2 *= len;
+            value_type len = 1.0 / std::hypot(z0, z1, z2);
+            z0 *= len;
+            z1 *= len;
+            z2 *= len;
 
-        //     value_type x0 = up[1] * z2 - up[2] * z1;
-        //     value_type x1 = up[2] * z0 - up[0] * z2;
-        //     value_type x2 = up[0] * z1 - up[1] * z0;
-        //     len = std::hypot(x0, x1, x2);
-        //     if (len == 0.0) {
-        //         x0 = 0;
-        //         x1 = 0;
-        //         x2 = 0;
-        //     } else {
-        //         len = 1.0 / len;
-        //         x0 *= len;
-        //         x1 *= len;
-        //         x2 *= len;
-        //     }
+            value_type x0 = up[1] * z2 - up[2] * z1;
+            value_type x1 = up[2] * z0 - up[0] * z2;
+            value_type x2 = up[0] * z1 - up[1] * z0;
+            len = std::hypot(x0, x1, x2);
+            if (len == 0.0) {
+                x0 = 0;
+                x1 = 0;
+                x2 = 0;
+            } else {
+                len = 1.0 / len;
+                x0 *= len;
+                x1 *= len;
+                x2 *= len;
+            }
 
-        //     value_type y0 = z1 * x2 - z2 * x1;
-        //     value_type y1 = z2 * x0 - z0 * x2;
-        //     value_type y2 = z0 * x1 - z1 * x0;
+            value_type y0 = z1 * x2 - z2 * x1;
+            value_type y1 = z2 * x0 - z0 * x2;
+            value_type y2 = z0 * x1 - z1 * x0;
 
-        //     len = std::hypot(y0, y1, y2);
-        //     if (len == 0.0) {
-        //         y0 = 0;
-        //         y1 = 0;
-        //         y2 = 0;
-        //     } else {
-        //         len = 1.0 / len;
-        //         y0 *= len;
-        //         y1 *= len;
-        //         y2 *= len;
-        //     }
+            len = std::hypot(y0, y1, y2);
+            if (len == 0.0) {
+                y0 = 0;
+                y1 = 0;
+                y2 = 0;
+            } else {
+                len = 1.0 / len;
+                y0 *= len;
+                y1 *= len;
+                y2 *= len;
+            }
 
-        //     (*this)[0] = x0;
-        //     (*this)[1] = y0;
-        //     (*this)[2] = z0;
-        //     (*this)[3] = 0.0;
-        //     (*this)[4] = x1;
-        //     (*this)[5] = y1;
-        //     (*this)[6] = z1;
-        //     (*this)[7] = 0.0;
-        //     (*this)[8] = x2;
-        //     (*this)[9] = y2;
-        //     (*this)[10] = z2;
-        //     (*this)[11] = 0.0;
-        //     (*this)[12] = -(x0 * eye[0] + x1 * eye[1] + x2 * eye[2]);
-        //     (*this)[13] = -(y0 * eye[0] + y1 * eye[1] + y2 * eye[2]);
-        //     (*this)[14] = -(z0 * eye[0] + z1 * eye[1] + z2 * eye[2]);
-        //     (*this)[15] = 1.0;
-        // }
+            (*this)[0] = x0;
+            (*this)[1] = y0;
+            (*this)[2] = z0;
+            (*this)[3] = 0.0;
+            (*this)[4] = x1;
+            (*this)[5] = y1;
+            (*this)[6] = z1;
+            (*this)[7] = 0.0;
+            (*this)[8] = x2;
+            (*this)[9] = y2;
+            (*this)[10] = z2;
+            (*this)[11] = 0.0;
+            (*this)[12] = -(x0 * eye[0] + x1 * eye[1] + x2 * eye[2]);
+            (*this)[13] = -(y0 * eye[0] + y1 * eye[1] + y2 * eye[2]);
+            (*this)[14] = -(z0 * eye[0] + z1 * eye[1] + z2 * eye[2]);
+            (*this)[15] = 1.0;
+        }
 
         void orthographic(value_type left,
                           value_type right,
@@ -281,21 +281,21 @@ struct matrix4 final : public matrix_base<T, rng> {
             (*this)[15] = 1.0;
         }
 
-        // void scale(const vector3_base<value_type>& offset) {
-        //     idtt();
+        void scale(const vector3<value_type>& offset) {
+            idtt();
 
-        //     (*this)[0] = offset[0];
-        //     (*this)[5] = offset[1];
-        //     (*this)[11] = offset[2];
-        // }
+            (*this)[0] = offset[0];
+            (*this)[5] = offset[1];
+            (*this)[11] = offset[2];
+        }
 
-        // void translate(const vector3_base<value_type>& offset) {
-        //     idtt();
+        void translate(const vector3<value_type>& offset) {
+            idtt();
 
-        //     (*this)[3] = offset[0];
-        //     (*this)[7] = offset[1];
-        //     (*this)[11] = offset[2];
-        // }
+            (*this)[3] = offset[0];
+            (*this)[7] = offset[1];
+            (*this)[11] = offset[2];
+        }
 
         void translate(value_type dx, value_type dy, value_type dz) {
             idtt();
@@ -351,38 +351,38 @@ struct matrix4 final : public matrix_base<T, rng> {
             *this = y * p * r;
         }
 
-        // void axis_angle(const vector3_base<value_type>& ax, value_type phi) {
-        //     value_type cosphi, sinphi, vxvy, vxvz, vyvz, vx, vy, vz;
+        void axis_angle(const vector3<value_type>& ax, value_type phi) {
+            value_type cosphi, sinphi, vxvy, vxvz, vyvz, vx, vy, vz;
 
-        //     cosphi = std::cos(degToRad(phi));
-        //     sinphi = std::sin(degToRad(phi));
-        //     vxvy = ax[0] * ax[1];
-        //     vxvz = ax[0] * ax[2];
-        //     vyvz = ax[1] * ax[2];
-        //     vx = ax[0];
-        //     vy = ax[1];
-        //     vz = ax[2];
+            cosphi = std::cos(degToRad(phi));
+            sinphi = std::sin(degToRad(phi));
+            vxvy = ax[0] * ax[1];
+            vxvz = ax[0] * ax[2];
+            vyvz = ax[1] * ax[2];
+            vx = ax[0];
+            vy = ax[1];
+            vz = ax[2];
 
-        //     (*this)[0] = cosphi + (1.0 - cosphi) * vx * vx;
-        //     (*this)[1] = (1.0 - cosphi) * vxvy - sinphi * vz;
-        //     (*this)[2] = (1.0 - cosphi) * vxvz + sinphi * vy;
-        //     (*this)[3] = 0.0f;
+            (*this)[0] = cosphi + (1.0 - cosphi) * vx * vx;
+            (*this)[1] = (1.0 - cosphi) * vxvy - sinphi * vz;
+            (*this)[2] = (1.0 - cosphi) * vxvz + sinphi * vy;
+            (*this)[3] = 0.0f;
 
-        //     (*this)[4] = (1.0 - cosphi) * vxvy + sinphi * vz;
-        //     (*this)[5] = cosphi + (1.0 - cosphi) * vy * vy;
-        //     (*this)[6] = (1.0 - cosphi) * vyvz - sinphi * vx;
-        //     (*this)[7] = 0.0f;
+            (*this)[4] = (1.0 - cosphi) * vxvy + sinphi * vz;
+            (*this)[5] = cosphi + (1.0 - cosphi) * vy * vy;
+            (*this)[6] = (1.0 - cosphi) * vyvz - sinphi * vx;
+            (*this)[7] = 0.0f;
 
-        //     (*this)[8] = (1.0 - cosphi) * vxvz - sinphi * vy;
-        //     (*this)[9] = (1.0 - cosphi) * vyvz + sinphi * vx;
-        //     (*this)[10] = cosphi + (1.0 - cosphi) * vz * vz;
-        //     (*this)[11] = 0.0f;
+            (*this)[8] = (1.0 - cosphi) * vxvz - sinphi * vy;
+            (*this)[9] = (1.0 - cosphi) * vyvz + sinphi * vx;
+            (*this)[10] = cosphi + (1.0 - cosphi) * vz * vz;
+            (*this)[11] = 0.0f;
 
-        //     (*this)[12] = 0.0f;
-        //     (*this)[13] = 0.0f;
-        //     (*this)[14] = 0.0f;
-        //     (*this)[15] = 1.0f;
-        // }
+            (*this)[12] = 0.0f;
+            (*this)[13] = 0.0f;
+            (*this)[14] = 0.0f;
+            (*this)[15] = 1.0f;
+        }
 };
 
 export {

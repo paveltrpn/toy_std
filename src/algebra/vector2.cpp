@@ -7,7 +7,7 @@ import :vector;
 
 namespace toy::algebra {
 
-template <typename T>
+export template <typename T>
 struct vector2 : vector_base<T, 2> {
         using base_type = vector_base<T, 2>;
         using typename base_type::self;

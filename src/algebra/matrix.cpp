@@ -2,10 +2,12 @@ module;
 
 #include <cstddef>
 #include <mdspan>
+#include <iostream>
 
 export module toy_std.algebra:matrix;
 
 import toy_std.array;
+import :vector;
 
 namespace toy::algebra {
 
@@ -143,18 +145,18 @@ auto matrix_sqr_transpose(const matrix_base<T, pSize_>& m) {
     return rt;
 }
 
-// template <typename T, size_t pSize_>
-// auto matrix_sqr_multVec(const matrix_base<T, pSize_>& m, const Vector<T, pSize_>& v) {
-//     std::decay_t<decltype(m)> rt;
-//
-//     for (size_t i = 0; i < pSize_; i++) {
-//         for (size_t j = 0; j < pSize_; j++) {
-//             rt[i] += m[i, j] * v[j];
-//         }
-//     }
-//
-//     return rt;
-// }
+template <typename T, size_t pSize_>
+auto matrix_sqr_multVec(const matrix_base<T, pSize_>& m, const vector_base<T, pSize_>& v) {
+    std::decay_t<decltype(m)> rt;
+
+    for (size_t i = 0; i < pSize_; i++) {
+        for (size_t j = 0; j < pSize_; j++) {
+            rt[i] += m[i, j] * v[j];
+        }
+    }
+
+    return rt;
+}
 
 template <typename T, size_t pSize_>
 std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> matrix_sqr_lu(
@@ -200,120 +202,120 @@ T matrix_sqr_det_lu(const matrix_base<T, pSize_>& m) {
     return det;
 }
 
-// template <typename T, size_t pSize_>
-// std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> __matrix_sqr_ldlt(
-//   const matrix_base<T, pSize_>& m) {
-//     std::decay_t<decltype(m)> lm;
-//     Vector<T, pSize_> dv;
-//     size_t i, j, k;
-//     T sum;
-//
-//     for (i = 0; i < pSize_; i++) {
-//         for (j = i; j < pSize_; j++) {
-//             sum = m[j, i];
-//             for (k = 0; k < i; k++) {
-//                 sum = sum - lm[i, k] * dv[k] * lm[j, k];
-//                 if (i == j) {
-//                     if (sum <= 0) {
-//                         std::cout << "__matrix_sqr_ldlt(): matrix is not positive deﬁnite";
-//                         return { matrix_base<T, pSize_>{}, Vector<T, pSize_>{} };
-//                     }
-//                     dv[i] = sum;
-//                     lm[i, i] = 1.0;
-//                 } else {
-//                     lm[j, i] = sum / dv[i];
-//                 }
-//             }
-//         }
-//     }
-//
-//     return { lm, dv };
-// }
+template <typename T, size_t pSize_>
+std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> __matrix_sqr_ldlt(
+  const matrix_base<T, pSize_>& m) {
+    std::decay_t<decltype(m)> lm;
+    vector_base<T, pSize_> dv;
+    size_t i, j, k;
+    T sum;
 
-// template <typename T, size_t pSize_>
-// Vector<T, pSize_> __matrix_sqr_solve_gauss(const matrix_base_sqr<T, pSize_>& m,
-//                                            const Vector<T, pSize_>& v) {
-//     size_t i, j, k;
-//     T t;
-//     std::array<std::array<T, pSize_ + 1>, pSize_> a;
-//     Vector<T, pSize_> rt;
-//
-//     for (i = 0; i < pSize_; i++) {
-//         for (j = 0; j < pSize_; j++) {
-//             a[i][j] = m[i, j];
-//             a[i][pSize_] = v[i];
-//         }
-//     }
-//
-//     /* Pivotisation */
-//     for (i = 0; i < pSize_; i++) {
-//         for (k = i + 1; k < pSize_; k++) {
-//             if (fabs(a[i][i]) < fabs(a[k][i])) {
-//                 for (j = 0; j <= pSize_; j++) {
-//                     t = a[i][j];
-//                     a[i][j] = a[k][j];
-//                     a[k][j] = t;
-//                 }
-//             }
-//         }
-//     }
-//
-//     /* прямой ход */
-//     for (k = 1; k < pSize_; k++) {
-//         for (j = k; j < pSize_; j++) {
-//             t = a[j][k - 1] / a[k - 1][k - 1];
-//             for (i = 0; i < pSize_ + 1; i++) {
-//                 a[j][i] = a[j][i] - t * a[k - 1][i];
-//             }
-//         }
-//     }
-//
-//     /* обратный ход */
-//     for (i = pSize_ - 1; i > 0; i--) {
-//         rt[i] = a[i][pSize_] / a[i][i];
-//         for (j = pSize_ - 1; j > i; j--) {
-//             rt[i] = rt[i] - a[i][j] * rt[j] / a[i][i];
-//         }
-//     }
-//
-//     return rt;
-// }
+    for (i = 0; i < pSize_; i++) {
+        for (j = i; j < pSize_; j++) {
+            sum = m[j, i];
+            for (k = 0; k < i; k++) {
+                sum = sum - lm[i, k] * dv[k] * lm[j, k];
+                if (i == j) {
+                    if (sum <= 0) {
+                        std::cout << "__matrix_sqr_ldlt(): matrix is not positive deﬁnite";
+                        return { matrix_base<T, pSize_>{}, vector_base<T, pSize_>{} };
+                    }
+                    dv[i] = sum;
+                    lm[i, i] = 1.0;
+                } else {
+                    lm[j, i] = sum / dv[i];
+                }
+            }
+        }
+    }
 
-// template <typename T, size_t pSize_>
-// void matrix_sqr_insert_cmn(matrix_base<T, pSize_>& m, const Vector<T, pSize_>& v) {
-//     size_t i, j = 0;
-//
-//     auto rt = m;
-//
-//     for (i = pSize_; i < pSize_ * pSize_; i += pSize_) {
-//         rt[i] = v[j];
-//         j++;
-//     }
-//
-//     m = rt;
-// }
+    return { lm, dv };
+}
 
-// template <typename T, size_t pSize_>
-// Vector<T, pSize_> __matrix_sqr_solve_kramer(const matrix_base_sqr<T, pSize_>& m,
-//                                             const Vector<T, pSize_>& v) {
-//     T det;
-//     std::decay_t<decltype(m)> kr_mtrx;
-//     Vector<T, pSize_> rt;
-//
-//     det = __matrix_sqr_det_lu(m);
-//
-//     if (fabs(det) < std::numeric_limits<float>::epsilon()) {
-//         std::cout << "__matrix_sqr_solve_kramer(): system has no solve\n";
-//         return Vector<T, pSize_>{};
-//     }
-//
-//     for (size_t i = 0; i < pSize_; i++) {
-//         __matrix_sqr_insert_cmn(kr_mtrx, v, i);
-//         rt[i] = __matrix_sqr_det_lu(kr_mtrx) / det;
-//     }
-//
-//     return rt;
-// }
+template <typename T, size_t pSize_>
+vector_base<T, pSize_> __matrix_sqr_solve_gauss(const matrix_base<T, pSize_>& m,
+                                                const vector_base<T, pSize_>& v) {
+    size_t i, j, k;
+    T t;
+    std::array<std::array<T, pSize_ + 1>, pSize_> a;
+    vector_base<T, pSize_> rt;
+
+    for (i = 0; i < pSize_; i++) {
+        for (j = 0; j < pSize_; j++) {
+            a[i][j] = m[i, j];
+            a[i][pSize_] = v[i];
+        }
+    }
+
+    /* Pivotisation */
+    for (i = 0; i < pSize_; i++) {
+        for (k = i + 1; k < pSize_; k++) {
+            if (fabs(a[i][i]) < fabs(a[k][i])) {
+                for (j = 0; j <= pSize_; j++) {
+                    t = a[i][j];
+                    a[i][j] = a[k][j];
+                    a[k][j] = t;
+                }
+            }
+        }
+    }
+
+    /* прямой ход */
+    for (k = 1; k < pSize_; k++) {
+        for (j = k; j < pSize_; j++) {
+            t = a[j][k - 1] / a[k - 1][k - 1];
+            for (i = 0; i < pSize_ + 1; i++) {
+                a[j][i] = a[j][i] - t * a[k - 1][i];
+            }
+        }
+    }
+
+    /* обратный ход */
+    for (i = pSize_ - 1; i > 0; i--) {
+        rt[i] = a[i][pSize_] / a[i][i];
+        for (j = pSize_ - 1; j > i; j--) {
+            rt[i] = rt[i] - a[i][j] * rt[j] / a[i][i];
+        }
+    }
+
+    return rt;
+}
+
+template <typename T, size_t pSize_>
+void matrix_sqr_insert_cmn(matrix_base<T, pSize_>& m, const vector_base<T, pSize_>& v) {
+    size_t i, j = 0;
+
+    auto rt = m;
+
+    for (i = pSize_; i < pSize_ * pSize_; i += pSize_) {
+        rt[i] = v[j];
+        j++;
+    }
+
+    m = rt;
+}
+
+template <typename T, size_t pSize_>
+vector_base<T, pSize_> __matrix_sqr_solve_kramer(const matrix_base<T, pSize_>& m,
+                                                 const vector_base<T, pSize_>& v) {
+    T det;
+    std::decay_t<decltype(m)> kr_mtrx;
+    vector_base<T, pSize_> rt;
+
+    det = __matrix_sqr_det_lu(m);
+
+    if (fabs(det) < std::numeric_limits<float>::epsilon()) {
+        std::cout << "__matrix_sqr_solve_kramer(): system has no solve\n";
+        return vector_base<T, pSize_>{};
+    }
+
+    for (size_t i = 0; i < pSize_; i++) {
+        __matrix_sqr_insert_cmn(kr_mtrx, v, i);
+        rt[i] = __matrix_sqr_det_lu(kr_mtrx) / det;
+    }
+
+    return rt;
+}
 
 }  // namespace detail
 
