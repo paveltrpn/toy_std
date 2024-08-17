@@ -46,59 +46,34 @@ set(CMAKE_SCAN_FOR_MODULES)
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-set(SRC_DIR "src")
-set(TST_DIR "test")
-
-add_subdirectory("third_party/googletest")
-
 add_library(toy_std)
 target_sources(toy_std
   PUBLIC
     FILE_SET CXX_MODULES FILES
-    ${SRC_DIR}/concepts.cpp
-    ${SRC_DIR}/array.cpp
-    ${SRC_DIR}/raw_list.cpp
-    ${SRC_DIR}/stack.cpp
-    ${SRC_DIR}/vector.cpp
-    ${SRC_DIR}/raw_vector.cpp
-    ${SRC_DIR}/iterator_traits.cpp
-    ${SRC_DIR}/toy_std.cpp
-    ${SRC_DIR}/algorithm.cpp
-    ${SRC_DIR}/optional.cpp
-    ${SRC_DIR}/variant.cpp
-    ${SRC_DIR}/any.cpp
-    ${SRC_DIR}/generator.cpp
-    ${SRC_DIR}/algebra/algebra.cpp
-    ${SRC_DIR}/algebra/matrix.cpp
-    ${SRC_DIR}/algebra/matrix2.cpp
-    ${SRC_DIR}/algebra/matrix3.cpp
-    ${SRC_DIR}/algebra/matrix4.cpp
-    ${SRC_DIR}/algebra/vector.cpp
-    ${SRC_DIR}/algebra/vector2.cpp
-    ${SRC_DIR}/algebra/vector3.cpp
-    ${SRC_DIR}/algebra/vector4.cpp
-    ${SRC_DIR}/algebra/quaternion.cpp
+    src/concepts.cpp
+    src/array.cpp
+    src/raw_list.cpp
+    src/stack.cpp
+    src/vector.cpp
+    src/raw_vector.cpp
+    src/iterator_traits.cpp
+    src/toy_std.cpp
+    src/algorithm.cpp
+    src/optional.cpp
+    src/variant.cpp
+    src/any.cpp
+    src/generator.cpp
+    src/algebra/algebra.cpp
+    src/algebra/matrix.cpp
+    src/algebra/matrix2.cpp
+    src/algebra/matrix3.cpp
+    src/algebra/matrix4.cpp
+    src/algebra/vector.cpp
+    src/algebra/vector2.cpp
+    src/algebra/vector3.cpp
+    src/algebra/vector4.cpp
+    src/algebra/quaternion.cpp
 )
 
-enable_testing()
+add_subdirectory(test)
 
-add_executable(test_unit 
-    ${TST_DIR}/main.cpp
-    ${TST_DIR}/array.cpp
-    ${TST_DIR}/vector.cpp
-    ${TST_DIR}/raw_vector.cpp
-    ${TST_DIR}/raw_list.cpp
-    ${TST_DIR}/stack.cpp
-    ${TST_DIR}/optional.cpp
-    ${TST_DIR}/variant.cpp
-    ${TST_DIR}/any.cpp
-    ${TST_DIR}/generator.cpp
-    ${TST_DIR}/algebra/matrix.cpp
-    ${TST_DIR}/algebra/vector.cpp
-    ${TST_DIR}/algebra/quaternion.cpp
-)
-
-# set_target_properties(test_unit PROPERTIES EXCLUDE_FROM_ALL True)
-
-target_link_libraries(test_unit gtest_main gmock_main toy_std)
-add_test(NAME toy_std_test COMMAND test_unit)
