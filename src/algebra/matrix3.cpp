@@ -3,6 +3,7 @@ module;
 
 #include <cstddef>
 #include <initializer_list>
+#include <cmath>
 
 export module toy_std.algebra:matrix3;
 
@@ -19,6 +20,22 @@ struct matrix3 final : public matrix_base<T, rng> {
         using base_type::_data;
 
         matrix3() {
+            idtt();
+        }
+
+        void zero() {
+            _data[0] = T{};
+            _data[1] = T{};
+            _data[2] = T{};
+            _data[3] = T{};
+            _data[4] = T{};
+            _data[5] = T{};
+            _data[6] = T{};
+            _data[7] = T{};
+            _data[8] = T{};
+        }
+
+        void idtt() {
             _data[0] = T{ 1 };
             _data[1] = T{};
             _data[2] = T{};
@@ -61,6 +78,27 @@ struct matrix3 final : public matrix_base<T, rng> {
         }
 
         value_type determinant() {
+        }
+
+        void rotation(value_type yaw, value_type pitch, value_type roll) {
+            auto siny = std::sin(yaw);
+            auto cosy = std::cos(yaw);
+            auto sinp = std::sin(pitch);
+            auto cosp = std::cos(pitch);
+            auto sinr = std::sin(roll);
+            auto cosr = std::cos(roll);
+
+            (*this)[0] = cosy * cosr - siny * cosp * sinr;
+            (*this)[1] = -cosy * sinr - siny * cosp * cosr;
+            (*this)[2] = siny * sinp;
+
+            (*this)[3] = siny * cosr + cosy * cosp * sinr;
+            (*this)[4] = -siny * sinr + cosy * cosp * cosr;
+            (*this)[5] = -cosy * sinp;
+
+            (*this)[6] = sinp * sinr;
+            (*this)[7] = sinp * cosr;
+            (*this)[8] = cosp;
         }
 };
 
