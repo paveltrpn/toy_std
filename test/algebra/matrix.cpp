@@ -40,6 +40,7 @@ TEST(matrix2, idtt_and_subscript_operators) {
 
 TEST(matrix2, multiply) {
     auto A = toy::algebra::matrix2d{ -1.0, 2.0, -2.0, 3.0 };
+    auto Aold = toy::algebra::matrix2d{ -1.0, 2.0, -2.0, 3.0 };
     auto B = toy::algebra::matrix2d{ 1.0, -2.0, 2.0, -3.0 };
     auto res = A * B;
     auto knownRes = toy::algebra::matrix2d{ 3.0, -4.0, 4.0, -5.0 };

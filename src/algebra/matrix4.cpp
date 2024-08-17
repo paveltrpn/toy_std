@@ -69,6 +69,21 @@ struct matrix4 final : public matrix_base<T, 4> {
             _data[15] = T{ 1 };
         }
 
+        void transpose() {
+            value_type tmp;
+            auto rt = *this;
+
+            for (size_t i = 0; i < 4; ++i) {
+                for (size_t j = 0; j < i; ++j) {
+                    tmp = rt[i, j];
+                    rt[i, j] = rt[j, i];
+                    rt[j, i] = tmp;
+                }
+            }
+
+            *this = rt;
+        }
+
         void multiply(const self& rhs) {
             auto this00 = (*this)[0, 0];
             auto this01 = (*this)[0, 1];
@@ -395,7 +410,9 @@ struct matrix4 final : public matrix_base<T, 4> {
 export {
     template <typename T>
     auto transpose(matrix4<T> & arg) -> decltype(auto) {
-        return __matrix_sqr_transpose(arg);
+        matrix4<T> rt{arg};
+        rt.transpose();
+        return rt;
     }
 
     template <typename T>
