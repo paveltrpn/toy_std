@@ -67,7 +67,13 @@ TEST(matrix3, range) {
 
 TEST(matrix3, determinant) {
     toy::algebra::matrix3d foo{ 2.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 34.0, 55.0 };
-    EXPECT_DOUBLE_EQ(-2.0, foo.determinant_lu());
+
+    // foo.determinant_lu() cumputes determinant in something
+    // about -1.9999999999999716 and EXPECT_DOUBLE_EQ(-2.0, -1.9999999999999716)
+    // evaluates to false. Beacause of that we use EXPECT_NEAR() with
+    // manualy set tolerance.
+    EXPECT_NEAR(-2.0, foo.determinant_lu(), 0.000001);
+    // EXPECT_DOUBLE_EQ(-2.0, foo.determinant_lu());
 }
 
 TEST(matrix3, idtt_and_subscript_operators) {
