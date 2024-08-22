@@ -8,6 +8,7 @@ module;
 export module toy_std.algebra:matrix3;
 
 import :matrix;
+import :vector3;
 
 namespace toy::algebra {
 
@@ -54,7 +55,22 @@ struct matrix3 final : public matrix_base<T, 3> {
             }
         }
 
-        void multiply(const self& rhs) {
+        void transpose() {
+            value_type tmp;
+            auto rt = *this;
+
+            for (size_t i = 0; i < 3; ++i) {
+                for (size_t j = 0; j < i; ++j) {
+                    tmp = rt[i, j];
+                    rt[i, j] = rt[j, i];
+                    rt[j, i] = tmp;
+                }
+            }
+
+            *this = rt;
+        }
+
+        void multiply(const self &rhs) {
             auto this00 = (*this)[0, 0];
             auto this01 = (*this)[0, 1];
 
@@ -83,7 +99,18 @@ struct matrix3 final : public matrix_base<T, 3> {
             *this = tmp;
             return *this;
         }
-        
+
+        vector3<value_type> mult_vector3(const vector3<value_type> &v) {
+            vector3<value_type> rt;
+            value_type w;
+
+            rt[0] = v[0] * (*this)[0] + v[1] * (*this)[1] + v[2] * (*this)[2];
+            rt[1] = v[0] * (*this)[3] + v[1] * (*this)[4] + v[2] * (*this)[5];
+            rt[2] = v[0] * (*this)[6] + v[1] * (*this)[6] + v[2] * (*this)[8];
+
+            return rt;
+        }
+
         value_type determinant() {
         }
 

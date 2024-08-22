@@ -31,6 +31,21 @@ struct matrix2 final : public matrix_base<T, 2> {
             }
         }
 
+        void transpose() {
+            value_type tmp;
+            auto rt = *this;
+
+            for (size_t i = 0; i < 2; ++i) {
+                for (size_t j = 0; j < i; ++j) {
+                    tmp = rt[i, j];
+                    rt[i, j] = rt[j, i];
+                    rt[j, i] = tmp;
+                }
+            }
+
+            *this = rt;
+        }
+
         void multiply(const self &rhs) {
             auto data0 = (*this)[0];
             auto data1 = (*this)[1];

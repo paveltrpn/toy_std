@@ -11,6 +11,7 @@ export module toy_std.algebra:matrix4;
 
 import :matrix;
 import :vector3;
+import :vector4;
 
 namespace toy::algebra {
 
@@ -79,20 +80,6 @@ struct matrix4 final : public matrix_base<T, 4> {
             _data[15] = T{ 1 };
         }
 
-        void transpose() {
-            value_type tmp;
-            auto rt = *this;
-
-            for (size_t i = 0; i < 4; ++i) {
-                for (size_t j = 0; j < i; ++j) {
-                    tmp = rt[i, j];
-                    rt[i, j] = rt[j, i];
-                    rt[j, i] = tmp;
-                }
-            }
-
-            *this = rt;
-        }
 
         void multiply(const self& rhs) {
             auto this00 = (*this)[0, 0];
@@ -153,6 +140,37 @@ struct matrix4 final : public matrix_base<T, 4> {
             tmp.multiply(rhs);
             *this = tmp;
             return *this;
+        }
+
+        vector3<value_type> mult_vector3(const vector3<value_type>& v) {
+            vector3<value_type> rt;
+            value_type w;
+
+            rt[0] = v[0] * (*this)[0] + v[1] * (*this)[1] + v[2] * (*this)[2] + (*this)[3];
+            rt[1] = v[0] * (*this)[4] + v[1] * (*this)[5] + v[2] * (*this)[6] + (*this)[7];
+            rt[2] = v[0] * (*this)[8] + v[1] * (*this)[9] + v[2] * (*this)[10] + (*this)[11];
+            w = v[0] * (*this)[12] + v[1] * (*this)[13] + v[2] * (*this)[14] + (*this)[15];
+
+            // normalize if w is different than 1 (convert from homogeneous to Cartesian
+            // coordinates)
+            if (w != 1.0f) {
+                rt[0] /= w;
+                rt[1] /= w;
+                rt[2] /= w;
+            }
+
+            return rt;
+        }
+
+        vector4<value_type> mult_vector4(const vector4<value_type>& v) {
+            vector4<value_type> rt;
+
+            rt[0] = v[0] * (*this)[0] + v[1] * (*this)[1] + v[2] * (*this)[2] + (*this)[3];
+            rt[1] = v[0] * (*this)[4] + v[1] * (*this)[5] + v[2] * (*this)[6] + (*this)[7];
+            rt[2] = v[0] * (*this)[8] + v[1] * (*this)[9] + v[2] * (*this)[10] + (*this)[11];
+            rt[3] = v[0] * (*this)[12] + v[1] * (*this)[13] + v[2] * (*this)[14] + (*this)[15];
+
+            return rt;
         }
 
         value_type determinant() {

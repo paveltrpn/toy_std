@@ -3,6 +3,10 @@
 
 import toy_std.algebra;
 
+// ==================================================================================
+// ========================= matrix2 ================================================
+// ==================================================================================
+//
 TEST(matrix2, range) {
     toy::algebra::matrix2d foo;
 
@@ -11,12 +15,9 @@ TEST(matrix2, range) {
     EXPECT_NE(3, foo.range());
 }
 
-TEST(matrix3, range) {
-    toy::algebra::matrix3d foo;
-
-    EXPECT_EQ(3, foo.range());
-    EXPECT_NE(2, foo.range());
-    EXPECT_NE(4, foo.range());
+TEST(matrix2, determinant) {
+    toy::algebra::matrix2d foo{ 1.0, 2.0, 3.0, 5.0 };
+    EXPECT_DOUBLE_EQ(-1.0, foo.determinant_lu());
 }
 
 TEST(matrix2, idtt_and_subscript_operators) {
@@ -50,6 +51,23 @@ TEST(matrix2, multiply) {
             auto bar = knownRes[i, j];
             EXPECT_DOUBLE_EQ(foo, bar);
         }
+}
+
+// ==================================================================================
+// ========================= matrix3 ================================================
+// ==================================================================================
+
+TEST(matrix3, range) {
+    toy::algebra::matrix3d foo;
+
+    EXPECT_EQ(3, foo.range());
+    EXPECT_NE(2, foo.range());
+    EXPECT_NE(4, foo.range());
+}
+
+TEST(matrix3, determinant) {
+    toy::algebra::matrix3d foo{ 2.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0, 34.0, 55.0 };
+    EXPECT_DOUBLE_EQ(-2.0, foo.determinant_lu());
 }
 
 TEST(matrix3, idtt_and_subscript_operators) {
@@ -86,6 +104,24 @@ TEST(matrix3, mult) {
             auto bar = mult3_tr[i, j];
             EXPECT_DOUBLE_EQ(foo, bar);
         }
+}
+
+// ==================================================================================
+// ========================= matrix4 ================================================
+// ==================================================================================
+
+TEST(matrix4, range) {
+    toy::algebra::matrix4d foo;
+
+    EXPECT_EQ(4, foo.range());
+    EXPECT_NE(3, foo.range());
+    EXPECT_NE(5, foo.range());
+}
+
+TEST(matrix4, determinant) {
+    toy::algebra::matrix4d foo{ 1.0,  2.0,  3.0,   5.0,   8.0,   13.0,  21.0,  34.0,
+                                55.0, 89.0, 144.0, 233.0, 377.0, 610.0, 987.0, 1597.0 };
+    EXPECT_DOUBLE_EQ(-113400, foo.determinant_lu());
 }
 
 TEST(matrix4, compile) {

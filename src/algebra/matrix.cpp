@@ -13,6 +13,7 @@ namespace toy::algebra {
 
 template <typename T, size_t rng>
 struct matrix_base {
+        using self = matrix_base<T, rng>;
         using value_type = T;
         using reference = value_type&;
         using const_reference = const value_type&;
@@ -58,6 +59,62 @@ struct matrix_base {
         [[nodiscard]]
         const_pointer data() const {
             return _data.data();
+        }
+
+        void transpose() {
+            value_type tmp;
+            auto rt = *this;
+
+            for (size_t i = 0; i < 4; ++i) {
+                for (size_t j = 0; j < i; ++j) {
+                    tmp = rt[i, j];
+                    rt[i, j] = rt[j, i];
+                    rt[j, i] = tmp;
+                }
+            }
+
+            *this = rt;
+        }
+
+        std::pair<self, self> lu() {
+            self lm, um;
+            size_t i, j, k;
+            T sum;
+
+            for (i = 0; i < rng; i++) {
+                for (k = i; k < rng; k++) {
+                    sum = 0;
+                    for (j = 0; j < i; j++) {
+                        sum += (lm[i, j] * um[j, k]);
+                    }
+                    um[i, k] = (*this)[i, k] - sum;
+                }
+
+                for (k = i; k < rng; k++) {
+                    if (i == k) {
+                        lm[i, i] = T{ 1 };
+                    } else {
+                        sum = 0;
+                        for (j = 0; j < i; j++) {
+                            sum += lm[k, j] * um[j, i];
+                        }
+                        lm[k, i] = ((*this)[k, i] - sum) / um[i, i];
+                    }
+                }
+            }
+
+            return { lm, um };
+        }
+
+        value_type determinant_lu() {
+            T det{ 1 };
+
+            auto [_, u] = lu();
+            for (size_t i = 0; i < rng; i++) {
+                det *= u[i, i];
+            }
+
+            return det;
         }
 
     protected:
@@ -234,7 +291,7 @@ std::pair<matrix_base<T, pSize_>, matrix_base<T, pSize_>> matrix_sqr_ldlt(
 
 template <typename T, size_t pSize_>
 vector_base<T, pSize_> matrix_sqr_solve_gauss(const matrix_base<T, pSize_>& m,
-                                                const vector_base<T, pSize_>& v) {
+                                              const vector_base<T, pSize_>& v) {
     size_t i, j, k;
     T t;
     std::array<std::array<T, pSize_ + 1>, pSize_> a;
@@ -297,7 +354,7 @@ void matrix_sqr_insert_cmn(matrix_base<T, pSize_>& m, const vector_base<T, pSize
 
 template <typename T, size_t pSize_>
 vector_base<T, pSize_> matrix_sqr_solve_kramer(const matrix_base<T, pSize_>& m,
-                                                 const vector_base<T, pSize_>& v) {
+                                               const vector_base<T, pSize_>& v) {
     T det;
     std::decay_t<decltype(m)> kr_mtrx;
     vector_base<T, pSize_> rt;
