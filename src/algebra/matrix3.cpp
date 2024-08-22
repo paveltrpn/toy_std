@@ -13,11 +13,11 @@ import :vector3;
 namespace toy::algebra {
 
 export template <typename T>
-struct matrix3 final : public matrix_base<T, 3> {
-        using base_type = matrix_base<T, 3>;
+struct matrix3 final : public matrix_sqr_base<T, 3> {
+        using base_type = matrix_sqr_base<T, 3>;
         using typename base_type::value_type;
         using self = matrix3<value_type>;
-        // Introduce name _data from matrix_base namespace because of parent type is template.
+        // Introduce name _data from matrix_sqr_base namespace because of parent type is template.
         using base_type::_data;
 
         matrix3() {

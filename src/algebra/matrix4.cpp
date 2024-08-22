@@ -24,11 +24,11 @@ constexpr T degToRad(T deg) {
 }
 
 export template <typename T>
-struct matrix4 final : public matrix_base<T, 4> {
-        using base_type = matrix_base<T, 4>;
+struct matrix4 final : public matrix_sqr_base<T, 4> {
+        using base_type = matrix_sqr_base<T, 4>;
         using typename base_type::value_type;
         using self = matrix4<value_type>;
-        // Introduce name _data from matrix_base namespace because of parent type is template.
+        // Introduce name _data from matrix_sqr_base namespace because of parent type is template.
         using base_type::_data;
 
         matrix4() {
@@ -79,7 +79,6 @@ struct matrix4 final : public matrix_base<T, 4> {
             _data[14] = T{};
             _data[15] = T{ 1 };
         }
-
 
         void multiply(const self& rhs) {
             auto this00 = (*this)[0, 0];

@@ -11,8 +11,8 @@ import :matrix;
 namespace toy::algebra {
 
 export template <typename T>
-struct matrix2 final : public matrix_base<T, 2> {
-        using base_type = matrix_base<T, 2>;
+struct matrix2 final : public matrix_sqr_base<T, 2> {
+        using base_type = matrix_sqr_base<T, 2>;
         using typename base_type::value_type;
         using self = matrix2<value_type>;
         using base_type::_data;
