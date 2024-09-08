@@ -16,6 +16,7 @@ add_executable(test_unit
     variant.cpp
     any.cpp
     generator.cpp
+    string.cpp
     algebra/matrix.cpp
     algebra/vector.cpp
     algebra/quaternion.cpp

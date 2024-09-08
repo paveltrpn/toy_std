@@ -71,6 +71,7 @@ target_sources(toy_std
     src/variant.cpp
     src/any.cpp
     src/generator.cpp
+    src/string.cpp
     src/algebra/algebra.cpp
     src/algebra/matrix.cpp
     src/algebra/matrix2.cpp

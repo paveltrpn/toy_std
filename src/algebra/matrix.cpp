@@ -13,31 +13,22 @@ namespace toy::algebra {
 
 template <typename T, size_t row, size_t column>
 struct matrix_base {
-    protected:
-        toy::array<T, row * column> _data;
-};
-
-template <typename T, size_t rng>
-struct matrix_sqr_base : matrix_base<T, rng, rng> {
-        using base_type = matrix_base<T, rng, rng>;
-        using self = matrix_sqr_base<T, rng>;
+        using self = matrix_base<T, row, column>;
         using value_type = T;
         using reference = value_type&;
         using const_reference = const value_type&;
         using pointer = value_type*;
         using const_pointer = const value_type*;
 
-        using base_type::_data;
-
         // row-wise indexing operator
         [[nodiscard]]
         reference operator[](size_t i, size_t j) {
-            return std::mdspan(_data.data(), rng, rng)[i, j];
+            return std::mdspan(_data.data(), row, column)[i, j];
         }
 
         [[nodiscard]]
         const_reference operator[](size_t i, size_t j) const {
-            return std::mdspan(_data.data(), rng, rng)[i, j];
+            return std::mdspan(_data.data(), row, column)[i, j];
         }
 
         [[nodiscard]]
@@ -56,11 +47,6 @@ struct matrix_sqr_base : matrix_base<T, rng, rng> {
         }
 
         [[nodiscard]]
-        consteval size_t range() {
-            return rng;
-        };
-
-        [[nodiscard]]
         pointer data() {
             return _data.data();
         }
@@ -69,6 +55,37 @@ struct matrix_sqr_base : matrix_base<T, rng, rng> {
         const_pointer data() const {
             return _data.data();
         }
+
+        [[nodiscard]]
+        consteval size_t rows() {
+            return row;
+        };
+
+        [[nodiscard]]
+        consteval size_t columnes() {
+            return column;
+        };
+
+    protected:
+        toy::array<T, row * column> _data;
+};
+
+template <typename T, size_t rng>
+struct matrix_sqr_base : matrix_base<T, rng, rng> {
+        using base_type = matrix_base<T, rng, rng>;
+        using self = matrix_sqr_base<T, rng>;
+        using value_type = T;
+        using reference = value_type&;
+        using const_reference = const value_type&;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
+
+        using base_type::_data;
+
+        [[nodiscard]]
+        consteval size_t range() {
+            return rng;
+        };
 
         void transpose() {
             value_type tmp;
