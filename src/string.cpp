@@ -8,21 +8,21 @@ export module toy_std.string;
 
 namespace toy {
 
-// int ft_memcmp(void const *s1, void const *s2, size_t n)
-// {
-// 	int		res;
-// 	t_byte	*ps1;
-// 	t_byte	*ps2;
-// 	res = 0;
-// 	if (s1 == s2)
-// 		return (res);
-// 	ps1 = (t_byte*)s1;
-// 	ps2 = (t_byte*)s2;
-// 	while (n-- && !res)
-// 		res = *ps1++ - *ps2++;
-// 	return (res);
-// }
-// 
+int memcmp(void const *s1, void const *s2, size_t n) {
+    int res;
+    char *ps1;
+    char *ps2;
+    res = 0;
+    if (s1 == s2)
+        return (res);
+    ps1 = (char *)s1;
+    ps2 = (char *)s2;
+    while (n-- && !res)
+        res = *ps1++ - *ps2++;
+    return (res);
+}
+
+//
 // int ft_strcmp(char const *s1, char const *s2)
 // {
 // 	size_t len;
@@ -71,10 +71,10 @@ struct basic_string final {
         }
 
         bool operator==(const basic_string &rhs) const {
-            if (length() != rhs.length()) {
-                return false;
+            if (strcmp(data_, rhs.data_) == 0) {
+                return true;
             } else {
-                return strcmp(data_, rhs.data_);
+                return false;
             }
         }
 
