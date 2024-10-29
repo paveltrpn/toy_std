@@ -34,6 +34,8 @@ option(WITH_ASAN  "build with address sanitizer" OFF)
 option(WITH_TSAN  "build with thread sanitizer" OFF)
 option(WITH_MSAN  "build with memory sanitizer" OFF)
 
+include_directories("src")
+
 if(WITH_UBSAN)
   add_compile_options(-fsanitize=undefined)
   add_link_options(-fsanitize=undefined)
@@ -84,9 +86,17 @@ target_sources(toy_std
     src/algebra/quaternion.cpp
 )
 
+add_library(memory
+    src/memory.h
+    src/memory/unique_ptr.h
+    src/memory/shared_ptr.h
+    src/memory/deleters.h
+)
+set_target_properties(memory PROPERTIES LINKER_LANGUAGE CXX)
+
 # If it standalone build then need to build tests as well.
 if (NOT_AS_MODULE)
-    add_subdirectory(test )
+    add_subdirectory(test)
 endif()
 
 
