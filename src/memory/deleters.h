@@ -36,4 +36,18 @@ template <typename T> struct default_delete_verbose<T[]> {
     };
 };
 
+// =========================================================================
+// ===============QT style deleters ========================================
+// =========================================================================
+
+template <typename T> struct default_delete_qt {
+    static inline void cleanup( T *pointer ) noexcept { delete pointer; }
+    void operator()( T *pointer ) const noexcept { cleanup( pointer ); }
+};
+
+template <typename T> struct default_delete_array_qt {
+    static inline void cleanup( T *pointer ) noexcept { delete[] pointer; }
+    void operator()( T *pointer ) const noexcept { cleanup( pointer ); }
+};
+
 } // namespace toy::__detail
