@@ -3,10 +3,10 @@
 
 #include "deleters.h"
 
-namespace toy
-{
+namespace toy {
 
-template <typename T, typename D = __detail::default_delete_verbose<T>> struct unique_ptr final {
+template <typename T, typename D = __detail::default_delete_verbose<T>>
+struct unique_ptr final {
 public:
     using element_type = T;
     using deleter_type = D;
@@ -27,8 +27,7 @@ public:
 
     unique_ptr &operator=( const unique_ptr & ) = delete;
     unique_ptr &operator=( unique_ptr &&rhs ) {
-        if ( _ptr == rhs._ptr )
-            return;
+        if ( _ptr == rhs._ptr ) return;
 
         reset();
         std::swap( _ptr, rhs._ptr );
@@ -52,8 +51,7 @@ public:
     }
 
     void reset( element_type *other = nullptr ) {
-        if ( _ptr == other )
-            return;
+        if ( _ptr == other ) return;
 
         element_type *tmp = std::exchange( _ptr, other );
         std::invoke( deleter_type(), tmp );
@@ -63,4 +61,4 @@ private:
     element_type *_ptr;
 };
 
-} // namespace toy
+}  // namespace toy

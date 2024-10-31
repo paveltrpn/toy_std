@@ -21,7 +21,8 @@ add_executable(test_unit
     algebra/vector.cpp
     algebra/quaternion.cpp
     memory.cpp
+    type_info.cpp
 )
 
-target_link_libraries(test_unit gtest_main gmock_main toy_std memory)
+target_link_libraries(test_unit gtest_main gmock_main toy_std memory type_info)
 add_test(NAME toy_std_test COMMAND test_unit)

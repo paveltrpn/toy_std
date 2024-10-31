@@ -94,6 +94,13 @@ add_library(memory
 )
 set_target_properties(memory PROPERTIES LINKER_LANGUAGE CXX)
 
+add_library(type_info
+    src/type_info/type_name.h
+    src/type_info/type_index.h
+    src/type_info/registry.h
+)
+set_target_properties(type_info PROPERTIES LINKER_LANGUAGE CXX)
+
 # If it standalone build then need to build tests as well.
 if (NOT_AS_MODULE)
     add_subdirectory(test)

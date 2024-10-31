@@ -1,4 +1,7 @@
-BasedOnStyle: Microsoft
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+SpacesBeforeTrailingComments: 2
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
@@ -7,7 +10,6 @@ SpacesInParentheses: 'true'
 SortIncludes: 'false'
 ReflowComments: 'false'
 AllowShortFunctionsOnASingleLine: InlineOnly
-StatementMacros: [Q_OBJECT, Q_UNUSED, QT_REQUIRE_VERSION]
 Standard: c++11
 AlignOperands: 'true'
 AccessModifierOffset: -4
