@@ -134,8 +134,4 @@ struct task {
         void unhandled_exception() {}
     };
 };
-
-task example( async_manual_reset_event& event ) {
-    co_await event;
-}
 }  // namespace toy
