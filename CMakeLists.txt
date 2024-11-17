@@ -72,7 +72,6 @@ target_sources(toy_std
     src/optional.cpp
     src/variant.cpp
     src/any.cpp
-    src/generator.cpp
     src/string.cpp
     src/algebra/algebra.cpp
     src/algebra/matrix.cpp
@@ -100,6 +99,13 @@ add_library(type_info
     src/type_info/registry.h
 )
 set_target_properties(type_info PROPERTIES LINKER_LANGUAGE CXX)
+
+add_library(coroutines
+    src/coroutines.h
+    src/coroutines/generator.h
+    src/coroutines/async_manual_reset_event.h
+)
+set_target_properties(coroutines PROPERTIES LINKER_LANGUAGE CXX)
 
 # If it standalone build then need to build tests as well.
 if (NOT_AS_MODULE)

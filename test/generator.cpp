@@ -1,18 +1,16 @@
 
 #include <gtest/gtest.h>
-#include <coroutine>
-
-import toy_std.generator;
+#include "coroutines.h"
 
 toy::Generator<int32_t> counter() {
-    for (int32_t i = 0; i < 3;) {
+    for ( int32_t i = 0; i < 3; ) {
         co_yield i++;
     }
 }
 
-TEST(generator, generator) {
+TEST( generator, generator ) {
     auto gen = counter();
 
-    EXPECT_EQ(1, gen());
-    EXPECT_EQ(2, gen());
+    EXPECT_EQ( 1, gen() );
+    EXPECT_EQ( 2, gen() );
 }
