@@ -14,15 +14,22 @@ void producer() {
 
 // Can be called many times to create many tasks.
 // All consumer tasks will wait until value has been published.
-toy::task consumer() {
+toy::task<void> consumer( std::string_view whoAmI ) {
     // Wait until value has been published by awaiting event.
+
+    if ( !event.is_set() ) {
+        std::cout << whoAmI << ", by now cunsumption is not allowed!\n";
+    }
+
     co_await event;  // suspend point!!!
-    std::cout << "consume value: " << value << "\n";
+    std::cout << whoAmI << ", consume value: " << value << "\n";
 }
 
 int main( int argc, char **argv ) {
     std::cout << "try to consume...\n";
-    consumer();
+    consumer( "first" );
+    consumer( "second" );
+    consumer( "third" );
 
     std::cout << "produce value...\n";
     producer();

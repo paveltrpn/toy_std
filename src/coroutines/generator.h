@@ -14,26 +14,39 @@ struct Generator {
     using handle_type = std::coroutine_handle<promise_type>;
 
     struct promise_type {
-        T value_;
-        std::exception_ptr exception_;
-
+        // The result of that call will be returned to the caller when the
+        // coroutine first suspends. Any exceptions thrown up to and including
+        // this step propagate back to the caller, not placed in the promise
         Generator get_return_object() {
             return Generator( handle_type::from_promise( *this ) );
         }
 
-        std::suspend_never initial_suspend() { return {}; }
-
+        std::suspend_always initial_suspend() { return {}; }
         std::suspend_always final_suspend() noexcept { return {}; }
-
         void unhandled_exception() { exception_ = std::current_exception(); }
 
+        // Useful with "co_yield i;"  operator
+        //
+        // template <std::convertible_to<T> From>
+        // std::suspend_always yield_value( From &&from ) {
+        // value_ = std::forward<From>( from );
+        // return {};
+        // }
+
+        // Useful with "co_await i;"  operator
+        //
         template <std::convertible_to<T> From>
-        std::suspend_always yield_value( From &&from ) {
+        std::suspend_always await_transform( From &&from ) {
             value_ = std::forward<From>( from );
             return {};
         }
 
+        // Can be only one of two
         void return_void() {}
+        // void return_value();
+
+        T value_;
+        std::exception_ptr exception_;
     };
 
     handle_type h_;
@@ -55,17 +68,18 @@ struct Generator {
     }
 
 private:
-    bool full_ = false;
-
     void fill() {
         if ( !full_ ) {
-            h_();
+            h_();  // resume, equal to h_.resume()
             if ( h_.promise().exception_ ) {
                 std::rethrow_exception( h_.promise().exception_ );
             }
             full_ = true;
         }
     }
+
+private:
+    bool full_ = false;
 };
 
 }  // namespace toy

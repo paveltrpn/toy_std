@@ -124,8 +124,12 @@ async_manual_reset_event::awaiter async_manual_reset_event::operator co_await()
     return awaiter{ *this };
 }
 
+template <typename T>
+struct task;
+
 // A simple task-class for void-returning coroutines.
-struct task {
+template <>
+struct task<void> {
     struct promise_type {
         task get_return_object() { return {}; }
         std::suspend_never initial_suspend() { return {}; }
@@ -134,4 +138,5 @@ struct task {
         void unhandled_exception() {}
     };
 };
+
 }  // namespace toy
