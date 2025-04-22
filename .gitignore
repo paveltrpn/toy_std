@@ -1,5 +1,6 @@
 .vscode
 build/*
+.cache/*
 third_party/googletest
 *.gch
 CMakeLists.txt.user

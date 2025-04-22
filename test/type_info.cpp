@@ -2,13 +2,11 @@
 #include <gtest/gtest.h>
 #include "gmock/gmock.h"
 
-#include "type_info/type_name.h"
-#include "type_info/type_index.h"
-#include "type_info/registry.h"
-
 #include "memory.h"
 #include <source_location>
 #include <print>
+
+import toy_std.type_info;
 
 TEST( type_name, get_type_name ) {
     const auto unique_ptrName = toy::type_name<toy::unique_ptr<int>>();

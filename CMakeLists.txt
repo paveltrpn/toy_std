@@ -69,20 +69,15 @@ target_sources(toy_std
     src/iterator_traits.cpp
     src/toy_std.cpp
     src/algorithm.cpp
-    src/optional.cpp
-    src/variant.cpp
-    src/any.cpp
     src/string.cpp
-    src/algebra/algebra.cpp
-    src/algebra/matrix.cpp
-    src/algebra/matrix2.cpp
-    src/algebra/matrix3.cpp
-    src/algebra/matrix4.cpp
-    src/algebra/vector.cpp
-    src/algebra/vector2.cpp
-    src/algebra/vector3.cpp
-    src/algebra/vector4.cpp
-    src/algebra/quaternion.cpp
+    src/any.cpp
+    src/variant.cpp
+    src/optional.cpp
+    src/tuple.cpp
+    src/type_info/type_info.cpp
+    src/type_info/type_name.cpp
+    src/type_info/type_index.cpp
+    src/type_info/registry.cpp
 )
 
 add_library(memory
@@ -92,13 +87,6 @@ add_library(memory
     src/memory/deleters.h
 )
 set_target_properties(memory PROPERTIES LINKER_LANGUAGE CXX)
-
-add_library(type_info
-    src/type_info/type_name.h
-    src/type_info/type_index.h
-    src/type_info/registry.h
-)
-set_target_properties(type_info PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(coroutines
     src/coroutines.h

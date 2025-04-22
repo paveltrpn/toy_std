@@ -1,15 +1,15 @@
 
-#pragma once
+module;
 
 #include <iostream>
 
-namespace toy
-{
+export module toy_std.type_info:type_index;
 
-namespace __detail
-{
+namespace toy {
 
-struct type_index final {
+namespace __detail {
+
+export struct type_index final {
     [[nodiscard]] static std::size_t next() noexcept {
         // NOTE: possible atomic
         static long long value;
@@ -17,13 +17,14 @@ struct type_index final {
     }
 };
 
-} // namespace __detail
+}  // namespace __detail
 
-template <typename T> struct type_index final {
+export template <typename T>
+struct type_index final {
     [[nodiscard]] static std::size_t value() noexcept {
         static const std::size_t value = __detail::type_index::next();
         return value;
     }
 };
 
-} // namespace toy
+}  // namespace toy

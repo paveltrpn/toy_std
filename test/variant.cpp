@@ -3,5 +3,5 @@
 
 import toy_std.variant;
 
-TEST(variant, construct) {
+TEST( variant, construct ) {
 }

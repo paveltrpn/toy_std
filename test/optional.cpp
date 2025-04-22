@@ -3,5 +3,5 @@
 
 import toy_std.optional;
 
-TEST(optional, construct) {
+TEST( optional, construct ) {
 }

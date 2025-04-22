@@ -15,9 +15,9 @@ export import toy_std.raw_vector;
 export import toy_std.stack;
 export import toy_std.iterator_traits;
 export import toy_std.algorithm;
-export import toy_std.optional;
-export import toy_std.variant;
-export import toy_std.any;
 export import toy_std.string;
-
-export import toy_std.algebra;
+export import toy_std.any;
+export import toy_std.variant;
+export import toy_std.optional;
+export import toy_std.tuple;
+export import toy_std.type_info;

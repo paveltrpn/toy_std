@@ -1,14 +1,17 @@
 
-#pragma once
+module;
 
 #include <any>
 #include <unordered_map>
+#include <vector>
 
-#include "type_index.h"
+export module toy_std.type_info:registry;
+
+import :type_index;
 
 namespace toy {
 
-struct registry {
+export struct registry {
 private:
     template <typename T>
     [[nodiscard]] auto &storage( std::size_t id = type_index<T>().value() ) {
