@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include "memory.h"
+import toy_std.memory;
 
 #define TEST_TYPE int
 TEST( unique_ptr, default_construct ) {
@@ -71,12 +71,10 @@ TEST( unique_ptr, operators ) {
     EXPECT_NE( 11, *foo );
 
     bool tst{};
-    if ( foo )
-        tst = true;
+    if ( foo ) tst = true;
     EXPECT_EQ( true, tst );
 
     foo.release();
-    if ( !foo )
-        tst = true;
+    if ( !foo ) tst = true;
     EXPECT_EQ( true, tst );
 }

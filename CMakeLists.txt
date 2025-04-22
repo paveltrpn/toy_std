@@ -78,15 +78,11 @@ target_sources(toy_std
     src/type_info/type_name.cpp
     src/type_info/type_index.cpp
     src/type_info/registry.cpp
+    src/memory/memory.cpp
+    src/memory/unique_ptr.cpp
+    src/memory/shared_ptr.cpp
+    src/memory/deleters.cpp
 )
-
-add_library(memory
-    src/memory.h
-    src/memory/unique_ptr.h
-    src/memory/shared_ptr.h
-    src/memory/deleters.h
-)
-set_target_properties(memory PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(coroutines
     src/coroutines.h

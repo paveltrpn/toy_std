@@ -7,6 +7,7 @@
 #include <print>
 
 import toy_std.type_info;
+import toy_std.memory;
 
 TEST( type_name, get_type_name ) {
     const auto unique_ptrName = toy::type_name<toy::unique_ptr<int>>();

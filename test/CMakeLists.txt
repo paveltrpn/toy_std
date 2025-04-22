@@ -21,7 +21,7 @@ add_executable(test_unit
     type_info.cpp
 )
 
-target_link_libraries(test_unit gtest_main gmock_main toy_std memory coroutines)
+target_link_libraries(test_unit gtest_main gmock_main toy_std coroutines)
 add_test(NAME toy_std_test COMMAND test_unit)
 
 add_executable(async_manual_reset_event
