@@ -82,14 +82,10 @@ target_sources(toy_std
     src/memory/unique_ptr.cpp
     src/memory/shared_ptr.cpp
     src/memory/deleters.cpp
+    src/coroutines/coroutines.cpp
+    src/coroutines/generator.cpp
+    src/coroutines/async_manual_reset_event.cpp
 )
-
-add_library(coroutines
-    src/coroutines.h
-    src/coroutines/generator.h
-    src/coroutines/async_manual_reset_event.h
-)
-set_target_properties(coroutines PROPERTIES LINKER_LANGUAGE CXX)
 
 # If it standalone build then need to build tests as well.
 if (NOT_AS_MODULE)

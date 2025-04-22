@@ -1,6 +1,8 @@
 
-#include "coroutines.h"
 #include <iostream>
+#include <coroutine>
+
+import toy_std.coroutines;
 
 toy::async_manual_reset_event event;
 std::string value;

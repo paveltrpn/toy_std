@@ -1,6 +1,9 @@
 
 #include <gtest/gtest.h>
-#include "coroutines.h"
+
+#include <coroutine>
+
+import toy_std.coroutines;
 
 toy::Generator<int32_t> counter() {
     for ( int32_t i = 0; i < 3; ) {

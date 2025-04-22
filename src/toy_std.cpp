@@ -20,4 +20,3 @@ export import toy_std.any;
 export import toy_std.variant;
 export import toy_std.optional;
 export import toy_std.tuple;
-export import toy_std.type_info;

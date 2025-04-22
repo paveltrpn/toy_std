@@ -1,5 +1,5 @@
 
-#pragma once
+module;
 
 // Example code for blog post 'Understanding Awaitables'
 //
@@ -8,9 +8,11 @@
 #include <coroutine>
 #include <atomic>
 
+export module toy_std.coroutines:async_manual_reset_event;
+
 namespace toy {
 
-struct async_manual_reset_event {
+export struct async_manual_reset_event {
 public:
     async_manual_reset_event( bool initiallySet = false ) noexcept;
 
@@ -124,11 +126,11 @@ async_manual_reset_event::awaiter async_manual_reset_event::operator co_await()
     return awaiter{ *this };
 }
 
-template <typename T>
+export template <typename T>
 struct task;
 
 // A simple task-class for void-returning coroutines.
-template <>
+export template <>
 struct task<void> {
     struct promise_type {
         task get_return_object() { return {}; }
