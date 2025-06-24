@@ -6,7 +6,7 @@ module;
 #include <type_traits>
 #include <string>
 
-// #define DEBUG
+#define DEBUG
 
 export module toy_std.raw_vector;
 
