@@ -49,7 +49,7 @@ struct default_delete_verbose<T[]> {
 
 export template <typename T>
 struct deleter_pointer_wrapper {
-    // NOTE: default constructo cause segfault in unique_ptr move cases
+    // NOTE: default constructor cause segfault in unique_ptr move cases
     // deleter_pointer_wrapper() = default;
 
     deleter_pointer_wrapper( void ( *pf )( T * ) )

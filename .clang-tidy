@@ -24,6 +24,7 @@ Checks: >
   -bugprone-unused-return-value,
   -misc-misplaced-const,
   -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
   -modernize-use-trailing-return-type,
   -modernize-use-constraints,
   -modernize-avoid-c-arrays,

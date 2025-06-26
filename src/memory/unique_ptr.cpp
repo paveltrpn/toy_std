@@ -70,7 +70,7 @@ public:
         }
 
         reset();
-        swap( rhs );
+        this->swap( rhs );
 
         return *this;
     }
